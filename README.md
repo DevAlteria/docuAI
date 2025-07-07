@@ -1,4 +1,15 @@
 # iaDoc
 
-webui -> 8080
-ollama -> 7869
+Cabecera
+Iconos subencion
+
+Breaf sobre el proyecto
+
+Requesitos del sistema
+
+TODO hacer guia de instalacion
+
+financiacion
+
+iconos
+Iconos subencion

@@ -8,28 +8,28 @@ services:
     ports:
       - 7869:11434
     environment: #https://github.com/ollama/ollama/issues/2941
-      - OLLAMA_HOST=${OLLAMA_HOST:-http://0.0.0.0:11434}
-      # - OLLAMA_ORIGINS=${OLLAMA_ORIGINS:-[localhost, 127.0.0.1, 0.0.0.0, iaDoc.alteria.vpn.alonsom.com, gpus.alteria.vpn.alonsom.com]}
-      - OLLAMA_MODELS=${OLLAMA_MODELS:-/root/.ollama/models}
-      - OLLAMA_KEEP_ALIVE=${OLLAMA_KEEP_ALIVE:-5m}
-      - OLLAMA_DEBUG=${OLLAMA_DEBUG:-false}
-      - OLLAMA_FLASH_ATTENTION=${OLLAMA_FLASH_ATTENTION:-false}
-      - OLLAMA_NOHISTORY=${OLLAMA_NOHISTORY:-false}
-      - OLLAMA_NOPRUNE=${OLLAMA_NOPRUNE:-false}
-      - OLLAMA_SCHED_SPREAD=${OLLAMA_SCHED_SPREAD:-false}
-      - OLLAMA_INTEL_GPU=${OLLAMA_INTEL_GPU:-false}
+      - OLLAMA_HOST=http://0.0.0.0:11434
+      - OLLAMA_MODELS=/root/.ollama/models
+      - OLLAMA_KEEP_ALIVE=5m
+      - OLLAMA_DEBUG=false
+      - OLLAMA_FLASH_ATTENTION=false
+      - OLLAMA_NOHISTORY=false
+      - OLLAMA_NOPRUNE=false
+      - OLLAMA_SCHED_SPREAD=false
+      - OLLAMA_INTEL_GPU=false
+      - OLLAMA_NUM_PARALLEL=0
+      - OLLAMA_MAX_LOADED_MODELS=0
+      - OLLAMA_MAX_QUEUE=512
+      - OLLAMA_MAX_VRAM=0
       # TODO complete
-      # - OLLAMA_LLM_LIBRARY=${OLLAMA_LLM_LIBRARY:-""}
-      # - OLLAMA_TMPDIR=${OLLAMA_TMPDIR:-/tmp}
-      # - CUDA_VISIBLE_DEVICES=${CUDA_VISIBLE_DEVICES:-}
-      # - HIP_VISIBLE_DEVICES=${HIP_VISIBLE_DEVICES:-}
-      # - OLLAMA_RUNNERS_DIR=${OLLAMA_RUNNERS_DIR:-}
-      - OLLAMA_NUM_PARALLEL=${OLLAMA_NUM_PARALLEL:-0}
-      - OLLAMA_MAX_LOADED_MODELS=${OLLAMA_MAX_LOADED_MODELS:-0}
-      - OLLAMA_MAX_QUEUE=${OLLAMA_MAX_QUEUE:-512}
-      - OLLAMA_MAX_VRAM=${OLLAMA_MAX_VRAM:-0}
+      # - OLLAMA_LLM_LIBRARY=""
+      # - OLLAMA_TMPDIR=/tmp
+      # - CUDA_VISIBLE_DEVICES=
+      # - HIP_VISIBLE_DEVICES=
+      # - OLLAMA_RUNNERS_DIR=
     networks:
       - ollama-docker
+# comment complete deploy key if not using nvidia gpus
     deploy:
       resources:
         reservations:
@@ -48,13 +48,13 @@ services:
     ports:
       - 8080:8080
     environment: # https://docs.openwebui.com/getting-started/env-configuration#default_models
-      - WEBUI_URL=${WEBUI_URL:-http://localhost:8080}
-      - ENABLE_SIGNUP=${ENABLE_SIGNUP:-true}
-      - ENABLE_LOGIN_FORM=${ENABLE_LOGIN_FORM:-true}
-      - DEFAULT_LOCALE=${DEFAULT_LOCALE:-en}
-      - DEFAULT_MODELS=${DEFAULT_MODELS:-}
-      - DEFAULT_USER_ROLE=${DEFAULT_USER_ROLE:-admin}
-      - PENDING_USER_OVERLAY_TITLE=${PENDING_USER_OVERLAY_TITLE:-""}
+      - WEBUI_URL=localhost:8080
+      - ENABLE_SIGNUP=false
+      - ENABLE_LOGIN_FORM=false
+      - DEFAULT_LOCALE=en
+      - DEFAULT_MODELS=
+      - DEFAULT_USER_ROLE=admin
+      - PENDING_USER_OVERLAY_TITLE=""
       - ENV=dev
       - ENABLE_PERSISTENT_CONFIG=true
       - WEBUI_NAME=iaDoc
@@ -87,15 +87,14 @@ services:
     ports:
       - 5678:5678
     environment:
-      - N8N_ENCRYPTION_KEY="thisismyencripotionkey"
       - N8N_PATH=/n8n/
-      - N8N_HOST=iadoc.alteria.vpn.alonsom.com
+      - N8N_HOST=$FQDN
       - N8N_LISTEN_ADDRESS=0.0.0.0
-      - N8N_PROTOCOL=http 
+      - N8N_PROTOCOL=$WEB_PROTOCOL
       - N8N_SECURE_COOKIE=false
       - N8N_RUNNERS_ENABLED=true
       - N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS=false
-      - WEBHOOK_URL=http://iadoc.alteria.vpn.alonsom.com/n8n/
+      - WEBHOOK_URL=$WEB_PROTOCOL://$FQDN/n8n/
   nginx:
     image: nginx:alpine-1.0.0
     build:
@@ -103,6 +102,8 @@ services:
       dockerfile: Dockerfile
     container_name: nginx
     restart: unless-stopped
+    environment:
+      - FQDN=$FQDN
     ports:
       - "80:80"
       # - "443:443"
