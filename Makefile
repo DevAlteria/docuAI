@@ -29,8 +29,27 @@ down:
 up:
 	docker compose -f ./envs/dev/docker-compose.yml up -d
 
-re: build down up
+re: clean build up
 	@echo http://iadoc.alteria.vpn.alonsom.com/
+
+n8n-export-workflows:
+	docker exec n8n rm -rf ./exports
+	docker exec n8n mkdir ./exports
+	docker exec n8n n8n export:workflow --separate --all --output ./exports --pretty
+	docker cp n8n:/home/node/exports ./src/n8n/workflows/.
+	for f in src/n8n/workflows/exports/*;  do MA_VAR=$$(cat $$f | jq .name | tr -d '"'); cp $$f "./src/n8n/workflows/$$MA_VAR.json" ; done
+	rm -rf src/n8n/workflows/exports
+	docker exec n8n rm -rf ./exports
+
+n8n-export-credentials:
+	docker exec n8n rm -rf ./exports
+	docker exec n8n mkdir ./exports
+	docker exec n8n n8n export:credentials --separate --all --output ./exports --pretty --decrypted
+	docker cp n8n:/home/node/exports ./src/n8n/credentials/.
+	for f in src/n8n/credentials/exports/*;  do MA_VAR=$$(cat $$f | jq .name | tr -d '"'); cp $$f "./src/n8n/credentials/$$MA_VAR.json" ; done
+	rm -rf src/n8n/credentials/exports
+	docker exec n8n rm -rf ./exports
+
 
 prod:
 	echo TODO

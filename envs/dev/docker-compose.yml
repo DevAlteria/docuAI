@@ -95,6 +95,7 @@ services:
       - N8N_SECURE_COOKIE=false
       - N8N_RUNNERS_ENABLED=true
       - N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS=false
+      - WEBHOOK_URL=http://iadoc.alteria.vpn.alonsom.com/n8n/
   nginx:
     image: nginx:alpine-1.0.0
     build:
