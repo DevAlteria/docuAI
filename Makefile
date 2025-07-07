@@ -16,6 +16,8 @@ build:
 	mkdir -p ${PWD}/envs/dev/data/ollama-data-vol
 	mkdir -p ${PWD}/envs/dev/data/n8n-data-vol
 	mkdir -p ${PWD}/envs/dev/data/webui-data-vol
+	mkdir -p ${PWD}/envs/dev/data/postgress-data-vol
+	mkdir -p ${PWD}/envs/dev/data/minio-data-vol
 	docker compose -f ./envs/dev/docker-compose.yml pull --ignore-buildable
 	docker compose -f ./envs/dev/docker-compose.yml build
 

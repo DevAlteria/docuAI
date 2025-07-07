@@ -52,10 +52,10 @@
   <h1>Service Dashboard</h1>
 
   <div class="card-container">
-    <div class="card"><a href="/n8n">n8n</a></div>
-    <div class="card"><a href="/ollama">Ollama</a></div>
+    <div class="card"><a href="/n8n/">n8n</a></div>
+    <div class="card"><a href="/ollama/">Ollama</a></div>
     <div class="card"><a href="http://webui.iadoc.alteria.vpn.alonsom.com">WebUI</a></div>
-    <div class="card"><a href="/appflowy">AppFlowy</a></div>
+    <div class="card"><a href="http://appflowy.iadoc.alteria.vpn.alonsom.com">AppFlowy</a></div>
     <div class="card"><a href="/chat-app">Chat App</a></div>
   </div>
 
@@ -65,13 +65,12 @@
     <div class="card"><a id=n8nport href="#">n8n</a></div>
     <div class="card"><a id=ollamaport href="#">Ollama</a></div>
     <div class="card"><a id=webuiport href="#">WebUI</a></div>
-    <div class="card"><a id=appflowyport href="#">AppFlowy</a></div>
     <div class="card"><a id=chatapp href="#">Chat App</a></div>
   </div>
 
   <script>
     const domain = window.location.hostname;
-    const ports = { n8n: "5678/n8n/", ollama: 7869, webui: 8080, appflowy: 1234, chatapp: 1234};
+    const ports = { n8n: "5678/n8n/", ollama: "7869/", webui: 8080, chatapp: 1234};
     for(var k in ports) {
       document.getElementById(k + 'port').href = `http://${domain}:${ports[k]}`;
       console.log(document.getElementById(k + 'port').href);
