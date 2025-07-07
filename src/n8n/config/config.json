@@ -1,0 +1,48 @@
+{
+ "executions": {
+  "mode": "queue",
+  "concurrency": {
+    "productionLimit": -1,
+    "productionLimit": -1
+  },
+  "timeout": -1,
+  "maxTimeout": 3600,
+  "saveDataOnError": "all",
+  "saveDataOnSuccess": "all",
+  "saveDataOnProgress": false,
+  "saveDataManualExecutions": true,
+  "queueRecovery": {
+    "interval": 180,
+    "batchSize": 100
+  }
+ },
+ "userManagement": {
+   "jwtSecret": "jwtSecret",
+   "jwtSessionDurationHours": 168,
+   "jwtRefreshTimeoutHours": 0,
+   "isInstanceOwnerSetUp": false,
+   "authenticationMethod": "mail"
+ },
+ "externalFrontendHooksUrls": "",
+ "sso": {
+   "justInTimeProvisioning": true,
+   "redirectLoginToSso": true,
+   "saml": {
+     "loginEnabled": false,
+     "loginLabel": ""
+   },
+   "oidc": {
+     "loginEnabled": false
+   },
+   "ldap": {
+     "loginEnabled": false,
+     "loginLabel": ""
+   }
+ },
+ "redis": {
+   "prefix": "n8n"
+ },
+ "ai": {
+   "enabled": true
+ }
+}
