@@ -1,4 +1,5 @@
 NAME=iaDoc
+APPFLOWY_TAG=0.9.64
 
 $(NAME):
 	@less README.md
@@ -11,6 +12,7 @@ clean: down
 	sudo rm -rf ${PWD}/envs/dev/data/webui-data-vol
 
 build:
+	cd src/appflowy && git checkout ${APPFLOWY_TAG}
 	mkdir -p ${PWD}/envs/dev/data/ollama-data-vol
 	mkdir -p ${PWD}/envs/dev/data/n8n-data-vol
 	mkdir -p ${PWD}/envs/dev/data/webui-data-vol
