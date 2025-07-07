@@ -71,7 +71,7 @@
 
   <script>
     const domain = window.location.hostname;
-    const ports = { n8n: 5678, ollama: 7869, webui: 8080, appflowy: 1234, chatapp: 1234};
+    const ports = { n8n: "5678/n8n/", ollama: 7869, webui: 8080, appflowy: 1234, chatapp: 1234};
     for(var k in ports) {
       document.getElementById(k + 'port').href = `http://${domain}:${ports[k]}`;
       console.log(document.getElementById(k + 'port').href);
