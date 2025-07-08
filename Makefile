@@ -66,5 +66,9 @@ appflowy-import: down
 	tar -xvzf dummy-data/appflowy.tar.gz -C envs/dev/data/.
 	make up
 
+appflowy-clean: down
+	sudo rm -rf ${PWD}/envs/dev/data/minio-data-vol
+	sudo rm -rf ${PWD}/envs/dev/data/posgres-data-vol
+
 prod:
 	echo TODO
