@@ -31,7 +31,7 @@ ps:
 down:
 	docker compose -f ./envs/dev/docker-compose.yml down
 
-up:
+up: build
 	docker compose -f ./envs/dev/docker-compose.yml up -d
 
 re: clean build up
@@ -56,13 +56,15 @@ n8n-export-credentials:
 	docker exec n8n rm -rf ./exports
 
 appflowy-export: down
-	rm dummy-data/appflowy.tar.gz
+	rm -f dummy-data/appflowy.tar.gz
 	sudo tar czf dummy-data/appflowy.tar.gz envs/dev/data/minio-data-vol envs/dev/data/postgres-data-vol
+	make up
 
 appflowy-import: down
 	sudo rm -rf ${PWD}/envs/dev/data/minio-data-vol
 	sudo rm -rf ${PWD}/envs/dev/data/posgres-data-vol
 	tar -xvzf dummy-data/appflowy.tar.gz -C envs/dev/data/.
+	make up
 
 prod:
 	echo TODO
