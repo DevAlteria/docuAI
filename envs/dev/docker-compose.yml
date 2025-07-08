@@ -150,7 +150,7 @@ services:
       timeout: 5s
       retries: 12
     volumes:
-      - postgress-data-vol:/var/lib/postgresql/data
+      - postgres-data-vol:/var/lib/postgresql/data
     networks:
       - ollama-docker
 
@@ -387,11 +387,11 @@ volumes:
       type: none
       o: bind
       device: ${PWD}/envs/dev/data/minio-data-vol
-  postgress-data-vol:
+  postgres-data-vol:
     driver: local
-    name: postgress-data-vol
+    name: postgres-data-vol
     driver_opts:
       type: none
       o: bind
-      device: ${PWD}/envs/dev/data/postgress-data-vol
+      device: ${PWD}/envs/dev/data/postgres-data-vol
 

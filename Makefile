@@ -12,11 +12,12 @@ clean: down
 	sudo rm -rf ${PWD}/envs/dev/data/webui-data-vol
 
 build:
+	cp envs/dev/deploy.env envs/dev/.env
 	cd src/appflowy && git checkout ${APPFLOWY_TAG}
 	mkdir -p ${PWD}/envs/dev/data/ollama-data-vol
 	mkdir -p ${PWD}/envs/dev/data/n8n-data-vol
 	mkdir -p ${PWD}/envs/dev/data/webui-data-vol
-	mkdir -p ${PWD}/envs/dev/data/postgress-data-vol
+	mkdir -p ${PWD}/envs/dev/data/postgres-data-vol
 	mkdir -p ${PWD}/envs/dev/data/minio-data-vol
 	docker compose -f ./envs/dev/docker-compose.yml pull --ignore-buildable
 	docker compose -f ./envs/dev/docker-compose.yml build
@@ -54,6 +55,14 @@ n8n-export-credentials:
 	rm -rf src/n8n/credentials/exports
 	docker exec n8n rm -rf ./exports
 
+appflowy-export: down
+	rm dummy-data/appflowy.tar.gz
+	sudo tar czf dummy-data/appflowy.tar.gz envs/dev/data/minio-data-vol envs/dev/data/postgres-data-vol
+
+appflowy-import: down
+	sudo rm -rf ${PWD}/envs/dev/data/minio-data-vol
+	sudo rm -rf ${PWD}/envs/dev/data/posgres-data-vol
+	tar -xvzf dummy-data/appflowy.tar.gz -C envs/dev/data/.
 
 prod:
 	echo TODO
