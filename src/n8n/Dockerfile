@@ -6,10 +6,14 @@ RUN N8N_CONFIG_FILES=/n8n-config.json
 
 USER root
 
-RUN npm i -g iconv-lite
+WORKDIR /home/node/.n8n
+
+RUN npm i iconv-lite
 
 ENV N8N_COMMUNITY_PACKAGES_ALLOW_TOOL_USAGE=true
-RUN npm i -g n8n-nodes-appflowy
+RUN npm i n8n-nodes-appflowy
+
+WORKDIR /home/node
 
 ENV PYTHONUNBUFFERED=1
 
@@ -19,6 +23,9 @@ RUN apk add --update --no-cache py3-pip
 RUN pip3 install --no-cache --upgrade --break-system-packages pip 
 
 RUN pip3 install --root-user-action=ignore --break-system-packages SpeechRecognition pydub
+
+# RUN apk add --update --no-cache pandas numpy
+RUN pip3 install --no-cache --upgrade --break-system-packages pandas numpy 
 
 RUN mkdir voice
 RUN chmod 777 voice
