@@ -1,0 +1,258 @@
+{
+  "createdAt": "2025-07-14T08:40:47.774Z",
+  "updatedAt": "2025-07-14T13:06:05.000Z",
+  "id": "CChnvz1Hv1hCgNsy",
+  "name": "Inventory Question Dev",
+  "active": true,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=[INST]\n\nOffer a thorough and accurate solution that directly addresses the Question outlined in the [Question].\n\nIf you recibe a quetion asking for the position of a item, reply with Name, Box, Col and Row ofg the given table otherwise reply that you do not know. Always follow this rule.\n\n### [Table Text]\nThis is the description of the cols of the table\n{{ JSON.stringify($json.headers) }}\n\n### [Table]\n```\n{{ $json.rowsCsv }}\n```\n\n### [Question]\n{{ $json.question }}\n\n### [Solution]\nThe reply should follow the following format:\n  - If element was found: \"UNKOWN\"\n  - If element was not found: \"The elements XXXX is on the box XXX, on thhe row XXXX and on the col XXXX\"\n\n\n[INST/]",
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.7,
+      "position": [
+        360,
+        -200
+      ],
+      "id": "660d2537-048b-449a-81c9-5b64ab00ee1f",
+      "name": "Basic LLM Chain"
+    },
+    {
+      "parameters": {
+        "workspaceId": "013a4efa-1bce-43cf-88bc-faf921d516be",
+        "databaseId": "f0dc0899-6864-46bc-ad79-4c44effb9850",
+        "returnAll": true,
+        "simplify": false
+      },
+      "type": "n8n-nodes-appflowy.appflowy",
+      "typeVersion": 1,
+      "position": [
+        -80,
+        -200
+      ],
+      "id": "ae1756b5-d75d-49ce-aec4-b860156d1d6f",
+      "name": "Get All Inventory",
+      "credentials": {
+        "appflowyApi": {
+          "id": "caTURWHOYl4VW0ZV",
+          "name": "Dev"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "hf.co/QuantFactory/TableLLM-13b-GGUF:Q8_0",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmOllama",
+      "typeVersion": 1,
+      "position": [
+        320,
+        0
+      ],
+      "id": "365a31bb-bf52-4aed-a8e9-27b74366ea1e",
+      "name": "Ollama Model",
+      "credentials": {
+        "ollamaApi": {
+          "id": "oEKNS3tm8YNi0WhW",
+          "name": "ollama"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "database",
+        "operation": "getFields",
+        "workspaceId": "013a4efa-1bce-43cf-88bc-faf921d516be",
+        "databaseId": "f0dc0899-6864-46bc-ad79-4c44effb9850"
+      },
+      "type": "n8n-nodes-appflowy.appflowy",
+      "typeVersion": 1,
+      "position": [
+        -520,
+        -200
+      ],
+      "id": "fb43e6aa-2bb7-4198-a7af-c9e01bc958a1",
+      "name": "Get Inventory Headers",
+      "credentials": {
+        "appflowyApi": {
+          "id": "caTURWHOYl4VW0ZV",
+          "name": "Dev"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Loop over input items and add a new field called 'myNewField' to the JSON of each one\nvar data = $('Code').first().json\ndata.rows = [];\ndata.rowsCsv = \"\";\n\n//Add to struct\nfor (const item of $input.all()) {\n  data.rows.push(item.json) \n}\n\n//Clean\nfor (var i = 0; i < data.rows.length; i++) {\n  data.rows[i] = data.rows[i].cells; \n}\n\n//Add headers to csv\nfor (var i = 0; i < data.headers.length; i++) {\n  data.rowsCsv += data.headers[i].name;\n  if (i != data.headers.length - 1) data.rowsCsv += \",\"\n}\ndata.rowsCsv += \"\\n\"\n\n//Add rows to csv\nfor (var i = 0; i < data.rows.length; i++) {\n  for (var j = 0; j < data.headers.length; j++) {\n    data.rowsCsv += data.rows[i][data.headers[j].name];\n    if (j != data.headers.length - 1) data.rowsCsv += \",\"\n  }\n  data.rowsCsv += \"\\n\"\n} \n\ndata.question = $('When chat message received').first().json.chatInput\n\nreturn data;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        140,
+        -200
+      ],
+      "id": "dc7f77a7-d10b-4acf-9326-16f67290b07e",
+      "name": "Gen promt",
+      "executeOnce": false
+    },
+    {
+      "parameters": {
+        "jsCode": "// Loop over input items and add a new field called 'myNewField' to the JSON of each one\nvar data = {}\ndata.headers = [];\n\nfor (const item of $input.all()) {\n  data.headers.push(item.json) \n}\nfor (var i = 0; i < data.headers.length; i++) {\n  delete data.headers[i].id ;\n  delete data.headers[i].is_primary ;\n  data.headers[i].options = [];\n  if (data.headers[i].field_type == \"SingleSelect\") {\n    for (var j = 0; j < data.headers[i].type_option.content.options.length; j++) {\n      data.headers[i].options.push(data.headers[i].type_option.content.options[j].name);\n    }\n    delete data.headers[i].type_option ;\n  }\n}\n\n\nreturn data;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -300,
+        -200
+      ],
+      "id": "502dba62-e633-40c7-9f73-9e196a69b917",
+      "name": "Code"
+    },
+    {
+      "parameters": {
+        "public": true,
+        "initialMessages": "Hello, just ask a question about the inventory.",
+        "options": {
+          "allowFileUploads": false,
+          "inputPlaceholder": "Type your question..",
+          "loadPreviousSession": "memory",
+          "responseMode": "lastNode",
+          "showWelcomeScreen": false,
+          "subtitle": "Inventory Chat subtitle",
+          "title": "Inventory Chat title",
+          "customCss": "<style>\n:root {\n  --chat--color-primary: #78B9B5;\n  --chat--color-primary-shade-50: #63a7a3;\n  --chat--color-primary-shade-100: #4e9491;\n  --chat--color-secondary: #0F828C;\n  --chat--color-secondary-shade-50: #0d6e76;\n\n  --chat--color-white: #f0f0f0;\n  --chat--color-light: #1b1c2e;\n  --chat--color-light-shade-50: #262738;\n  --chat--color-light-shade-100: #33354d;\n  --chat--color-medium: #4a5568;\n  --chat--color-dark: #0e0f1a;\n  --chat--color-disabled: #6b7280;\n  --chat--color-typing: #94a3b8;\n\n  --chat--spacing: 1rem;\n  --chat--border-radius: 0.75rem;\n  --chat--transition-duration: 0.25s;\n  --chat--font-family: (\n    -apple-system,\n    BlinkMacSystemFont,\n    'Segoe UI',\n    Roboto,\n    Oxygen-Sans,\n    Ubuntu,\n    Cantarell,\n    'Helvetica Neue',\n    sans-serif\n  );\n\n  --chat--window--width: 420px;\n  --chat--window--height: 640px;\n  --chat--window--bottom: var(--chat--spacing);\n  --chat--window--right: var(--chat--spacing);\n  --chat--window--z-index: 9999;\n  --chat--window--border: 1px solid var(--chat--color-light-shade-50);\n  --chat--window--border-radius: var(--chat--border-radius);\n  --chat--window--margin-bottom: var(--chat--spacing);\n\n  --chat--header-height: auto;\n  --chat--header--padding: 1.25rem;\n  --chat--header--background: #320A6B;\n  --chat--header--color: var(--chat--color-white);\n  --chat--heading--font-size: 1.5rem;\n  --chat--subtitle--font-size: 1rem;\n  --chat--subtitle--line-height: 1.6;\n\n  --chat--message--font-size: 1rem;\n  --chat--message--padding: 0.875rem 1rem;\n  --chat--message--border-radius: var(--chat--border-radius);\n  --chat--message-line-height: 1.6;\n  --chat--message--margin-bottom: 0.75rem;\n  --chat--message--bot--background: var(--chat--color-light-shade-50);\n  --chat--message--bot--color: var(--chat--color-white);\n  --chat--message--bot--border: 1px solid var(--chat--color-light-shade-100);\n  --chat--message--user--background: var(--chat--color-primary);\n  --chat--message--user--color: var(--chat--color-dark);\n  --chat--message--user--border: none;\n  --chat--message--pre--background: rgba(255, 255, 255, 0.05);\n  --chat--messages-list--padding: var(--chat--spacing);\n\n  --chat--toggle--size: 56px;\n  --chat--toggle--width: var(--chat--toggle--size);\n  --chat--toggle--height: var(--chat--toggle--size);\n  --chat--toggle--border-radius: 50%;\n  --chat--toggle--background: var(--chat--color-primary);\n  --chat--toggle--hover--background: var(--chat--color-primary-shade-50);\n  --chat--toggle--active--background: var(--chat--color-primary-shade-100);\n  --chat--toggle--color: var(--chat--color-dark);\n  --chat--toggle--box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);\n\n  --chat--textarea--height: 56px;\n  --chat--textarea--max-height: 20rem;\n  --chat--input--font-size: 1rem;\n  --chat--input--border: 1px solid var(--chat--color-light-shade-100);\n  --chat--input--border-radius: var(--chat--border-radius);\n  --chat--input--padding: 0.75rem 1rem;\n  --chat--input--background: var(--chat--color-dark);\n  --chat--input--text-color: var(--chat--color-white);\n  --chat--input--line-height: 1.5;\n  --chat--input--placeholder--font-size: 1rem;\n  --chat--input--border-active: 1px solid var(--chat--color-primary);\n  --chat--input--left--panel--width: 2.5rem;\n\n  --chat--button--color: var(--chat--color-dark);\n  --chat--button--background: var(--chat--color-primary);\n  --chat--button--padding: 0.5rem 1rem;\n  --chat--button--border-radius: var(--chat--border-radius);\n  --chat--button--hover--color: var(--chat--color-dark);\n  --chat--button--hover--background: var(--chat--color-primary-shade-50);\n  --chat--close--button--color-hover: var(--chat--color-primary);\n\n  --chat--input--send--button--background: var(--chat--color-primary);\n  --chat--input--send--button--color: var(--chat--color-dark);\n  --chat--input--send--button--background-hover: var(--chat--color-primary-shade-50);\n  --chat--input--send--button--color-hover: var(--chat--color-dark);\n  --chat--input--file--button--background: transparent;\n  --chat--input--file--button--color: var(--chat--color-secondary);\n  --chat--input--file--button--background-hover: var(--chat--color-light-shade-50);\n  --chat--input--file--button--color-hover: var(--chat--color-secondary-shade-50);\n  --chat--files-spacing: 0.5rem;\n\n  --chat--body--background: var(--chat--color-dark);\n  --chat--footer--background: var(--chat--color-light-shade-50);\n  --chat--footer--color: var(--chat--color-white);\n}\n\n.chat-message {\n  max-width: 60%;\n  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);\n  transition: all var(--chat--transition-duration) ease-in-out;\n}\n</style>\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -880,
+        -200
+      ],
+      "id": "7d2e7a64-1901-4ed0-925a-0b0c7e435f60",
+      "name": "When chat message received",
+      "webhookId": "200cbf2b-2c05-4364-a5b0-f3b3d8c29614"
+    },
+    {
+      "parameters": {
+        "contextWindowLength": 50
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        -800,
+        20
+      ],
+      "id": "7690286b-785b-4a84-b0e2-fa4a35d3fe41",
+      "name": "Simple Memory"
+    }
+  ],
+  "connections": {
+    "Get All Inventory": {
+      "main": [
+        [
+          {
+            "node": "Gen promt",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ollama Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Inventory Headers": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gen promt": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Get All Inventory",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "Get Inventory Headers",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "When chat message received",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain": {
+      "main": [
+        []
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": {
+    "node:Get Inventory Headers": {
+      "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIwYjM4MWQ0OS1iOTU2LTRkNDEtOTA5OS1lMjM3ZDIyMDNkMDYiLCJhdWQiOiIiLCJleHAiOjE3NTI0OTQ1NDAsImlhdCI6MTc1MjQ4NzM0MCwiZW1haWwiOiJ1c2VyMUB1c2VyLnVzIiwicGhvbmUiOiIiLCJhcHBfbWV0YWRhdGEiOnsicHJvdmlkZXIiOiJlbWFpbCIsInByb3ZpZGVycyI6WyJlbWFpbCJdfSwidXNlcl9tZXRhZGF0YSI6eyJlbWFpbCI6InVzZXIxQHVzZXIudXMiLCJlbWFpbF92ZXJpZmllZCI6ZmFsc2UsInBob25lX3ZlcmlmaWVkIjpmYWxzZSwic3ViIjoiMGIzODFkNDktYjk1Ni00ZDQxLTkwOTktZTIzN2QyMjAzZDA2In0sInJvbGUiOiIiLCJhYWwiOiJhYWwxIiwiYW1yIjpbeyJtZXRob2QiOiJwYXNzd29yZCIsInRpbWVzdGFtcCI6MTc1MjQ4NzM0MH1dLCJzZXNzaW9uX2lkIjoiMWM4OTE1ZWUtZjRiYi00Yzk5LWJlYTktYTk5MDA5YWNhOTUxIiwiaXNfYW5vbnltb3VzIjpmYWxzZX0.wg-9xswjHepje4mcAoPqjmtmNMclooPr1FGmzoVxAGI",
+      "refreshToken": "oqKfmf4eJKL_MBbykRqn7g"
+    },
+    "node:Get All Inventory": {
+      "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIwYjM4MWQ0OS1iOTU2LTRkNDEtOTA5OS1lMjM3ZDIyMDNkMDYiLCJhdWQiOiIiLCJleHAiOjE3NTI0OTg0NTUsImlhdCI6MTc1MjQ5MTI1NSwiZW1haWwiOiJ1c2VyMUB1c2VyLnVzIiwicGhvbmUiOiIiLCJhcHBfbWV0YWRhdGEiOnsicHJvdmlkZXIiOiJlbWFpbCIsInByb3ZpZGVycyI6WyJlbWFpbCJdfSwidXNlcl9tZXRhZGF0YSI6eyJlbWFpbCI6InVzZXIxQHVzZXIudXMiLCJlbWFpbF92ZXJpZmllZCI6ZmFsc2UsInBob25lX3ZlcmlmaWVkIjpmYWxzZSwic3ViIjoiMGIzODFkNDktYjk1Ni00ZDQxLTkwOTktZTIzN2QyMjAzZDA2In0sInJvbGUiOiIiLCJhYWwiOiJhYWwxIiwiYW1yIjpbeyJtZXRob2QiOiJwYXNzd29yZCIsInRpbWVzdGFtcCI6MTc1MjQ5MTI1NX1dLCJzZXNzaW9uX2lkIjoiMzk2NGVkOWUtMDc5OS00OTMzLTg4NjYtYTE0ZTM1YzZhMmE4IiwiaXNfYW5vbnltb3VzIjpmYWxzZX0.DGtKAEBzy9PcoofVcoCHFt4HOBeQKwxzHHtre4pHSVg",
+      "refreshToken": "c_IV5Hv4giCKhCUbRiWE0w"
+    }
+  },
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "75b563d2-30a4-4cbf-9198-09604c9c56d1",
+  "triggerCount": 1,
+  "tags": []
+}

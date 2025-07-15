@@ -8,11 +8,13 @@ USER root
 
 RUN npm i -g iconv-lite
 
+ENV N8N_COMMUNITY_PACKAGES_ALLOW_TOOL_USAGE=true
+RUN npm i -g n8n-nodes-appflowy
+
 ENV PYTHONUNBUFFERED=1
 
 RUN apk add --update --no-cache python3 curl ffmpeg
 RUN apk add --update --no-cache py3-pip
-
 
 RUN pip3 install --no-cache --upgrade --break-system-packages pip 
 
