@@ -1,7 +1,7 @@
 # iaDoc
 
-![FinanciadoUE](https://github.com/DevAlteria/iaDoc/assets/FinanciadoUE.jpg)
-![LOGOPERTE](https://github.com/DevAlteria/iaDoc/assets/LOGOPERTE.png)
+![FinanciadoUE](/assets/FinanciadoUE.jpg)
+![LOGOPERTE](/assets/LOGOPERTE.png)
 
 Cabecera
 Iconos subencion
