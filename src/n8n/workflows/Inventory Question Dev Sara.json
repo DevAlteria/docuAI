@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-07-15T08:52:40.850Z",
-  "updatedAt": "2025-07-15T08:53:19.000Z",
+  "updatedAt": "2025-07-15T09:59:06.000Z",
   "id": "IZkjy77I6AMNKuVp",
   "name": "Inventory Question Dev Sara",
   "active": true,
@@ -9,7 +9,7 @@
     {
       "parameters": {
         "promptType": "define",
-        "text": "=[INST]\n\nOffer a thorough and accurate solution that directly addresses the Question outlined in the [Question].\n\nIf you recibe a quetion asking for the position of a item, reply with Name, Box, Col and Row ofg the given table otherwise reply that you do not know. Always follow this rule.\n\n### [Table Text]\nThis is the description of the cols of the table\n{{ JSON.stringify($json.headers) }}\n\n### [Table]\n```\n{{ $json.rowsCsv }}\n```\n\n### [Question]\n{{ $json.question }}\n\n### [Solution]\nThe reply should follow the following format:\n  - If element was found: \"UNKOWN\"\n  - If element was not found: \"The elements XXXX is on the box XXX, on thhe row XXXX and on the col XXXX\"\n\n\n[INST/]",
+        "text": "=[INST]Below are the first few lines of a CSV file. You need to write a Python program to solve the provided question.\n\n### [Table Text]\nThis is the description of the cols of the table\n{{ JSON.stringify($json.headers) }}\n\n### [Table]\n```\n{{ $json.rowsCsv }}\n```\n\n### [Question]\n{{ $json.question }}\n\n### [Solution]\nThe reply should follow the following format:\n  -search in all the elements of the csvFile and returns the elements that have any compatible information with the question.\n  - if you don't find anything, search again. After 3 times searching if you can't find a match, return \"UNKNOWN\"\n[/INST]",
         "batching": {}
       },
       "type": "@n8n/n8n-nodes-langchain.chainLlm",
@@ -136,6 +136,83 @@
       "id": "6376604b-75c1-4c40-bb31-60e5a7a59533",
       "name": "When chat message received",
       "webhookId": "397b3a6f-ad37-416c-8fbe-aac9b54a7a51"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=[INST]\n\nOffer a thorough and accurate solution that directly addresses the Question outlined in the [Question].\n\nIf you recibe a quetion asking for the position of a item, reply with Name, Box, Col and Row ofg the given table otherwise reply that you do not know. Always follow this rule.\n\n### [Table Text]\nThis is the description of the cols of the table\n{{ JSON.stringify($json.headers) }}\n\n### [Table]\n```\n{{ $json.rowsCsv }}\n```\n\n### [Question]\n{{ $json.question }}\n\n### [Solution]\nThe reply should follow the following format:\n  - If element was not found: \"UNKOWN\"\n  - If element was found: \"The elements XXXX is on the box XXX, on thhe row XXXX and on the col XXXX\"\n\n\n[INST/]",
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.7,
+      "position": [
+        1440,
+        -220
+      ],
+      "id": "46ebece0-0a5e-432d-bd3a-80305d5f931c",
+      "name": "Basic LLM Chain1"
+    },
+    {
+      "parameters": {
+        "jsCode": "const content = $json[\"text\"];\nconst buffer = Buffer.from(content, 'utf-8');\n\nreturn [{\n  binary: {\n    data: await this.helpers.prepareBinaryData(buffer, 'data.py', 'text/x-python')\n  }\n}];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        720,
+        -200
+      ],
+      "id": "baa28d3a-b442-49c7-90da-e136b974547c",
+      "name": "Make text into binary File",
+      "executeOnce": false
+    },
+    {
+      "parameters": {
+        "command": "python3 data.py"
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        1220,
+        -200
+      ],
+      "id": "fb7d1ded-44da-4eea-8353-efee4f9d1bc1",
+      "name": "Execute Command"
+    },
+    {
+      "parameters": {
+        "operation": "write",
+        "fileName": "/home/node/data.py",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1,
+      "position": [
+        980,
+        -200
+      ],
+      "id": "a2e0f850-5536-469c-81f7-7b51d50d97fb",
+      "name": "Read/Write Files from Disk"
+    },
+    {
+      "parameters": {
+        "model": "hf.co/QuantFactory/TableLLM-13b-GGUF:Q8_0",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmOllama",
+      "typeVersion": 1,
+      "position": [
+        1400,
+        0
+      ],
+      "id": "fb68b918-e1da-43f2-a4f0-7a9dfda5a596",
+      "name": "Ollama Model1",
+      "credentials": {
+        "ollamaApi": {
+          "id": "oEKNS3tm8YNi0WhW",
+          "name": "ollama"
+        }
+      }
     }
   ],
   "connections": {
@@ -207,7 +284,57 @@
     },
     "Basic LLM Chain": {
       "main": [
-        []
+        [
+          {
+            "node": "Make text into binary File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Make text into binary File": {
+      "main": [
+        [
+          {
+            "node": "Read/Write Files from Disk",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute Command": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read/Write Files from Disk": {
+      "main": [
+        [
+          {
+            "node": "Execute Command",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ollama Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
       ]
     }
   },
@@ -228,7 +355,7 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "03ad99df-cd96-4d58-9660-7988ad9e196f",
+  "versionId": "5b052e88-fcec-4368-abb3-8057d5e84f77",
   "triggerCount": 1,
   "tags": []
 }
