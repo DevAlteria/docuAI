@@ -1,6 +1,11 @@
 # iaDoc - Plataforma de Documentación Inteligente
 
-![FinanciadoUE](/assets/FinanciadoUE.jpg) ![LOGOPERTE](/assets/LOGOPERTE.png)
+<p align="center">
+  <img src="assets/logoNextGen.png" width="25%"/>
+  <img src="assets/logoGobiernoEspana.jpg" width="35%"/>
+  <img src="assets/logoPerte.png" width="17%"/>
+  <img src="assets/logoComunidadMadrid.png" width="8%"/>
+</p>
 
 ## 📋 Descripción del Proyecto
 
@@ -201,9 +206,14 @@ Las variables de entorno de AppFlowy se configuran en `envs/dev/deploy.env`.
 
 ## 🏢 Financiación
 
-Este proyecto está financiado por la Unión Europea a través del programa PERTE (Proyecto Estratégico para la Recuperación y Transformación Económica).
+Este proyecto está financiado por la Unión Europea a través del programa __PERTE__ (Proyecto Estratégico para la Recuperación y Transformación Económica) dentro de __Subvenciones para uso de Inteligencia Artificial (IA) aplicada a la industria (2024)__ de la Comunidad de Madrid. 
 
-![Financiado por la UE](/assets/FinanciadoUE.jpg)
+<p align="center">
+  <img src="assets/logoNextGen.png" width="25%"/>
+  <img src="assets/logoGobiernoEspana.jpg" width="35%"/>
+  <img src="assets/logoPerte.png" width="17%"/>
+  <img src="assets/logoComunidadMadrid.png" width="8%"/>
+</p>
 
 ## 📄 Licencia
 
@@ -220,8 +230,8 @@ Las contribuciones son bienvenidas. Por favor:
 
 ## 📞 Soporte
 
-Para soporte técnico o preguntas sobre el proyecto, contactar al equipo de desarrollo de DevAlteria.
+Para soporte técnico o preguntas sobre el proyecto, contactar al equipo de desarrollo de Alteria Auutomation SL.
 
 ---
 
-**Desarrollado por DevAlteria** | **Financiado por la Unión Europea - PERTE**
+**Desarrollado por Alteria Auutomation SL** | **Financiado por la Unión Europea - PERTE**
