@@ -230,7 +230,9 @@ Las contribuciones son bienvenidas. Por favor:
 
 ## 📞 Soporte
 
-Para soporte técnico o preguntas sobre el proyecto, contactar al equipo de desarrollo de Alteria Auutomation SL.
+Para soporte técnico o preguntas sobre el proyecto, contactar al equipo de desarrollo de Alteria Automation SL.
+
+dev@alteriaautomation.com
 
 ---
 
