@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-07-15T08:52:40.850Z",
-  "updatedAt": "2025-07-15T09:59:06.000Z",
+  "updatedAt": "2025-07-15T12:05:39.000Z",
   "id": "IZkjy77I6AMNKuVp",
   "name": "Inventory Question Dev Sara",
   "active": true,
@@ -9,7 +9,7 @@
     {
       "parameters": {
         "promptType": "define",
-        "text": "=[INST]Below are the first few lines of a CSV file. You need to write a Python program to solve the provided question.\n\n### [Table Text]\nThis is the description of the cols of the table\n{{ JSON.stringify($json.headers) }}\n\n### [Table]\n```\n{{ $json.rowsCsv }}\n```\n\n### [Question]\n{{ $json.question }}\n\n### [Solution]\nThe reply should follow the following format:\n  -search in all the elements of the csvFile and returns the elements that have any compatible information with the question.\n  - if you don't find anything, search again. After 3 times searching if you can't find a match, return \"UNKNOWN\"\n[/INST]",
+        "text": "=[INST]Below are the first few lines of a CSV file. You need to write a Python program to solve the provided question.\n\n### [Table Text]\nThis is the description of the cols of the table\n{{ JSON.stringify($json.headers) }}\n\n### [Table]\n```\n{{ $json.rowsCsv }}\n```\n\n### [Question]\n{{ $json.question }}\n\n### [Solution]\nThe reply should follow the following format:\n  -search in all the elements of the csvFile and returns the elements that have any compatible information with the question.\n  - if you don't find anything, return \"UNKNOWN\"\n  - the output MUST be a JSON\n   - You are only allowed to solve the question using the EXACT Python script shown at [Python Script Template below]\n  - If you do NOT use this exact code structure, your response will be considered invalid and rejected.\n\n\n### [Python Script Template] — DO NOT MODIFY THIS CODE UNDER ANY CIRCUMSTANCES\nYou MUST use this exact script structure below to answer the question. DO NOT change any part of it.\n\n```python\nimport pandas as pd\nimport re\n\nsearch_query = \"{{ $('When chat message received').first().json.chatInput }}\"\ndf = pd.read_csv('data.csv')\nkeywords = search_query.lower().split()\n\ndef matches_keywords(name):\n    name = str(name).lower()\n    return any(re.search(r'\\b' + re.escape(word) + r'\\b', name) for word in keywords)\n\nfiltered_df = df[df['Name'].apply(matches_keywords)]\n\nif not filtered_df.empty:\n    result = filtered_df.to_dict('records')\nelse:\n    result = \"UNKNOWN\"\n\nprint(result)\n\n#You MUST NOT use any other logic or return type. This is the ONLY allowed script.\n\n[/INST]",
         "batching": {}
       },
       "type": "@n8n/n8n-nodes-langchain.chainLlm",
@@ -140,21 +140,21 @@
     {
       "parameters": {
         "promptType": "define",
-        "text": "=[INST]\n\nOffer a thorough and accurate solution that directly addresses the Question outlined in the [Question].\n\nIf you recibe a quetion asking for the position of a item, reply with Name, Box, Col and Row ofg the given table otherwise reply that you do not know. Always follow this rule.\n\n### [Table Text]\nThis is the description of the cols of the table\n{{ JSON.stringify($json.headers) }}\n\n### [Table]\n```\n{{ $json.rowsCsv }}\n```\n\n### [Question]\n{{ $json.question }}\n\n### [Solution]\nThe reply should follow the following format:\n  - If element was not found: \"UNKOWN\"\n  - If element was found: \"The elements XXXX is on the box XXX, on thhe row XXXX and on the col XXXX\"\n\n\n[INST/]",
+        "text": "=[INST]\n\nOffer a thorough and accurate solution that directly addresses the Question outlined in the [Question].\n\nIf you recibe a quetion asking for the position of a item, reply with Name, Box, Col and Row ofg the given table otherwise reply that you do not know. Always follow this rule.\n\n### [Table Text]\nThis is the description of the cols of the table\n{{ $('Gen promt').item.json.headers }}\n\n### [Table]\n```\n{{ $('Execute python Code').item.json.stdout }}\n```\n\n### [Question]\n{{ $('When chat message received').first().json.chatInput }}\n\n### [Solution]\nThe reply should follow the following format:\n  - If element was not found: \"UNKOWN\"\n  - If element was found: \"The elements XXXX is on the box XXX, on thhe row XXXX and on the col XXXX\"\n\n\n[INST/]",
         "batching": {}
       },
       "type": "@n8n/n8n-nodes-langchain.chainLlm",
       "typeVersion": 1.7,
       "position": [
-        1440,
-        -220
+        1880,
+        -200
       ],
       "id": "46ebece0-0a5e-432d-bd3a-80305d5f931c",
       "name": "Basic LLM Chain1"
     },
     {
       "parameters": {
-        "jsCode": "const content = $json[\"text\"];\nconst buffer = Buffer.from(content, 'utf-8');\n\nreturn [{\n  binary: {\n    data: await this.helpers.prepareBinaryData(buffer, 'data.py', 'text/x-python')\n  }\n}];\n"
+        "jsCode": "const content = $json[\"text\"];\nconst buffer = Buffer.from(content, 'utf-8');\n// Obtener sessionId desde otro nodo\nconst sessionId = $('When chat message received').first().json.sessionId;  // ← trim aquí\nconst filename = `/home/node/data-${sessionId}.py`;\n\n\nreturn [{\n  binary: {\n    data: await this.helpers.prepareBinaryData(buffer, filename, 'text/x-python')\n  }\n}];\n"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -168,21 +168,8 @@
     },
     {
       "parameters": {
-        "command": "python3 data.py"
-      },
-      "type": "n8n-nodes-base.executeCommand",
-      "typeVersion": 1,
-      "position": [
-        1220,
-        -200
-      ],
-      "id": "fb7d1ded-44da-4eea-8353-efee4f9d1bc1",
-      "name": "Execute Command"
-    },
-    {
-      "parameters": {
         "operation": "write",
-        "fileName": "/home/node/data.py",
+        "fileName": "=/home/node/data-{{$('When chat message received').first().json.sessionId}}.py",
         "options": {}
       },
       "type": "n8n-nodes-base.readWriteFile",
@@ -202,8 +189,8 @@
       "type": "@n8n/n8n-nodes-langchain.lmOllama",
       "typeVersion": 1,
       "position": [
-        1400,
-        0
+        1680,
+        -40
       ],
       "id": "fb68b918-e1da-43f2-a4f0-7a9dfda5a596",
       "name": "Ollama Model1",
@@ -213,6 +200,32 @@
           "name": "ollama"
         }
       }
+    },
+    {
+      "parameters": {
+        "command": "=python3 /home/node/data-{{$('When chat message received').first().json.sessionId}}.py\n\n"
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        1220,
+        -200
+      ],
+      "id": "fb7d1ded-44da-4eea-8353-efee4f9d1bc1",
+      "name": "Execute python Code"
+    },
+    {
+      "parameters": {
+        "command": "=rm /home/node/data-{{ $('When chat message received').first().json.sessionId }}.py"
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        1460,
+        -180
+      ],
+      "id": "3f1154c9-1ae0-446e-b066-98d784be6ca2",
+      "name": "Delete data-id.py"
     }
   ],
   "connections": {
@@ -304,22 +317,11 @@
         ]
       ]
     },
-    "Execute Command": {
-      "main": [
-        [
-          {
-            "node": "Basic LLM Chain1",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "Read/Write Files from Disk": {
       "main": [
         [
           {
-            "node": "Execute Command",
+            "node": "Execute python Code",
             "type": "main",
             "index": 0
           }
@@ -332,6 +334,33 @@
           {
             "node": "Basic LLM Chain1",
             "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain1": {
+      "main": [
+        []
+      ]
+    },
+    "Execute python Code": {
+      "main": [
+        [
+          {
+            "node": "Delete data-id.py",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Delete data-id.py": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain1",
+            "type": "main",
             "index": 0
           }
         ]
@@ -355,7 +384,7 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "5b052e88-fcec-4368-abb3-8057d5e84f77",
+  "versionId": "1379e368-08e9-4a28-a07c-79941cec01ac",
   "triggerCount": 1,
   "tags": []
 }
