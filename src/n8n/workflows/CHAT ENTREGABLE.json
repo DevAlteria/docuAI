@@ -1,9 +1,9 @@
 {
   "createdAt": "2025-07-24T12:51:14.372Z",
-  "updatedAt": "2025-07-24T13:05:02.000Z",
+  "updatedAt": "2025-07-24T13:38:04.000Z",
   "id": "AeL15q2p7x2TtYUZ",
   "name": "CHAT ENTREGABLE",
-  "active": false,
+  "active": true,
   "isArchived": false,
   "nodes": [
     {
@@ -62,8 +62,8 @@
           ]
         },
         "event": "rowUpdatedInDatabase",
-        "workspaceId": "9a50d26a-471a-4b81-a03d-79b31ea05a20",
-        "databaseId": "bb352661-09df-4741-8035-9bc4ac09e150"
+        "workspaceId": "63e3086f-a1a1-4889-a5fa-a0ede8d119cc",
+        "databaseId": "02bfb23e-d88e-42ce-8987-55e07e16179d"
       },
       "type": "n8n-nodes-appflowy.appflowyTrigger",
       "typeVersion": 1,
@@ -349,17 +349,30 @@
   },
   "staticData": {
     "node:AppFlowy Trigger": {
-      "lastTimeChecked": "2025-07-24T13:05:02.352Z",
+      "lastTimeChecked": "2025-07-24T13:38:04.935Z",
       "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1MGY0MDhmYS0xNTM3LTRjZTEtODIyMi02MjllZTZjMzllZTAiLCJhdWQiOiIiLCJleHAiOjE3NTMzNjkxNzIsImlhdCI6MTc1MzM2MTk3MiwiZW1haWwiOiJkZWZhdWx0QGRlZmF1bHQuZGVmYXVsdCIsInBob25lIjoiIiwiYXBwX21ldGFkYXRhIjp7InByb3ZpZGVyIjoiZW1haWwiLCJwcm92aWRlcnMiOlsiZW1haWwiXX0sInVzZXJfbWV0YWRhdGEiOnsiZW1haWwiOiJkZWZhdWx0QGRlZmF1bHQuZGVmYXVsdCIsImVtYWlsX3ZlcmlmaWVkIjpmYWxzZSwicGhvbmVfdmVyaWZpZWQiOmZhbHNlLCJzdWIiOiI1MGY0MDhmYS0xNTM3LTRjZTEtODIyMi02MjllZTZjMzllZTAifSwicm9sZSI6IiIsImFhbCI6ImFhbDEiLCJhbXIiOlt7Im1ldGhvZCI6InBhc3N3b3JkIiwidGltZXN0YW1wIjoxNzUzMzYxOTcyfV0sInNlc3Npb25faWQiOiJjZjg1MzUwOC04MmY5LTRjZTItYWZjZC0wOTI3MTQ0OTJhM2YiLCJpc19hbm9ueW1vdXMiOmZhbHNlfQ.bCyEFRqIs_-JN2lJgFUul048tsER3M4gk1hAtfgcwU4",
       "refreshToken": "9gVCvqbmfmLLj_TuJ_Npdg",
-      "rows": []
+      "rows": [
+        {
+          "updated_at": "2025-07-24T13:34:57.817526Z",
+          "row_id": "e7a71b4f-c623-46b8-a9f3-eed1dad3600a"
+        },
+        {
+          "updated_at": "2025-07-24T13:34:57.817526Z",
+          "row_id": "a37f01e7-a31d-45f1-a06b-93637801ee72"
+        },
+        {
+          "updated_at": "2025-07-24T13:34:57.817526Z",
+          "row_id": "f9f838ed-27c1-4720-9e20-320604a6b128"
+        }
+      ]
     }
   },
   "meta": {
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "46d04000-f636-4570-8c6b-86b69a5d264f",
+  "versionId": "49ada8fa-8f60-43a5-b850-6baf4c11d59f",
   "triggerCount": 2,
   "tags": []
 }
