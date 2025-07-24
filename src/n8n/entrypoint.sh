@@ -32,8 +32,7 @@ kill -9 $(ps -a | grep "n8n start" | awk '{ print $1 }' | head -n1)
 n8n execute --id=4kSTvQKW8uzJVur4
 
 n8n update:workflow --id=AeL15q2p7x2TtYUZ --active=true
-n8n update:workflow --id= --active=true
-n8n update:workflow --id= --active=true
+# n8n update:workflow --id= --active=true
 # n8n update:workflow --id= --active=true
 
 echo PROSIONED

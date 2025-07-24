@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-07-24T09:55:15.885Z",
-  "updatedAt": "2025-07-24T11:51:40.000Z",
+  "updatedAt": "2025-07-24T14:41:16.000Z",
   "id": "X7ZHKxUOQUK56zoS",
   "name": "EJEMPLO SARA RAG RETOCAR",
   "active": false,
@@ -24,7 +24,7 @@
       "type": "@n8n/n8n-nodes-langchain.embeddingsOllama",
       "typeVersion": 1,
       "position": [
-        1480,
+        1040,
         180
       ],
       "id": "4eb4cf8f-6d4a-4b06-a3ae-791787f9b29b",
@@ -45,7 +45,7 @@
       "type": "@n8n/n8n-nodes-langchain.vectorStorePGVector",
       "typeVersion": 1.3,
       "position": [
-        1460,
+        1020,
         -40
       ],
       "id": "71dfcdfd-ac90-45f5-a178-9bf88d2c08fc",
@@ -147,7 +147,7 @@
       "type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
       "typeVersion": 1.1,
       "position": [
-        1600,
+        1160,
         180
       ],
       "id": "e221d928-b620-4c39-8ed3-60ac4f39f422",
@@ -155,15 +155,15 @@
     },
     {
       "parameters": {
-        "workspaceId": "9a50d26a-471a-4b81-a03d-79b31ea05a20",
-        "databaseId": "df6be534-68ec-421d-9ec7-ad20dae30ee7",
+        "workspaceId": "273d82d8-1caa-44ce-9a4a-90e55dbbf4e3",
+        "databaseId": "ae6b9ae3-e4eb-4c09-b07d-b3a1a12afd96",
         "returnAll": true,
         "simplify": false
       },
       "type": "n8n-nodes-appflowy.appflowy",
       "typeVersion": 1,
       "position": [
-        1020,
+        580,
         -40
       ],
       "id": "143b7071-b5a3-477e-80bc-429ea47633b7",
@@ -179,14 +179,14 @@
       "parameters": {
         "resource": "database",
         "operation": "getFields",
-        "workspaceId": "9a50d26a-471a-4b81-a03d-79b31ea05a20",
-        "databaseId": "df6be534-68ec-421d-9ec7-ad20dae30ee7"
+        "workspaceId": "273d82d8-1caa-44ce-9a4a-90e55dbbf4e3",
+        "databaseId": "ae6b9ae3-e4eb-4c09-b07d-b3a1a12afd96"
       },
       "type": "n8n-nodes-appflowy.appflowy",
       "typeVersion": 1,
       "position": [
-        580,
-        -40
+        0,
+        420
       ],
       "id": "055d6498-c7f8-44dc-b004-6038636357ed",
       "name": "Get Inventory Headers",
@@ -204,8 +204,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        800,
-        -40
+        220,
+        420
       ],
       "id": "a1acef56-df49-4d25-83ee-98ea9cedbb70",
       "name": "Code1"
@@ -217,7 +217,7 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1240,
+        800,
         -40
       ],
       "id": "a370b757-794e-4998-947f-212a759e706b",
@@ -291,7 +291,7 @@
       "main": [
         [
           {
-            "node": "Get Inventory Headers",
+            "node": "Get All Inventory",
             "type": "main",
             "index": 0
           }
@@ -338,13 +338,7 @@
     },
     "Code1": {
       "main": [
-        [
-          {
-            "node": "Get All Inventory",
-            "type": "main",
-            "index": 0
-          }
-        ]
+        []
       ]
     },
     "Code2": {
@@ -378,7 +372,7 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "023f80ec-7f4a-4c28-ad38-80bd1d64486c",
+  "versionId": "0250a6fb-034d-4602-9961-cdb7bc2bb202",
   "triggerCount": 0,
   "tags": []
 }

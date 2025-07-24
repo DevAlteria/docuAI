@@ -5,14 +5,14 @@ RUN N8N_CONFIG_FILES=/n8n-config.json
 # Install additional packages as needed
 
 USER root
-
-WORKDIR /home/node/.n8n
-
+#
+RUN mkdir -p /home/node/.n8n/nodes
+WORKDIR /home/node/.n8n/nodes
+#
 RUN npm i iconv-lite
 
 ENV N8N_COMMUNITY_PACKAGES_ALLOW_TOOL_USAGE=true
-# RUN npm i -g n8n-nodes-appflowy
-RUN npm i n8n-nodes-appflowy
+RUN npm i n8n-nodes-appflowy 
 
 WORKDIR /home/node
 
