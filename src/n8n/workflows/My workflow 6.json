@@ -1,10 +1,10 @@
 {
   "createdAt": "2025-07-18T10:29:48.271Z",
-  "updatedAt": "2025-07-18T10:30:41.000Z",
+  "updatedAt": "2025-07-23T11:55:08.000Z",
   "id": "f53C6vBYZaEikQrP",
   "name": "My workflow 6",
-  "active": true,
-  "isArchived": false,
+  "active": false,
+  "isArchived": true,
   "nodes": [
     {
       "parameters": {},
@@ -68,7 +68,7 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "189e3601-8da3-4820-b648-470bf92d116d",
+  "versionId": "eed73657-7342-4c0f-95d2-477f17e571f1",
   "triggerCount": 1,
   "tags": []
 }

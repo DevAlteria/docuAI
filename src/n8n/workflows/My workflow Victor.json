@@ -1,10 +1,10 @@
 {
   "createdAt": "2025-07-09T09:28:32.311Z",
-  "updatedAt": "2025-07-09T11:07:33.000Z",
+  "updatedAt": "2025-07-23T11:53:23.000Z",
   "id": "ApQXgVfi40v6PRKm",
   "name": "My workflow Victor",
   "active": false,
-  "isArchived": false,
+  "isArchived": true,
   "nodes": [
     {
       "parameters": {
@@ -179,7 +179,7 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "34c433bb-b13c-4796-8ad6-e4aaf36e755f",
+  "versionId": "7e99e764-5fc5-4ed1-a443-d0e065806019",
   "triggerCount": 0,
   "tags": []
 }

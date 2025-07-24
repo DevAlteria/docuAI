@@ -3,7 +3,7 @@
   "updatedAt": "2025-07-14T12:32:54.000Z",
   "id": "Ivnni6lAlJ2awUlG",
   "name": "Inventory Question Prod",
-  "active": true,
+  "active": false,
   "isArchived": false,
   "nodes": [
     {

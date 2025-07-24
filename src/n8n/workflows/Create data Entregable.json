@@ -1,0 +1,1257 @@
+{
+  "createdAt": "2025-07-15T13:19:15.850Z",
+  "updatedAt": "2025-07-23T13:22:23.000Z",
+  "id": "4kSTvQKW8uzJVur4",
+  "name": "Create data Entregable",
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -760,
+        -330
+      ],
+      "id": "88129292-9efa-403f-95b3-9c334544c383",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://appflowy.iadoc.alteria.vpn.alonsom.com/gotrue/token",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpCustomAuth",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -100,
+        -330
+      ],
+      "id": "39fad6bf-f758-4fb0-867a-daccbdcd82f5",
+      "name": "Get access token",
+      "credentials": {
+        "httpCustomAuth": {
+          "id": "8u4k4uALem7ZjQHK",
+          "name": "default@default.default"
+        },
+        "oAuth2Api": {
+          "id": "waIaIdgRaH9sAUIZ",
+          "name": "TestOAuth2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://appflowy.iadoc.alteria.vpn.alonsom.com/gotrue/signup",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "email",
+              "value": "default@default.default"
+            },
+            {
+              "name": "password",
+              "value": "default@default.default"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -540,
+        -330
+      ],
+      "id": "e57688c3-a127-4ae2-8cd3-94d96b1ae7e2",
+      "name": "Register default@default.default",
+      "alwaysOutputData": false,
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://appflowy.iadoc.alteria.vpn.alonsom.com/api/workspace",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $('Get access token').item.json.access_token }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "workspace_name",
+              "value": "demo"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        780,
+        -330
+      ],
+      "id": "d34eef45-72b8-4efd-bc52-2a7be467e047",
+      "name": "Create Demo Workspace",
+      "executeOnce": true
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://appflowy.iadoc.alteria.vpn.alonsom.com/console/web-api/signin",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/x-www-form-urlencoded"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "email",
+              "value": "default@default.default"
+            },
+            {
+              "name": "password",
+              "value": "default@default.default"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -320,
+        -330
+      ],
+      "id": "6c352b35-55e6-47c4-b70f-708105f41243",
+      "name": "Populate defult data"
+    },
+    {
+      "parameters": {
+        "url": "=http://appflowy.iadoc.alteria.vpn.alonsom.com/api/workspace/{{ $json.data.workspace_id }}/folder",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $('Get access token').item.json.access_token }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1000,
+        -330
+      ],
+      "id": "85f1e0b1-93d6-48af-88d7-c687bf549602",
+      "name": "Get default spaces"
+    },
+    {
+      "parameters": {
+        "url": "http://appflowy.iadoc.alteria.vpn.alonsom.com/api/workspace",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $('Get access token').item.json.access_token }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "workspace_name",
+              "value": "demo"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        120,
+        -330
+      ],
+      "id": "a6ff8be4-eef4-4696-9326-8467e51838bc",
+      "name": "Get workspaces"
+    },
+    {
+      "parameters": {
+        "jsCode": "\nreturn $input.first().json.data;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        340,
+        -330
+      ],
+      "id": "3c3840b4-0ec6-4e7e-9d22-2d2f808db949",
+      "name": "Code"
+    },
+    {
+      "parameters": {
+        "method": "DELETE",
+        "url": "=http://appflowy.iadoc.alteria.vpn.alonsom.com/api/workspace/{{ $json.workspace_id }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $('Get access token').item.json.access_token }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        560,
+        -330
+      ],
+      "id": "dd18aead-8acf-42fb-97d8-e0be50bab0ed",
+      "name": "Delete workspace"
+    },
+    {
+      "parameters": {
+        "jsCode": "\nreturn $('Get default spaces').first().json.data.children;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1440,
+        -630
+      ],
+      "id": "8f1548aa-0afc-4c4d-9624-fcd24be8fa84",
+      "name": "Code1"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=http://appflowy.iadoc.alteria.vpn.alonsom.com/api/workspace/{{ $('Create Demo Workspace').item.json.data.workspace_id }}/page-view/{{ $json.view_id }}/move-to-trash",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $('Get access token').item.json.access_token }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1660,
+        -480
+      ],
+      "id": "05f120d3-ea05-483f-a430-6a856b30a73a",
+      "name": "Delete folders"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=http://appflowy.iadoc.alteria.vpn.alonsom.com/api/workspace/{{ $('Create Demo Workspace').item.json.data.workspace_id }}/space",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $('Get access token').item.json.access_token }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "{\"name\":\"Inventory\",\"space_icon\":\"\",\"space_icon_color\":\"\",\"space_permission\":0}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1220,
+        -330
+      ],
+      "id": "5f7435b2-fee3-4875-8895-5f12fdd1036d",
+      "name": "Create inventory space",
+      "executeOnce": false
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=http://appflowy.iadoc.alteria.vpn.alonsom.com/api/workspace/{{ $('Create Demo Workspace').item.json.data.workspace_id }}/page-view",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $('Get access token').item.json.access_token }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"layout\": 1,\n  \"parent_view_id\": \"{{ $('Create inventory space').item.json.data.view_id }}\",\n  \"name\": \"Inventory\"\n} ",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1440,
+        -280
+      ],
+      "id": "62ed9da1-d5cd-4bb0-9186-75c704c1573d",
+      "name": "Create Inventory Grid"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=http://appflowy.iadoc.alteria.vpn.alonsom.com/api/workspace/{{ $('Create Demo Workspace').item.json.data.workspace_id }}/space",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $('Get access token').item.json.access_token }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "{\"name\":\"KICAD\",\"space_icon\":\"\",\"space_icon_color\":\"\",\"space_permission\":0}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1440,
+        120
+      ],
+      "id": "fd90a4da-3f73-404a-9ec5-38115c422eab",
+      "name": "Create kicad space",
+      "executeOnce": false
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=http://appflowy.iadoc.alteria.vpn.alonsom.com/api/workspace/{{ $('Create Demo Workspace').item.json.data.workspace_id }}/page-view",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $('Get access token').item.json.access_token }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"layout\": 1,\n  \"parent_view_id\": \"{{ $('Create kicad space').item.json.data.view_id }}\",\n  \"name\": \"KICAD\"\n} ",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1660,
+        120
+      ],
+      "id": "bdbde5e2-f45e-41d8-bcce-097075255542",
+      "name": "Create KICAD Grid"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=http://appflowy.iadoc.alteria.vpn.alonsom.com/api/workspace/{{ $('Create Demo Workspace').item.json.data.workspace_id }}/page-view/{{ $json.view_id }}/move-to-trash",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $('Get access token').item.json.access_token }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1660,
+        -680
+      ],
+      "id": "c99a4de3-157b-4002-9a89-977c88090366",
+      "name": "Delete folders1"
+    },
+    {
+      "parameters": {
+        "url": "=http://appflowy.iadoc.alteria.vpn.alonsom.com/api/workspace/{{ $('Create Demo Workspace').item.json.data.workspace_id }}/page-view/{{ $json.data.view_id }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $('Get access token').item.json.access_token }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1660,
+        -280
+      ],
+      "id": "c1766dc2-3669-415f-8d64-133b6381f8da",
+      "name": "Get Inventory Grid"
+    },
+    {
+      "parameters": {
+        "url": "=http://appflowy.iadoc.alteria.vpn.alonsom.com/api/workspace/{{ $('Create Demo Workspace').item.json.data.workspace_id }}/database/",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $('Get access token').item.json.access_token }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1880,
+        120
+      ],
+      "id": "53de8b6e-a5df-492e-a72e-d219dfec7745",
+      "name": "Get KICAD database"
+    },
+    {
+      "parameters": {
+        "jsCode": "const target = $('Create KICAD Grid').first().json.data.view_id;\n\nfor (const item of $input.first().json.data) {\n  for (const view of item.views) {\n    if (view.view_id == target) {\n      return [ { kicadDB: item.id} ]\n    }\n  }\n}\n\nreturn [ { } ];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2100,
+        120
+      ],
+      "id": "8939f2c4-c9c5-487d-8a0d-b5f43c9cf561",
+      "name": "Find KICAD database"
+    },
+    {
+      "parameters": {
+        "workspaceId": "={{ $('Create Demo Workspace').item.json.data.workspace_id }}",
+        "databaseId": "={{ $json.kicadDB }}"
+      },
+      "type": "n8n-nodes-appflowy.appflowy",
+      "typeVersion": 1,
+      "position": [
+        -760,
+        380
+      ],
+      "id": "5e554b5f-1284-44c1-8c90-e73d3fbdf67e",
+      "name": "Get many database rows",
+      "credentials": {
+        "appflowyApi": {
+          "id": "YODmFLRKL0nTWCx6",
+          "name": "Default"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "workspaceId": "={{ $('Create Demo Workspace').item.json.data.workspace_id }}",
+        "databaseId": "={{ $('Find KICAD database').item.json.kicadDB }}"
+      },
+      "type": "n8n-nodes-appflowy.appflowy",
+      "typeVersion": 1,
+      "position": [
+        -540,
+        380
+      ],
+      "id": "3331a4c1-75d8-4710-98cf-2530e2d36b47",
+      "name": "Get many database rows1",
+      "credentials": {
+        "appflowyApi": {
+          "id": "YODmFLRKL0nTWCx6",
+          "name": "Default"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=http://appflowy.iadoc.alteria.vpn.alonsom.com/api/workspace/{{ $('Create Demo Workspace').item.json.data.workspace_id }}/database/{{ $('Find KICAD database').item.json.kicadDB }}/fields",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $('Get access token').item.json.access_token }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ $json }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2540,
+        120
+      ],
+      "id": "101f1915-5f74-4aad-9a14-efd6a963a71c",
+      "name": "Add fields to KICAD"
+    },
+    {
+      "parameters": {
+        "jsCode": "function makeid(length) {\n    var result           = '';\n    var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';\n    var charactersLength = characters.length;\n    for ( var i = 0; i < length; i++ ) {\n        result += characters.charAt(Math.floor(Math.random() * charactersLength));\n    }\n    return result;\n}\n\nvar nameID = $input.first().json.data.find((el) => el.name == \"Name\");\nvar repoID = $input.first().json.data.find((el) => el.name == \"Repo\");\nnameID = nameID.name + \"|\" + nameID.field_type;\nrepoID = repoID.name + \"|\" + repoID.field_type;\n\nvar items = [\n  {\n    \"name\": \"JAMMA_2player_xbox360\",\n    \"repo\": \"https://github.com/KabukiFlux/JAMMA_2player_xbox360\"\n  },\n  {\n    \"name\": \"Scart-Megadrive-2-12v-cable\",\n    \"repo\": \"https://github.com/KabukiFlux/Scart-Megadrive-2-12v-cable\"\n  },\n  {\n    \"name\": \"Duplicanator-Scart-Duplicator\",\n    \"repo\": \"https://github.com/KabukiFlux/Duplicanator-Scart-Duplicator\"\n  }\n];\n\nvar newItems = [];\n\n\nfor(let i=0; i<items.length; i++){\n  newItems.push(\n    {\n      \"json\":\n        {\n          \"name\": items[i].name,\n          \"repo\": items[i].repo,\n          nameID: nameID,\n          repoID: repoID,\n          hash: makeid(16),\n          workspace: $('Create Demo Workspace').first().json.data.workspace_id,\n          database: $('Find KICAD database').first().json.kicadDB,\n          token: $('Get access token').first().json.access_token\n        },\n      \"pairedItem\": i\n    }    \n  )\n}\nreturn newItems;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2980,
+        120
+      ],
+      "id": "5cbbbe1c-66df-43e9-9d0c-de0f9a289245",
+      "name": "Prepare KICAD ROWs",
+      "executeOnce": true
+    },
+    {
+      "parameters": {
+        "url": "=http://appflowy.iadoc.alteria.vpn.alonsom.com/api/workspace/{{ $('Create Demo Workspace').item.json.data.workspace_id }}/database/{{ $('Find KICAD database').item.json.kicadDB }}/fields",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $('Get access token').item.json.access_token }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2760,
+        120
+      ],
+      "id": "9742ce4b-4e9b-4c29-b5f2-0321a66b24e7",
+      "name": "Get fields of KICAD",
+      "executeOnce": true
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=http://appflowy.iadoc.alteria.vpn.alonsom.com/api/workspace/{{ $json.workspace }}/database/{{ $json.database }}/row",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $json.token }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"cells\": {\n    \"Name\": \"{{ $json.name }}\",\n    \"Repo\": \"{{ $json.repo }}\"\n  },\n  \"document\": \"## NAME {{ $json.name }}\\nrepo {{ $json.repo }}\"\n} ",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        3420,
+        120
+      ],
+      "id": "313f311b-ac0b-4e0b-9e35-7eaba5582060",
+      "name": "Create rows of KICAD",
+      "executeOnce": false,
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "url": "=http://appflowy.iadoc.alteria.vpn.alonsom.com/api/workspace/{{ $('Create Demo Workspace').item.json.data.workspace_id }}/database/",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $('Get access token').item.json.access_token }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1880,
+        -280
+      ],
+      "id": "6d78dfc4-addf-4440-9a66-7940a42f18ef",
+      "name": "Get Inventory database"
+    },
+    {
+      "parameters": {
+        "jsCode": "const target = $('Create Inventory Grid').first().json.data.view_id;\n\nfor (const item of $input.first().json.data) {\n  for (const view of item.views) {\n    if (view.view_id == target) {\n      return [ { inventoryDB: item.id} ]\n    }\n  }\n}\n\nreturn [ { } ];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2100,
+        -280
+      ],
+      "id": "944f2485-594a-41c1-b8fc-afbbcfac5c76",
+      "name": "Find Inventory database"
+    },
+    {
+      "parameters": {
+        "jsCode": "return [\n  {\n    \"name\": \"Class\",\n    \"field_type\": 0\n  },\n  {\n    \"name\": \"Quantity\",\n    \"field_type\": 1\n  },\n  {\n    \"name\": \"BOX\",\n    \"field_type\": 0\n  },\n  {\n    \"name\": \"COL\",\n    \"field_type\": 1\n  },\n  {\n    \"name\": \"ROW\",\n    \"field_type\": 1\n  },\n  {\n    \"name\": \"Seller 1\",\n    \"field_type\": 6\n  },\n  {\n    \"name\": \"Seller 2\",\n    \"field_type\": 6\n  },\n  {\n    \"name\": \"Executive summary\",\n    \"field_type\": 0\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2320,
+        -280
+      ],
+      "id": "5f9907ae-bdf8-4f1b-91c8-1d948e1427cf",
+      "name": "Prepare fields for Inventory"
+    },
+    {
+      "parameters": {
+        "jsCode": "return [ \n  {\n    \"name\": \"Repo\",\n    \"field_type\": 6\n  },\n  {\n    \"name\": \"PCB\",\n    \"field_type\": 14\n  },\n  {\n    \"name\": \"SCH\",\n    \"field_type\": 14\n  },\n  {\n    \"name\": \"BOM\",\n    \"field_type\": 0\n  },\n  {\n    \"name\": \"Last Update\",\n    \"field_type\": 8\n  },\n  {\n    \"name\": \"Created at\",\n    \"field_type\": 9\n  },\n  {\n    \"name\": \"Executive summarie\",\n    \"field_type\": 0\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2320,
+        120
+      ],
+      "id": "05956c8e-13d5-42be-97e2-4c639528cea5",
+      "name": "Prepare fields for KICAD"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=http://appflowy.iadoc.alteria.vpn.alonsom.com/api/workspace/{{ $('Create Demo Workspace').item.json.data.workspace_id }}/database/{{ $('Find Inventory database').item.json.inventoryDB }}/fields",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $('Get access token').item.json.access_token }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ $json }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2540,
+        -280
+      ],
+      "id": "1d195b37-f625-48a6-804d-39478424687c",
+      "name": "Add fields to Inventory"
+    },
+    {
+      "parameters": {
+        "url": "=http://appflowy.iadoc.alteria.vpn.alonsom.com/api/workspace/{{ $('Create Demo Workspace').item.json.data.workspace_id }}/database/{{ $('Find Inventory database').item.json.inventoryDB }}/fields",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $('Get access token').item.json.access_token }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2760,
+        -280
+      ],
+      "id": "4bcd97ed-2499-45da-ba97-ea3790e92057",
+      "name": "Get fields of Inventory",
+      "executeOnce": true
+    },
+    {
+      "parameters": {
+        "jsCode": "function makeid(length) {\n    var result           = '';\n    var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';\n    var charactersLength = characters.length;\n    for ( var i = 0; i < length; i++ ) {\n        result += characters.charAt(Math.floor(Math.random() * charactersLength));\n    }\n    return result;\n}\n\nvar items = [\n  {\n  \"Name\": \"BIG SOCKET 2P\",\n  \"Type\": \"conector\",\n  \"Quantity\": 1,\n  \"BOX\": \"B-AD\",\n  \"COL\": \"1\",\n  \"ROW\": \"1\"\n},\n{\n  \"Name\": \"BIG SOCKET 3P\",\n  \"Type\": \"conector\",\n  \"Quantity\": 17,\n  \"BOX\": \"B-AD\",\n  \"COL\": \"2\",\n  \"ROW\": \"1\"\n},\n{\n  \"Name\": \"BIG SOCKET 4P\",\n  \"Type\": \"conector\",\n  \"Quantity\": 17,\n  \"BOX\": \"B-AD\",\n  \"COL\": \"3\",\n  \"ROW\": \"1\"\n},\n{\n  \"Name\": \"BIG SOCKET 5P\",\n  \"Type\": \"conector\",\n  \"Quantity\": 17,\n  \"BOX\": \"B-AD\",\n  \"COL\": \"1\",\n  \"ROW\": \"2\"\n},\n{\n  \"Name\": \"TPS7353DRBR\",\n  \"Type\": \"INTEGRADOS\",\n  \"Quantity\": 14,\n  \"BOX\": \"B-FA\",\n  \"COL\": \"1\",\n  \"ROW\": \"1\"\n},\n{\n  \"Name\": \"CHIPS MEGA\",\n  \"Type\": \"INTEGRADOS\",\n  \"Quantity\": 17,\n  \"BOX\": \"B-FA\",\n  \"COL\": \"2\",\n  \"ROW\": \"1\"\n},\n{\n  \"Name\": \"AHT 20\",\n  \"Type\": \"INTEGRADOS\",\n  \"Quantity\": 5,\n  \"BOX\": \"B-FA\",\n  \"COL\": \"3\",\n  \"ROW\": \"1\"\n},\n{\n  \"Name\": \"ESP32 N4\",\n  \"Type\": \"INTEGRADOS\",\n  \"Quantity\": 12,\n  \"BOX\": \"B-FA\",\n  \"COL\": \"1\",\n  \"ROW\": \"2\"\n},\n{\n  \"Name\": \"ESP32 H4\",\n  \"Type\": \"INTEGRADOS\",\n  \"Quantity\": 1,\n  \"BOX\": \"A-FA\",\n  \"COL\": \"1\",\n  \"ROW\": \"1\"\n},\n{\n  \"Name\": \"WISOL SFM20R1 WSSFM20R1\",\n\"Type\": \"INTEGRADOS\",\n\"Quantity\": 8,\n\"BOX\": \"A-FA\",\n\"COL\": \"2\",\n\"ROW\": \"1\"\n},\n{\n  \"Name\": \"BT40F\",\n  \"Type\": \"INTEGRADOS\",\n  \"Quantity\": 2,\n  \"BOX\": \"A-FA\",\n  \"COL\": \"3\",\n  \"ROW\": \"1\"\n},\n{\n  \"Name\": \"PVN012\",\n  \"Type\": \"INTEGRADOS\",\n  \"Quantity\": 11,\n  \"BOX\": \"A-FA\",\n  \"COL\": \"1\",\n  \"ROW\": \"2\"\n},\n{\n  \"Name\": \"ESDM3051MXT5G\",\n  \"Type\": \"INTEGRADOS\",\n  \"Quantity\": 0,\n  \"BOX\": \"A-FA\",\n  \"COL\": \"2\",\n  \"ROW\": \"2\"\n},\n{\n  \"Name\": \"SM74611\",\n  \"Type\": \"INTEGRADOS\",\n  \"Quantity\": 10,\n  \"BOX\": \"A-FA\",\n  \"COL\": \"3\",\n  \"ROW\": \"2\"\n},\n{\n  \"Name\": \"LTC4358\",\n  \"Type\": \"INTEGRADOS\",\n  \"Quantity\": 6,\n  \"BOX\": \"A-FA\",\n  \"COL\": \"4\",\n  \"ROW\": \"2\"\n},\n{\n  \"Name\": \"HS2DFS M3G\",\n  \"Type\": \"INTEGRADOS\",\n  \"Quantity\": 16,\n  \"BOX\": \"A-FA\",\n  \"COL\": \"5\",\n  \"ROW\": \"2\"\n},\n{\n  \"Name\": \"LM1013A\",\n  \"Type\": \"INTEGRADOS\",\n  \"Quantity\": 2,\n  \"BOX\": \"A-FA\",\n  \"COL\": \"6\",\n  \"ROW\": \"2\"\n},\n{\n  \"Name\": \"LM 358\",\n  \"Type\": \"INTEGRADOS\",\n  \"Quantity\": 12,\n  \"BOX\": \"A-FA\",\n  \"COL\": \"1\",\n  \"ROW\": \"3\"\n},\n{\n  \"Name\": \"OSCILADOR 88MHz ECS-2520VQ-080-CN-TR\",\n  \"Type\": \"INTEGRADOS\",\n  \"Quantity\": 11,\n  \"BOX\": \"A-FA\",\n  \"COL\": \"2\",\n  \"ROW\": \"3\"\n},\n{\n  \"Name\": \"SMBJ7.0A TP\",\n  \"Type\": \"INTEGRADOS\",\n  \"Quantity\": 7,\n  \"BOX\": \"A-FA\",\n  \"COL\": \"3\",\n  \"ROW\": \"3\"\n},\n{\n  \"Name\": \"XC6230\",\n  \"Type\": \"INTEGRADOS\",\n  \"Quantity\": 18,\n  \"BOX\": \"A-FA\",\n  \"COL\": \"4\",\n  \"ROW\": \"3\"\n},\n{\n  \"Name\": \"TVS28\",\n  \"Type\": \"INTEGRADOS\",\n  \"Quantity\": 12,\n  \"BOX\": \"A-FA\",\n  \"COL\": \"5\",\n  \"ROW\": \"3\"\n},\n{\n  \"Name\": \"ISA 0509\",\n  \"Type\": \"INTEGRADOS\",\n  \"Quantity\": 8,\n  \"BOX\": \"A-FA\",\n  \"COL\": \"6\",\n  \"ROW\": \"3\"\n},\n{\n  \"Name\": \"MCP41050\",\n  \"Type\": \"INTEGRADOS\",\n  \"Quantity\": 2,\n  \"BOX\": \"A-FA\",\n  \"COL\": \"1\",\n  \"ROW\": \"4\"\n},\n{\n  \"Name\": \"ZENER 3V9\",\n  \"Type\": \"SUPERFICIAL\",\n  \"Quantity\": 18,\n  \"BOX\": \"A-GB\",\n  \"COL\": \"1\",\n  \"ROW\": \"1\"\n},\n{\n  \"Name\": \"ZENER 4V7\",\n  \"Type\": \"SUPERFICIAL\",\n  \"Quantity\": 4,\n  \"BOX\": \"A-GB\",\n  \"COL\": \"2\",\n  \"ROW\": \"1\"\n},\n{\n  \"Name\": \"ZENER 5V1\",\n  \"Type\": \"SUPERFICIAL\",\n  \"Quantity\": 17,\n  \"BOX\": \"A-GB\",\n  \"COL\": \"3\",\n  \"ROW\": \"1\"\n},\n{\n  \"Name\": \"ZENER 5V6\",\n  \"Type\": \"SUPERFICIAL\",\n  \"Quantity\": 10,\n  \"BOX\": \"A-GB\",\n  \"COL\": \"4\",\n  \"ROW\": \"1\"\n},\n{\n  \"Name\": \"ZENER 6V1\",\n  \"Type\": \"SUPERFICIAL\",\n  \"Quantity\": 9,\n  \"BOX\": \"A-GB\",\n  \"COL\": \"5\",\n  \"ROW\": \"1\"\n},\n{\n  \"Name\": \"ZENER 9V1\",\n  \"Type\": \"SUPERFICIAL\",\n  \"Quantity\": 3,\n  \"BOX\": \"A-GB\",\n  \"COL\": \"6\",\n  \"ROW\": \"1\"\n},\n{\n  \"Name\": \"ZENER 10V\",\n  \"Type\": \"SUPERFICIAL\",\n  \"Quantity\": 3,\n  \"BOX\": \"A-GB\",\n  \"COL\": \"1\",\n  \"ROW\": \"2\"\n},\n{\n  \"Name\": \"ZENER 13V\",\n  \"Type\": \"SUPERFICIAL\",\n  \"Quantity\": 12,\n  \"BOX\": \"A-GB\",\n  \"COL\": \"2\",\n  \"ROW\": \"2\"\n},\n{\n  \"Name\": \"ZENER 15V\",\n  \"Type\": \"SUPERFICIAL\",\n  \"Quantity\": 15,\n  \"BOX\": \"A-GB\",\n  \"COL\": \"3\",\n  \"ROW\": \"2\"\n},\n{\n  \"Name\": \"ZENER 18V\",\n  \"Type\": \"SUPERFICIAL\",\n  \"Quantity\": 6,\n  \"BOX\": \"A-GB\",\n  \"COL\": \"4\",\n  \"ROW\": \"2\"\n},\n{\n  \"Name\": \"ZENER 3V3\",\n  \"Type\": \"SUPERFICIAL\",\n  \"Quantity\": 1,\n  \"BOX\": \"A-GB\",\n  \"COL\": \"5\",\n  \"ROW\": \"2\"\n},\n{\n  \"Name\": \"1K\",\n  \"Type\": \"RESISTOR\",\n  \"Quantity\": 14,\n  \"BOX\": \"R-AC\",\n  \"COL\": \"6\",\n  \"ROW\": \"5\"\n},\n{\n  \"Name\": \"1.5K\",\n  \"Type\": \"RESISTOR\",\n  \"Quantity\": 15,\n  \"BOX\": \"R-AD\",\n  \"COL\": \"1\",\n  \"ROW\": \"1\"\n},\n{\n  \"Name\": \"2.2K\",\n  \"Type\": \"RESISTOR\",\n  \"Quantity\": 11,\n  \"BOX\": \"R-AD\",\n  \"COL\": \"2\",\n  \"ROW\": \"1\"\n},\n{\n  \"Name\": \"3K\",\n  \"Type\": \"RESISTOR\",\n  \"Quantity\": 2,\n  \"BOX\": \"R-AD\",\n  \"COL\": \"3\",\n  \"ROW\": \"1\"\n},\n{\n  \"Name\": \"3.3K\",\n  \"Type\": \"RESISTOR\",\n  \"Quantity\": 10,\n  \"BOX\": \"R-AD\",\n  \"COL\": \"4\",\n  \"ROW\": \"1\"\n},\n{\n  \"Name\": \"3.9K\",\n  \"Type\": \"RESISTOR\",\n  \"Quantity\": 1,\n  \"BOX\": \"R-AD\",\n  \"COL\": \"5\",\n  \"ROW\": \"1\"\n},\n{\n  \"Name\": \"4.7K\",\n  \"Type\": \"RESISTOR\",\n  \"Quantity\": 14,\n  \"BOX\": \"R-AD\",\n  \"COL\": \"6\",\n  \"ROW\": \"1\"\n},\n{\n  \"Name\": \"6.8K\",\n  \"Type\": \"RESISTOR\",\n  \"Quantity\": 15,\n  \"BOX\": \"R-AD\",\n  \"COL\": \"1\",\n  \"ROW\": \"2\"\n},\n{\n  \"Name\": \"7.5K\",\n  \"Type\": \"RESISTOR\",\n  \"Quantity\": 12,\n  \"BOX\": \"R-AD\",\n  \"COL\": \"2\",\n  \"ROW\": \"2\"\n},\n{\n  \"Name\": \"10K\",\n  \"Type\": \"RESISTOR\",\n  \"Quantity\": 9,\n  \"BOX\": \"R-AD\",\n  \"COL\": \"4\",\n  \"ROW\": \"2\"\n},\n{\n  \"Name\": \"15K\",\n  \"Type\": \"RESISTOR\",\n  \"Quantity\": 15,\n  \"BOX\": \"R-AD\",\n  \"COL\": \"5\",\n  \"ROW\": \"2\"\n},\n{\n  \"Name\": \"22K\",\n  \"Type\": \"RESISTOR\",\n  \"Quantity\": 3,\n  \"BOX\": \"R-AD\",\n  \"COL\": \"6\",\n  \"ROW\": \"2\"\n},\n{\n  \"Name\": \"33K\",\n  \"Type\": \"RESISTOR\",\n  \"Quantity\": 12,\n  \"BOX\": \"R-AD\",\n  \"COL\": \"1\",\n  \"ROW\": \"3\"\n},\n{\n  \"Name\": \"39K\",\n  \"Type\": \"RESISTOR\",\n  \"Quantity\": 5,\n  \"BOX\": \"R-AD\",\n  \"COL\": \"2\",\n  \"ROW\": \"3\"\n},\n{\n  \"Name\": \"56K\",\n  \"Type\": \"RESISTOR\",\n  \"Quantity\": 11,\n  \"BOX\": \"R-AD\",\n  \"COL\": \"3\",\n  \"ROW\": \"3\"\n},\n{\n  \"Name\": \"75K\",\n  \"Type\": \"RESISTOR\",\n  \"Quantity\": 4,\n  \"BOX\": \"R-AD\",\n  \"COL\": \"4\",\n  \"ROW\": \"3\"\n},\n{\n  \"Name\": \"82K\",\n  \"Type\": \"RESISTOR\",\n  \"Quantity\": 15,\n  \"BOX\": \"R-AD\",\n  \"COL\": \"5\",\n  \"ROW\": \"3\"\n},\n{\n  \"Name\": \"100K\",\n  \"Type\": \"RESISTOR\",\n  \"Quantity\": 12,\n  \"BOX\": \"R-AD\",\n  \"COL\": \"6\",\n  \"ROW\": \"3\"\n},\n{\n  \"Name\": \"150K\",\n  \"Type\": \"RESISTOR\",\n  \"Quantity\": 19,\n  \"BOX\": \"R-AD\",\n  \"COL\": \"1\",\n  \"ROW\": \"4\"\n},\n{\n  \"Name\": \"180K\",\n  \"Type\": \"RESISTOR\",\n  \"Quantity\": 10,\n  \"BOX\": \"R-AD\",\n  \"COL\": \"2\",\n  \"ROW\": \"4\"\n},\n{\n  \"Name\": \"220K\",\n  \"Type\": \"RESISTOR\",\n  \"Quantity\": 2,\n  \"BOX\": \"R-AD\",\n  \"COL\": \"3\",\n  \"ROW\": \"4\"\n},\n{\n  \"Name\": \"330K\",\n  \"Type\": \"RESISTOR\",\n  \"Quantity\": 8,\n  \"BOX\": \"R-AD\",\n  \"COL\": \"4\",\n  \"ROW\": \"4\"\n},\n{\n  \"Name\": \"560K\",\n  \"Type\": \"RESISTOR\",\n  \"Quantity\": 7,\n  \"BOX\": \"R-AD\",\n  \"COL\": \"5\",\n  \"ROW\": \"4\"\n},\n{\n  \"Name\": \"1M\",\n  \"Type\": \"RESISTOR\",\n  \"Quantity\": 9,\n  \"BOX\": \"R-AD\",\n  \"COL\": \"6\",\n  \"ROW\": \"4\"\n},\n{\n  \"Name\": \"1.5M\",\n  \"Type\": \"RESISTOR\",\n  \"Quantity\": 16,\n  \"BOX\": \"R-AD\",\n  \"COL\": \"1\",\n  \"ROW\": \"5\"\n},\n{\n  \"Name\": \"5.7M\",\n  \"Type\": \"RESISTOR\",\n  \"Quantity\": 5,\n  \"BOX\": \"R-AD\",\n  \"COL\": \"2\",\n  \"ROW\": \"5\"\n},\n{\n  \"Name\": \"5.6M\",\n  \"Type\": \"RESISTOR\",\n  \"Quantity\": 2,\n  \"BOX\": \"R-AD\",\n  \"COL\": \"3\",\n  \"ROW\": \"5\"\n},\n{\n  \"Name\": \"10M\",\n  \"Type\": \"RESISTOR\",\n  \"Quantity\": 4,\n  \"BOX\": \"R-AD\",\n  \"COL\": \"4\",\n  \"ROW\": \"5\"\n},\n{\n  \"Name\": \"47K\",\n  \"Type\": \"RESISTOR\",\n  \"Quantity\": 18,\n  \"BOX\": \"R-AD\",\n  \"COL\": \"5\",\n  \"ROW\": \"5\"\n}\n];\n\nvar newItems = [];\n\n\nfor(let i=0; i<items.length; i++){\n  newItems.push(\n    {\n      \"json\":\n        {\n          ...items[i],\n          hash: makeid(16),\n          workspace: $('Create Demo Workspace').first().json.data.workspace_id,\n          database: $('Find Inventory database').first().json.inventoryDB,\n          token: $('Get access token').first().json.access_token\n        },\n      \"pairedItem\": i\n    }    \n  )\n}\nreturn newItems;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2980,
+        -280
+      ],
+      "id": "c745e68e-1fee-48c8-801c-2d5a6b0d92f0",
+      "name": "Prepare Inventory ROWs",
+      "executeOnce": true
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=http://appflowy.iadoc.alteria.vpn.alonsom.com/api/workspace/{{ $json.workspace }}/database/{{ $json.database }}/row",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $json.token }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"cells\": {\n    \"Name\": \"{{ $json.Name }}\",\n    \"Class\": \"{{ $json.Type }}\",\n    \"Quantity\": \"{{ $json.Quantity }}\",\n    \"BOX\": \"{{ $json.BOX }}\",\n    \"COL\": \"{{ $json.COL }}\",\n    \"ROW\": \"{{ $json.ROW }}\"\n  },\n  \"document\": \"## NAME {{ $json.name }}\\nHello World!\"\n} ",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        3420,
+        -280
+      ],
+      "id": "12f0b1d1-e6da-45e9-9f22-0668bfaa4090",
+      "name": "Create rows of Inventory",
+      "executeOnce": false,
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "url": "=http://appflowy.iadoc.alteria.vpn.alonsom.com/api/workspace/{{ $('Create Demo Workspace').item.json.data.workspace_id }}/database/{{ $('Find KICAD database').item.json.kicadDB }}/row",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $('Get access token').item.json.access_token }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        3420,
+        -80
+      ],
+      "id": "44ca7773-b305-47c8-9343-8735182948a7",
+      "name": "Get rows of KICAD",
+      "executeOnce": true,
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        3200,
+        120
+      ],
+      "id": "5cef5218-6858-4cde-8536-00bc0d92c232",
+      "name": "Loop Over Items"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        3200,
+        -280
+      ],
+      "id": "c15461ff-83ce-468d-a151-76b76b98041a",
+      "name": "Loop Over Items1"
+    },
+    {
+      "parameters": {
+        "url": "=http://appflowy.iadoc.alteria.vpn.alonsom.com/api/workspace/{{ $('Create Demo Workspace').item.json.data.workspace_id }}/database/{{ $('Find Inventory database').item.json.inventoryDB }}/row",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $('Get access token').item.json.access_token }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        3420,
+        -480
+      ],
+      "id": "9e9a3fd4-8a83-439e-8c85-7502a02ab98a",
+      "name": "Get rows of Inventory",
+      "executeOnce": true,
+      "onError": "continueErrorOutput"
+    }
+  ],
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Register default@default.default",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get access token": {
+      "main": [
+        [
+          {
+            "node": "Get workspaces",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Register default@default.default": {
+      "main": [
+        [
+          {
+            "node": "Populate defult data",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Populate defult data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Demo Workspace": {
+      "main": [
+        [
+          {
+            "node": "Get default spaces",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Populate defult data": {
+      "main": [
+        [
+          {
+            "node": "Get access token",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get default spaces": {
+      "main": [
+        [
+          {
+            "node": "Create inventory space",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get workspaces": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Delete workspace",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code1": {
+      "main": [
+        [
+          {
+            "node": "Delete folders",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Delete folders1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Delete folders": {
+      "main": [
+        []
+      ]
+    },
+    "Create inventory space": {
+      "main": [
+        [
+          {
+            "node": "Code1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Create Inventory Grid",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Create kicad space",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Inventory Grid": {
+      "main": [
+        [
+          {
+            "node": "Get Inventory Grid",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create kicad space": {
+      "main": [
+        [
+          {
+            "node": "Create KICAD Grid",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Inventory Grid": {
+      "main": [
+        [
+          {
+            "node": "Get Inventory database",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create KICAD Grid": {
+      "main": [
+        [
+          {
+            "node": "Get KICAD database",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get KICAD database": {
+      "main": [
+        [
+          {
+            "node": "Find KICAD database",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Find KICAD database": {
+      "main": [
+        [
+          {
+            "node": "Prepare fields for KICAD",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get many database rows": {
+      "main": [
+        [
+          {
+            "node": "Get many database rows1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Add fields to KICAD": {
+      "main": [
+        [
+          {
+            "node": "Get fields of KICAD",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare KICAD ROWs": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Delete workspace": {
+      "main": [
+        [
+          {
+            "node": "Create Demo Workspace",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get fields of KICAD": {
+      "main": [
+        [
+          {
+            "node": "Prepare KICAD ROWs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create rows of KICAD": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Inventory database": {
+      "main": [
+        [
+          {
+            "node": "Find Inventory database",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Find Inventory database": {
+      "main": [
+        [
+          {
+            "node": "Prepare fields for Inventory",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare fields for KICAD": {
+      "main": [
+        [
+          {
+            "node": "Add fields to KICAD",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare fields for Inventory": {
+      "main": [
+        [
+          {
+            "node": "Add fields to Inventory",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Add fields to Inventory": {
+      "main": [
+        [
+          {
+            "node": "Get fields of Inventory",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get fields of Inventory": {
+      "main": [
+        [
+          {
+            "node": "Prepare Inventory ROWs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Inventory ROWs": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [
+          {
+            "node": "Get rows of KICAD",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Create rows of KICAD",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create rows of Inventory": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Loop Over Items1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items1": {
+      "main": [
+        [
+          {
+            "node": "Get rows of Inventory",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Create rows of Inventory",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "6c42e931-929c-4788-9795-7c407e648b04",
+  "triggerCount": 0,
+  "tags": []
+}

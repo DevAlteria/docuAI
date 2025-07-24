@@ -1,10 +1,10 @@
 {
   "createdAt": "2025-07-09T09:53:19.673Z",
-  "updatedAt": "2025-07-09T11:36:06.000Z",
+  "updatedAt": "2025-07-23T11:54:15.000Z",
   "id": "DvbNg4Nua2anxs6D",
   "name": "My workflow 3",
   "active": false,
-  "isArchived": false,
+  "isArchived": true,
   "nodes": [
     {
       "parameters": {
@@ -418,7 +418,7 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "a624f957-b3ea-4bee-b5c8-ea30f06c5884",
+  "versionId": "3102b2fe-f1a4-4182-9922-0ba27f76b8a2",
   "triggerCount": 0,
   "tags": []
 }

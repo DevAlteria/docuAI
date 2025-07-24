@@ -1,8 +1,8 @@
 {
-  "createdAt": "2025-07-15T12:07:19.822Z",
-  "updatedAt": "2025-07-23T11:38:15.000Z",
-  "id": "NvgM86eUEwCjHBck",
-  "name": "Inventory Question Dev Sara SearchIAcopy",
+  "createdAt": "2025-07-23T13:22:17.749Z",
+  "updatedAt": "2025-07-23T14:08:11.000Z",
+  "id": "xnMqcmAwIVsoyXRz",
+  "name": "Search In CSV ENTREGABLE",
   "active": false,
   "isArchived": false,
   "nodes": [
@@ -15,31 +15,31 @@
       "type": "@n8n/n8n-nodes-langchain.chainLlm",
       "typeVersion": 1.7,
       "position": [
-        360,
-        -200
+        500,
+        -255
       ],
-      "id": "92c0cd81-2615-45f3-8893-37af83d3eda7",
+      "id": "6260edee-46db-4364-9fc7-579389244df8",
       "name": "Basic LLM Chain"
     },
     {
       "parameters": {
-        "workspaceId": "013a4efa-1bce-43cf-88bc-faf921d516be",
-        "databaseId": "f0dc0899-6864-46bc-ad79-4c44effb9850",
+        "workspaceId": "9a50d26a-471a-4b81-a03d-79b31ea05a20",
+        "databaseId": "df6be534-68ec-421d-9ec7-ad20dae30ee7",
         "returnAll": true,
         "simplify": false
       },
       "type": "n8n-nodes-appflowy.appflowy",
       "typeVersion": 1,
       "position": [
-        -80,
-        -200
+        60,
+        -255
       ],
-      "id": "4a95f4d1-b2d0-46c0-9364-346743f6814e",
+      "id": "58565282-2284-47fa-9f01-6b16d4beddfd",
       "name": "Get All Inventory",
       "credentials": {
         "appflowyApi": {
-          "id": "caTURWHOYl4VW0ZV",
-          "name": "Dev"
+          "id": "YODmFLRKL0nTWCx6",
+          "name": "Default"
         }
       }
     },
@@ -47,35 +47,35 @@
       "parameters": {
         "resource": "database",
         "operation": "getFields",
-        "workspaceId": "013a4efa-1bce-43cf-88bc-faf921d516be",
-        "databaseId": "f0dc0899-6864-46bc-ad79-4c44effb9850"
+        "workspaceId": "9a50d26a-471a-4b81-a03d-79b31ea05a20",
+        "databaseId": "df6be534-68ec-421d-9ec7-ad20dae30ee7"
       },
       "type": "n8n-nodes-appflowy.appflowy",
       "typeVersion": 1,
       "position": [
-        -520,
-        -200
+        -380,
+        -255
       ],
-      "id": "0f48fc00-b314-480d-9225-27a03f89790a",
+      "id": "8c3bf042-cada-496e-b33e-43727765a6ee",
       "name": "Get Inventory Headers",
       "credentials": {
         "appflowyApi": {
-          "id": "caTURWHOYl4VW0ZV",
-          "name": "Dev"
+          "id": "YODmFLRKL0nTWCx6",
+          "name": "Default"
         }
       }
     },
     {
       "parameters": {
-        "jsCode": "// Loop over input items and add a new field called 'myNewField' to the JSON of each one\nvar data = $('Code').first().json\ndata.rows = [];\ndata.rowsCsv = \"\";\n\n//Add to struct\nfor (const item of $input.all()) {\n  data.rows.push(item.json) \n}\n\n//Clean\nfor (var i = 0; i < data.rows.length; i++) {\n  aux = data.rows[i].id; \n  data.rows[i] = data.rows[i].cells; \n  data.rows[i].id = aux; \n}\n\n//Add headers to csv\nfor (var i = 0; i < data.headers.length; i++) {\n  data.rowsCsv += data.headers[i].name;\n  if (i != data.headers.length - 1) data.rowsCsv += \",\"\n}\ndata.rowsCsv += \"\\n\"\n\n//Add rows to csv\nfor (var i = 0; i < data.rows.length; i++) {\n  for (var j = 0; j < data.headers.length; j++) {\n    data.rowsCsv += data.rows[i][data.headers[j].name];\n    if (j != data.headers.length - 1) data.rowsCsv += \",\"\n  }\n  data.rowsCsv += \"\\n\"\n} \n\ndata.question = $('When chat message received').first().json.chatInput\n\nreturn data;"
+        "jsCode": "// Loop over input items and add a new field called 'myNewField' to the JSON of each one\nvar data = {};\ndata.headers = $('Code').first().json.headers;\ndata.rows = [];\ndata.rowsCsv = \"\";\n\n//Add to struct\nfor (const item of $input.all()) {\n  data.rows.push(item.json) \n}\n\n//Clean\nfor (var i = 0; i < data.rows.length; i++) {\n  aux = data.rows[i].id; \n  data.rows[i] = data.rows[i].cells; \n  data.rows[i].id = aux; \n}\n\nfor (var i = 0; i < data.headers.length; i++) {\n  data.rowsCsv += data.headers[i].name;\n  if (i != data.headers.length - 1) data.rowsCsv += \",\"\n}\ndata.rowsCsv += \"\\n\"\n\n//Add rows to csv\nfor (var i = 0; i < data.rows.length; i++) {\n  for (var j = 0; j < data.headers.length; j++) {\n    data.rowsCsv += data.rows[i][data.headers[j].name];\n    if (j != data.headers.length - 1) data.rowsCsv += \",\"\n  }\n  data.rowsCsv += \"\\n\"\n} \n\ndata.question = $('Code2').first().json.chatInput\n\ndata.sessionId = Math.random().toString();  // ← trim aquí\n\nreturn data;"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        140,
-        -200
+        280,
+        -255
       ],
-      "id": "63cb114f-cc2e-4bf0-8857-86d82122e954",
+      "id": "9b61cbe5-4da8-4f28-8b7c-c3cc100a2d63",
       "name": "Gen promt",
       "executeOnce": false
     },
@@ -86,40 +86,25 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -300,
-        -200
+        -160,
+        -255
       ],
-      "id": "98f0917a-ac46-4ff1-8597-2ee9a284ff3a",
+      "id": "484353e6-a316-4f9a-8800-3b285f87f4ad",
       "name": "Code"
     },
     {
       "parameters": {
-        "public": true,
-        "options": {}
-      },
-      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
-      "typeVersion": 1.1,
-      "position": [
-        -880,
-        -200
-      ],
-      "id": "1531e48a-b1eb-46bd-9dd1-8c53ae394d05",
-      "name": "When chat message received",
-      "webhookId": "6bb00d8e-5645-485f-8996-9e27bf747dc2"
-    },
-    {
-      "parameters": {
         "operation": "write",
-        "fileName": "=/home/node/data-{{$('When chat message received').first().json.sessionId}}.py",
+        "fileName": "=/home/node/data-.py",
         "options": {}
       },
       "type": "n8n-nodes-base.readWriteFile",
       "typeVersion": 1,
       "position": [
-        1160,
-        -200
+        1300,
+        -255
       ],
-      "id": "c418ceb3-9cb2-41b0-acaf-7d5a5c36ac64",
+      "id": "7e2a2c57-3ef9-4111-8ce8-7384d5970528",
       "name": "Read/Write Files from Disk"
     },
     {
@@ -131,9 +116,9 @@
       "typeVersion": 1,
       "position": [
         2040,
-        20
+        -35
       ],
-      "id": "7dd3590d-e55e-4892-b562-c5306b688e3c",
+      "id": "4d96e073-c02f-443d-b36f-000a186c3e72",
       "name": "Ollama Model1",
       "credentials": {
         "ollamaApi": {
@@ -149,10 +134,10 @@
       "type": "n8n-nodes-base.executeCommand",
       "typeVersion": 1,
       "position": [
-        1380,
-        -200
+        1520,
+        -255
       ],
-      "id": "363cb59a-a5f9-4fee-8eae-56226457c164",
+      "id": "63985a24-8bee-4001-9a89-53d4e26df770",
       "name": "Execute python Code"
     },
     {
@@ -162,23 +147,23 @@
       "type": "n8n-nodes-base.executeCommand",
       "typeVersion": 1,
       "position": [
-        1560,
-        -200
+        1740,
+        -255
       ],
-      "id": "00fb2187-27fd-4fa5-97c1-82971aa93c7a",
+      "id": "4fa5507a-2160-4f72-8c18-69ac893c43b2",
       "name": "Delete data-id.py"
     },
     {
       "parameters": {
-        "jsCode": "const content = $json[\"script\"];\nconst buffer = Buffer.from(content, 'utf-8');\n// Obtener sessionId desde otro nodo\nconst sessionId = $('When chat message received').first().json.sessionId;  // ← trim aquí\nconst filename = `/home/node/data-${sessionId}.py`;\n\n\nreturn [{\n  binary: {\n    data: await this.helpers.prepareBinaryData(buffer, filename, 'text/x-python')\n  }\n}];\n"
+        "jsCode": "const content = $json[\"script\"];\nconst buffer = Buffer.from(content, 'utf-8');\n// Obtener sessionId desde otro nodo\n//const sessionId = $('When chat message received').first().json.sessionId;  // ← trim aquí\nconst filename = `/home/node/data-$('Gen promt').first().json.sessionId.py`;\n\n\nreturn [{\n  binary: {\n    data: await this.helpers.prepareBinaryData(buffer, filename, 'text/x-python')\n  }\n}];\n"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        940,
-        -200
+        1080,
+        -255
       ],
-      "id": "12436635-4553-4495-94d6-055bcfa7c964",
+      "id": "f2d51bc6-337a-48df-96ac-8bbd875a1952",
       "name": "Convert Text into binary File",
       "executeOnce": false
     },
@@ -189,10 +174,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        720,
-        -200
+        860,
+        -255
       ],
-      "id": "fe17b617-cd37-4076-bf2a-44dd5a5cd8fc",
+      "id": "427829c1-b935-4dbe-a100-bd4ac405732b",
       "name": "Stop thinking",
       "executeOnce": false
     },
@@ -204,10 +189,10 @@
       "type": "@n8n/n8n-nodes-langchain.lmOllama",
       "typeVersion": 1,
       "position": [
-        440,
-        20
+        580,
+        -35
       ],
-      "id": "80a72c5b-fbd2-43f6-8400-49a89a45256c",
+      "id": "eae2e59e-dd20-4a70-9601-9c724f020de4",
       "name": "deepseek",
       "credentials": {
         "ollamaApi": {
@@ -223,10 +208,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        2400,
-        140
+        2760,
+        -155
       ],
-      "id": "83580c24-ca5a-4012-b700-8632c3fb2188",
+      "id": "cc4d10f4-698a-46ae-ba1b-6787b36dc548",
       "name": "try Again"
     },
     {
@@ -266,10 +251,10 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        2360,
-        -200
+        2540,
+        -330
       ],
-      "id": "83033a46-89de-44f4-814c-dcd43cd12962",
+      "id": "f5ab014d-e523-4416-adf8-c0a190ccaca0",
       "name": "If"
     },
     {
@@ -281,10 +266,10 @@
       "type": "@n8n/n8n-nodes-langchain.chainLlm",
       "typeVersion": 1.7,
       "position": [
-        1740,
-        -200
+        1960,
+        -255
       ],
-      "id": "59692ad7-5f0e-4301-b783-1cb838ec2345",
+      "id": "69466aca-00b3-427e-940a-c87fd65473bb",
       "name": "Basic LLM Chain1"
     },
     {
@@ -294,10 +279,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        2640,
-        -180
+        2760,
+        -380
       ],
-      "id": "9392b090-b4ec-418d-a818-138be83650a1",
+      "id": "b02c221a-6f26-4fa8-bab0-c55edb655298",
       "name": "Code1"
     },
     {
@@ -307,12 +292,50 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        2020,
-        -200
+        2320,
+        -330
       ],
-      "id": "59928df6-05f2-4413-83a4-267159120e0a",
+      "id": "3253140d-3922-4889-b3d0-891aee4efb1f",
       "name": "Insert count1",
       "executeOnce": true
+    },
+    {
+      "parameters": {
+        "inputSource": "jsonExample",
+        "jsonExample": "{\n  \"workspace\": \"zxczxczxc\",\n  \"database\": \"zxczxczx\",\n  \"chatInput\": \"Donde estan las resistencias de 1k\"\n}"
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -600,
+        -155
+      ],
+      "id": "d187d34a-8439-4496-a77f-6a035cbe6ead",
+      "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -820,
+        -355
+      ],
+      "id": "9416d55b-281c-4260-a342-1ad397e7e13d",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Loop over input items and add a new field called 'myNewField' to the JSON of each one\nfor (const item of $input.all()) {\n  item.json.myNewField = 1;\n}\n\nreturn [\n  {\n  \"workspace\": \"asdasdasd\",\n  \"database\": \"asdsdasd\",\n  \"chatInput\": \"Donde estan las resistencias de 1k\"\n}\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -600,
+        -355
+      ],
+      "id": "8335b740-edf0-4768-8e93-4623a26239e9",
+      "name": "Code2"
     }
   ],
   "connections": {
@@ -354,17 +377,6 @@
         [
           {
             "node": "Get All Inventory",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "When chat message received": {
-      "main": [
-        [
-          {
-            "node": "Get Inventory Headers",
             "type": "main",
             "index": 0
           }
@@ -509,6 +521,39 @@
           }
         ]
       ]
+    },
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "Get Inventory Headers",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Code2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code2": {
+      "main": [
+        [
+          {
+            "node": "Get Inventory Headers",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
@@ -528,7 +573,7 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "25bb2cbc-f980-4217-82f2-51c74fca0963",
+  "versionId": "51581bc1-740a-478c-9cee-7f4739db0a25",
   "triggerCount": 1,
   "tags": []
 }
