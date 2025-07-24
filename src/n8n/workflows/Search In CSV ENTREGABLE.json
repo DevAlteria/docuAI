@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-07-23T13:22:17.749Z",
-  "updatedAt": "2025-07-23T14:08:11.000Z",
+  "updatedAt": "2025-07-24T10:55:29.000Z",
   "id": "xnMqcmAwIVsoyXRz",
   "name": "Search In CSV ENTREGABLE",
   "active": false,
@@ -9,14 +9,14 @@
     {
       "parameters": {
         "promptType": "define",
-        "text": "=[INST]\nYou are given a CSV data snippet, a column header description, and a natural language question from the user.\n\nYour task is:\n1. Extract the most relevant nouns or item names from the question — ignore all verbs, articles, prepositions, and filler words.\n2. Insert those keywords directly into the Python script.\n3. Return ONLY the final Python script (see format below). The keywords must be explicitly defined in the `keywords = [...]` line.\n\n### [Table Text]\nThis is the description of the cols of the table:  \n{{ JSON.stringify($json.headers) }}\n\n### [Table]\n{{ $json.rowsCsv }}\n\n### [Question]\n{{ $json.question }}\n\n### [Instructions]\nYour response must follow these constraints:\n- Return ONLY the Python script, and nothing else.\n- DO NOT include any explanations, reasoning, markdown formatting, or comments unless they are part of the original script.\n- You are not allowed to include ANY explanations, thoughts, reasoning, or Markdown formatting.\n- The code you return will be directly saved into a .py file and executed. Therefore, it must be valid Python.\n- You are only allowed to solve the question using the EXACT Python script shown below in [Python Script Template].\n- DO NOT alter or add anything to the script.\n- DO NOT wrap the code in triple backticks. Return only raw code.\n- Return ONLY the exact Python script as plain text, and nothing else. Do NOT wrap it in python.\n\n### [Python Script Template] — DO NOT MODIFY FORMAT\n\n```python\nimport pandas as pd\n\nkeywords = [] # ← Replace with extracted relevant nouns form the {{ $json.question }}\n\ndf = pd.read_csv('data.csv')\n\ndef matches_keywords(name):\n    name = str(name).lower()\n    return any(word in name for word in keywords)  # Coincidencia parcial\n\nfiltered_df = df[df['Name'].apply(matches_keywords)]\n\nif not filtered_df.empty:\n    result = filtered_df.to_dict('records')\nelse:\n    result = \"UNKNOWN\"\n\nprint(result)\n```\n\n[/INST]\n",
+        "text": "=[INST]\nYou are given a CSV data snippet, a column header description, and a natural language question from the user.\n\nYour task is:\n1. Extract the most relevant nouns or item names from the question — ignore all verbs, articles, prepositions, and filler words.\n2. Insert those keywords directly into the Python script.\n3. Return ONLY the final Python script (see format below). The keywords must be explicitly defined in the `keywords = [...]` line.\n\n### [Table Text]\nThis is the description of the cols of the table:  \n{{ $('Gen promt').item.json.headers }}\n\n### [Table]\n{{ $('Gen promt').item.json.rowsCsv }}\n\n### [Question]\n{{ $('Gen promt').item.json.question }}\n\n### [Instructions]\nYour response must follow these constraints:\n- Return ONLY the Python script, and nothing else.\n- DO NOT include any explanations, reasoning, markdown formatting, or comments unless they are part of the original script.\n- You are not allowed to include ANY explanations, thoughts, reasoning, or Markdown formatting.\n- The code you return will be directly saved into a .py file and executed. Therefore, it must be valid Python.\n- You are only allowed to solve the question using the EXACT Python script shown below in [Python Script Template].\n- DO NOT alter or add anything to the script.\n- DO NOT wrap the code in triple backticks. Return only raw code.\n- Return ONLY the exact Python script as plain text, and nothing else. Do NOT wrap it in python.\n\n### [Python Script Template] — DO NOT MODIFY FORMAT\n\n```python\nimport pandas as pd\n\nkeywords = [] # ← Replace with extracted relevant nouns form the {{ $('Gen promt').item.json.question }}\n\ndf = pd.read_csv('data-{{ $json.sessionId }}.csv')\n\ndef matches_keywords(name):\n    name = str(name).lower()\n    return any(word in name for word in keywords)  # Coincidencia parcial\n\nfiltered_df = df[df['Name'].apply(matches_keywords)]\n\nif not filtered_df.empty:\n    result = filtered_df.to_dict('records')\nelse:\n    result = \"UNKNOWN\"\n\nprint(result)\n```\n\n[/INST]\n",
         "batching": {}
       },
       "type": "@n8n/n8n-nodes-langchain.chainLlm",
       "typeVersion": 1.7,
       "position": [
-        500,
-        -255
+        940,
+        -275
       ],
       "id": "6260edee-46db-4364-9fc7-579389244df8",
       "name": "Basic LLM Chain"
@@ -32,7 +32,7 @@
       "typeVersion": 1,
       "position": [
         60,
-        -255
+        -275
       ],
       "id": "58565282-2284-47fa-9f01-6b16d4beddfd",
       "name": "Get All Inventory",
@@ -54,7 +54,7 @@
       "typeVersion": 1,
       "position": [
         -380,
-        -255
+        -275
       ],
       "id": "8c3bf042-cada-496e-b33e-43727765a6ee",
       "name": "Get Inventory Headers",
@@ -67,13 +67,13 @@
     },
     {
       "parameters": {
-        "jsCode": "// Loop over input items and add a new field called 'myNewField' to the JSON of each one\nvar data = {};\ndata.headers = $('Code').first().json.headers;\ndata.rows = [];\ndata.rowsCsv = \"\";\n\n//Add to struct\nfor (const item of $input.all()) {\n  data.rows.push(item.json) \n}\n\n//Clean\nfor (var i = 0; i < data.rows.length; i++) {\n  aux = data.rows[i].id; \n  data.rows[i] = data.rows[i].cells; \n  data.rows[i].id = aux; \n}\n\nfor (var i = 0; i < data.headers.length; i++) {\n  data.rowsCsv += data.headers[i].name;\n  if (i != data.headers.length - 1) data.rowsCsv += \",\"\n}\ndata.rowsCsv += \"\\n\"\n\n//Add rows to csv\nfor (var i = 0; i < data.rows.length; i++) {\n  for (var j = 0; j < data.headers.length; j++) {\n    data.rowsCsv += data.rows[i][data.headers[j].name];\n    if (j != data.headers.length - 1) data.rowsCsv += \",\"\n  }\n  data.rowsCsv += \"\\n\"\n} \n\ndata.question = $('Code2').first().json.chatInput\n\ndata.sessionId = Math.random().toString();  // ← trim aquí\n\nreturn data;"
+        "jsCode": "// Loop over input items and add a new field called 'myNewField' to the JSON of each one\nvar data = {};\ndata.headers = $('Code').first().json.headers;\ndata.rows = [];\ndata.rowsCsv = \"\";\n\n//Add to struct\nfor (const item of $input.all()) {\n  data.rows.push(item.json) \n}\n\n//Clean\nfor (var i = 0; i < data.rows.length; i++) {\n  aux = data.rows[i].id; \n  data.rows[i] = data.rows[i].cells; \n  data.rows[i].id = aux; \n}\n\nfor (var i = 0; i < data.headers.length; i++) {\n  data.rowsCsv += data.headers[i].name;\n  if (i != data.headers.length - 1) data.rowsCsv += \",\"\n}\ndata.rowsCsv += \"\\n\"\n\n//Add rows to csv\nfor (var i = 0; i < data.rows.length; i++) {\n  for (var j = 0; j < data.headers.length; j++) {\n    data.rowsCsv += data.rows[i][data.headers[j].name];\n    if (j != data.headers.length - 1) data.rowsCsv += \",\"\n  }\n  data.rowsCsv += \"\\n\"\n} \n\ndata.question = $('Code2').first().json.chatInput\n\ndata.sessionId = Math.random().toString();  // ← trim aquí\n\n\nreturn data;"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
         280,
-        -255
+        -275
       ],
       "id": "9b61cbe5-4da8-4f28-8b7c-c3cc100a2d63",
       "name": "Gen promt",
@@ -87,7 +87,7 @@
       "typeVersion": 2,
       "position": [
         -160,
-        -255
+        -275
       ],
       "id": "484353e6-a316-4f9a-8800-3b285f87f4ad",
       "name": "Code"
@@ -95,14 +95,14 @@
     {
       "parameters": {
         "operation": "write",
-        "fileName": "=/home/node/data-.py",
+        "fileName": "=/home/node/data-{{ $('Gen promt').item.json.sessionId }}.py",
         "options": {}
       },
       "type": "n8n-nodes-base.readWriteFile",
       "typeVersion": 1,
       "position": [
-        1300,
-        -255
+        1740,
+        -275
       ],
       "id": "7e2a2c57-3ef9-4111-8ce8-7384d5970528",
       "name": "Read/Write Files from Disk"
@@ -115,8 +115,8 @@
       "type": "@n8n/n8n-nodes-langchain.lmOllama",
       "typeVersion": 1,
       "position": [
-        2040,
-        -35
+        2700,
+        -55
       ],
       "id": "4d96e073-c02f-443d-b36f-000a186c3e72",
       "name": "Ollama Model1",
@@ -129,39 +129,39 @@
     },
     {
       "parameters": {
-        "command": "=python3 /home/node/data-{{$('When chat message received').first().json.sessionId}}.py\n\n"
+        "command": "=python3 /home/node/data-{{ $('Gen promt').item.json.sessionId }}.py\n\n"
       },
       "type": "n8n-nodes-base.executeCommand",
       "typeVersion": 1,
       "position": [
-        1520,
-        -255
+        1960,
+        -275
       ],
       "id": "63985a24-8bee-4001-9a89-53d4e26df770",
       "name": "Execute python Code"
     },
     {
       "parameters": {
-        "command": "=rm /home/node/data-{{ $('When chat message received').first().json.sessionId }}.py"
+        "command": "=rm /home/node/data-{{ $('Gen promt').item.json.sessionId }}.py"
       },
       "type": "n8n-nodes-base.executeCommand",
       "typeVersion": 1,
       "position": [
-        1740,
-        -255
+        2180,
+        -275
       ],
       "id": "4fa5507a-2160-4f72-8c18-69ac893c43b2",
       "name": "Delete data-id.py"
     },
     {
       "parameters": {
-        "jsCode": "const content = $json[\"script\"];\nconst buffer = Buffer.from(content, 'utf-8');\n// Obtener sessionId desde otro nodo\n//const sessionId = $('When chat message received').first().json.sessionId;  // ← trim aquí\nconst filename = `/home/node/data-$('Gen promt').first().json.sessionId.py`;\n\n\nreturn [{\n  binary: {\n    data: await this.helpers.prepareBinaryData(buffer, filename, 'text/x-python')\n  }\n}];\n"
+        "jsCode": "const content = $json[\"script\"];\nconst buffer = Buffer.from(content, 'utf-8');\n// Obtener sessionId desde otro nodo\nconst sessionId = $('Gen promt').first().json.sessionId;  // ← trim aquí\nconst filename = `/home/node/data-${sessionId}`;\n\n\nreturn [{\n  binary: {\n    data: await this.helpers.prepareBinaryData(buffer, filename, 'text/x-python')\n  }\n}];\n"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1080,
-        -255
+        1520,
+        -275
       ],
       "id": "f2d51bc6-337a-48df-96ac-8bbd875a1952",
       "name": "Convert Text into binary File",
@@ -174,8 +174,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        860,
-        -255
+        1300,
+        -275
       ],
       "id": "427829c1-b935-4dbe-a100-bd4ac405732b",
       "name": "Stop thinking",
@@ -189,8 +189,8 @@
       "type": "@n8n/n8n-nodes-langchain.lmOllama",
       "typeVersion": 1,
       "position": [
-        580,
-        -35
+        1020,
+        -55
       ],
       "id": "eae2e59e-dd20-4a70-9601-9c724f020de4",
       "name": "deepseek",
@@ -208,8 +208,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        2760,
-        -155
+        3420,
+        -175
       ],
       "id": "cc4d10f4-698a-46ae-ba1b-6787b36dc548",
       "name": "try Again"
@@ -251,8 +251,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        2540,
-        -330
+        3200,
+        -350
       ],
       "id": "f5ab014d-e523-4416-adf8-c0a190ccaca0",
       "name": "If"
@@ -260,14 +260,14 @@
     {
       "parameters": {
         "promptType": "define",
-        "text": "=[INST]\n\nOffer a thorough and accurate solution that directly addresses the Question outlined in the [Question].\n\nIf you recibe a quetion asking for the position of a item, reply with Name, Box, Col and Row of all the items of the given table otherwise reply that you do not know. Always follow this rule.\n\n### [Table Text]\nThis is the description of the cols of the table\n{{ $('Gen promt').item.json.headers }}\n\n### [Table]\n```\n{{ $('Execute python Code').item.json.stdout }}\n```\n\n### [Question]\n{{ $('When chat message received').first().json.chatInput }}\n\n### [Solution]\nThe reply should follow the following format:\n  - If element was not found: \"UNKNOWN\".\n  - If ONE element was found: \"The elements XXXX is on the box XXX, on thhe row XXXX and on the col XXXX\"\n  - Otherwise, if there its more than one elements found, return all of them, each one with the format: \"The elements XXXX is on the box XXX, on thhe row XXXX and on the col XXXX\"\n\n\n[INST/]",
+        "text": "=[INST]\n\nOffer a thorough and accurate solution that directly addresses the Question outlined in the [Question].\n\nIf you recibe a quetion asking for the position of a item, reply with Name, Box, Col and Row of all the items of the given table otherwise reply that you do not know. Always follow this rule.\n\n### [Table Text]\nThis is the description of the cols of the table\n{{ $('Gen promt').item.json.headers }}\n\n### [Table]\n```\n{{ $('Execute python Code').item.json.stdout }}\n```\n\n### [Question]\n{{ $('Code2').first().json.chatInput }}\n\n### [Solution]\nThe reply should follow the following format:\n  - If element was not found: \"UNKNOWN\".\n  - If ONE element was found: \"The elements XXXX is on the box XXX, on thhe row XXXX and on the col XXXX\"\n  - Otherwise, if there its more than one elements found, return all of them, each one with the format: \"The elements XXXX is on the box XXX, on thhe row XXXX and on the col XXXX\"\n\n\n[INST/]",
         "batching": {}
       },
       "type": "@n8n/n8n-nodes-langchain.chainLlm",
       "typeVersion": 1.7,
       "position": [
-        1960,
-        -255
+        2620,
+        -275
       ],
       "id": "69466aca-00b3-427e-940a-c87fd65473bb",
       "name": "Basic LLM Chain1"
@@ -279,8 +279,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        2760,
-        -380
+        3420,
+        -400
       ],
       "id": "b02c221a-6f26-4fa8-bab0-c55edb655298",
       "name": "Code1"
@@ -292,8 +292,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        2320,
-        -330
+        2980,
+        -350
       ],
       "id": "3253140d-3922-4889-b3d0-891aee4efb1f",
       "name": "Insert count1",
@@ -308,7 +308,7 @@
       "typeVersion": 1.1,
       "position": [
         -600,
-        -155
+        -175
       ],
       "id": "d187d34a-8439-4496-a77f-6a035cbe6ead",
       "name": "When Executed by Another Workflow"
@@ -319,23 +319,67 @@
       "typeVersion": 1,
       "position": [
         -820,
-        -355
+        -375
       ],
       "id": "9416d55b-281c-4260-a342-1ad397e7e13d",
       "name": "When clicking ‘Execute workflow’"
     },
     {
       "parameters": {
-        "jsCode": "// Loop over input items and add a new field called 'myNewField' to the JSON of each one\nfor (const item of $input.all()) {\n  item.json.myNewField = 1;\n}\n\nreturn [\n  {\n  \"workspace\": \"asdasdasd\",\n  \"database\": \"asdsdasd\",\n  \"chatInput\": \"Donde estan las resistencias de 1k\"\n}\n];"
+        "jsCode": "// Loop over input items and add a new field called 'myNewField' to the JSON of each one\nfor (const item of $input.all()) {\n  item.json.myNewField = 1;\n}\n\nreturn [\n  {\n  \"workspace\": \"asdasdasd\",\n  \"database\": \"asdsdasd\",\n  \"chatInput\": \"Donde estan los zener 13v\"\n}\n];"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
         -600,
-        -355
+        -375
       ],
       "id": "8335b740-edf0-4768-8e93-4623a26239e9",
       "name": "Code2"
+    },
+    {
+      "parameters": {
+        "operation": "write",
+        "fileName": "=/home/node/data-{{ $('Gen promt').item.json.sessionId }}.csv",
+        "options": {
+          "append": false
+        }
+      },
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1,
+      "position": [
+        720,
+        -275
+      ],
+      "id": "d03d5e00-4b74-4d7b-8a02-6122b4a0923f",
+      "name": "Read/Write Files from Disk1"
+    },
+    {
+      "parameters": {
+        "jsCode": "const csvContent = $json[\"rowsCsv\"];\nconst buffer = Buffer.from(csvContent, 'utf-8');\nconst sessionId = $json[\"sessionId\"];\nconst filename = `data-${sessionId}.csv`;\n\nreturn [{\n  binary: {\n    data: await this.helpers.prepareBinaryData(buffer, filename, 'text/csv')\n  },\n  json: {\n    sessionId\n  }\n}];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        500,
+        -275
+      ],
+      "id": "1576bf8b-ce5e-4aff-918e-8a3fad179b4d",
+      "name": "Convert Text into binary File1",
+      "executeOnce": false
+    },
+    {
+      "parameters": {
+        "command": "=rm /home/node/data-{{ $('Gen promt').item.json.sessionId }}.csv"
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        2400,
+        -275
+      ],
+      "id": "e0831c88-3213-492c-8a3e-28d3968910c0",
+      "name": "Delete data-id.csv"
     }
   ],
   "connections": {
@@ -365,7 +409,7 @@
       "main": [
         [
           {
-            "node": "Basic LLM Chain",
+            "node": "Convert Text into binary File1",
             "type": "main",
             "index": 0
           }
@@ -431,7 +475,7 @@
       "main": [
         [
           {
-            "node": "Basic LLM Chain1",
+            "node": "Delete data-id.csv",
             "type": "main",
             "index": 0
           }
@@ -554,6 +598,39 @@
           }
         ]
       ]
+    },
+    "Read/Write Files from Disk1": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert Text into binary File1": {
+      "main": [
+        [
+          {
+            "node": "Read/Write Files from Disk1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Delete data-id.csv": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
@@ -573,7 +650,7 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "51581bc1-740a-478c-9cee-7f4739db0a25",
+  "versionId": "cad621ef-97f6-4a7e-8dd2-ba7d29432bfd",
   "triggerCount": 1,
   "tags": []
 }

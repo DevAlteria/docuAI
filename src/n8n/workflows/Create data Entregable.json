@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-07-15T13:19:15.850Z",
-  "updatedAt": "2025-07-23T13:22:23.000Z",
+  "updatedAt": "2025-07-23T16:29:30.000Z",
   "id": "4kSTvQKW8uzJVur4",
   "name": "Create data Entregable",
   "active": false,
@@ -1251,7 +1251,7 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "6c42e931-929c-4788-9795-7c407e648b04",
+  "versionId": "02653a33-09fa-4bf2-9073-8b128b42e20d",
   "triggerCount": 0,
   "tags": []
 }

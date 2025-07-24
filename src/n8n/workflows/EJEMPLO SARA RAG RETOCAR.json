@@ -1,0 +1,384 @@
+{
+  "createdAt": "2025-07-24T09:55:15.885Z",
+  "updatedAt": "2025-07-24T11:51:40.000Z",
+  "id": "X7ZHKxUOQUK56zoS",
+  "name": "EJEMPLO SARA RAG RETOCAR",
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        -40
+      ],
+      "id": "a6456534-91ba-46ea-81e0-ec72a6f92235",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "model": "tazarov/all-minilm-l6-v2-f32:latest"
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOllama",
+      "typeVersion": 1,
+      "position": [
+        1480,
+        180
+      ],
+      "id": "4eb4cf8f-6d4a-4b06-a3ae-791787f9b29b",
+      "name": "Embeddings Ollama",
+      "credentials": {
+        "ollamaApi": {
+          "id": "oEKNS3tm8YNi0WhW",
+          "name": "ollama"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "insert",
+        "tableName": "n8n_vectors_test",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStorePGVector",
+      "typeVersion": 1.3,
+      "position": [
+        1460,
+        -40
+      ],
+      "id": "71dfcdfd-ac90-45f5-a178-9bf88d2c08fc",
+      "name": "Postgres PGVector Store",
+      "credentials": {
+        "postgres": {
+          "id": "rUrocHl8XaJ8Jwox",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {
+          "allowFileUploads": true
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        0,
+        160
+      ],
+      "id": "e07fede6-0304-4433-89b0-e91afa71603e",
+      "name": "When chat message received",
+      "webhookId": "9433c975-8ea5-4f11-934e-ac567591b182"
+    },
+    {
+      "parameters": {
+        "mode": "load",
+        "tableName": "n8n_vectors_test",
+        "prompt": "={{ $json.chatInput }}",
+        "topK": 1,
+        "options": {
+          "distanceStrategy": "cosine"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStorePGVector",
+      "typeVersion": 1.3,
+      "position": [
+        220,
+        160
+      ],
+      "id": "e7e52810-e390-4fe3-a0b2-41c404338e2e",
+      "name": "Postgres PGVector Store1",
+      "credentials": {
+        "postgres": {
+          "id": "rUrocHl8XaJ8Jwox",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "deleteTable",
+        "schema": {
+          "__rl": true,
+          "value": "public",
+          "mode": "list",
+          "cachedResultName": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "n8n_vectors_test",
+          "mode": "list",
+          "cachedResultName": "n8n_vectors_test"
+        },
+        "deleteCommand": "drop",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        290,
+        -40
+      ],
+      "id": "85acdf65-d46c-4d7f-adf8-cd9839edad32",
+      "name": "Delete table or rows",
+      "credentials": {
+        "postgres": {
+          "id": "rUrocHl8XaJ8Jwox",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {
+          "metadata": {
+            "metadataValues": [
+              {
+                "name": "appflowy",
+                "value": "={{ $json.appflowy }}"
+              }
+            ]
+          }
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+      "typeVersion": 1.1,
+      "position": [
+        1600,
+        180
+      ],
+      "id": "e221d928-b620-4c39-8ed3-60ac4f39f422",
+      "name": "Default Data Loader"
+    },
+    {
+      "parameters": {
+        "workspaceId": "9a50d26a-471a-4b81-a03d-79b31ea05a20",
+        "databaseId": "df6be534-68ec-421d-9ec7-ad20dae30ee7",
+        "returnAll": true,
+        "simplify": false
+      },
+      "type": "n8n-nodes-appflowy.appflowy",
+      "typeVersion": 1,
+      "position": [
+        1020,
+        -40
+      ],
+      "id": "143b7071-b5a3-477e-80bc-429ea47633b7",
+      "name": "Get All Inventory",
+      "credentials": {
+        "appflowyApi": {
+          "id": "YODmFLRKL0nTWCx6",
+          "name": "Default"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "database",
+        "operation": "getFields",
+        "workspaceId": "9a50d26a-471a-4b81-a03d-79b31ea05a20",
+        "databaseId": "df6be534-68ec-421d-9ec7-ad20dae30ee7"
+      },
+      "type": "n8n-nodes-appflowy.appflowy",
+      "typeVersion": 1,
+      "position": [
+        580,
+        -40
+      ],
+      "id": "055d6498-c7f8-44dc-b004-6038636357ed",
+      "name": "Get Inventory Headers",
+      "credentials": {
+        "appflowyApi": {
+          "id": "YODmFLRKL0nTWCx6",
+          "name": "Default"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Loop over input items and add a new field called 'myNewField' to the JSON of each one\nvar data = {}\ndata.headers = [];\n\nfor (const item of $input.all()) {\n  data.headers.push(item.json) \n}\nfor (var i = 0; i < data.headers.length; i++) {\n  delete data.headers[i].id ;\n  delete data.headers[i].is_primary ;\n  data.headers[i].options = [];\n  if (data.headers[i].field_type == \"SingleSelect\") {\n    for (var j = 0; j < data.headers[i].type_option.content.options.length; j++) {\n      data.headers[i].options.push(data.headers[i].type_option.content.options[j].name);\n    }\n    delete data.headers[i].type_option ;\n  }\n}\ndata.headers.push({\n  \"name\": \"id\",\n  \"field_type\":\"SingleSelect\",\n  \"options\": \"null\"\n});\n\nreturn data;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        800,
+        -40
+      ],
+      "id": "a1acef56-df49-4d25-83ee-98ea9cedbb70",
+      "name": "Code1"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Loop over input items and add a new field called 'myNewField' to the JSON of each one\nvar data = []\n\nfor (const item of $input.all()) {\n  data.push({\n    text: item.json.cells.Name + \"-\" + item.json.cells.Class,\n    appflowy: {\n      rowID: item.json.id\n    }\n  })\n  item.json.myNewField = 1;\n}\n\nreturn data;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1240,
+        -40
+      ],
+      "id": "a370b757-794e-4998-947f-212a759e706b",
+      "name": "Code2"
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "workspaceId": "9a50d26a-471a-4b81-a03d-79b31ea05a20",
+        "databaseId": "df6be534-68ec-421d-9ec7-ad20dae30ee7",
+        "databaseRowId": "={{ $json.document.metadata.appflowy.rowID }}",
+        "includeDocumentData": true,
+        "simplify": false
+      },
+      "type": "n8n-nodes-appflowy.appflowy",
+      "typeVersion": 1,
+      "position": [
+        580,
+        160
+      ],
+      "id": "b475d212-8de5-46ca-9a85-934eeadda1ee",
+      "name": "Get All Inventory1",
+      "credentials": {
+        "appflowyApi": {
+          "id": "YODmFLRKL0nTWCx6",
+          "name": "Default"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Delete table or rows",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings Ollama": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Postgres PGVector Store1",
+            "type": "ai_embedding",
+            "index": 0
+          },
+          {
+            "node": "Postgres PGVector Store",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "Postgres PGVector Store1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Delete table or rows": {
+      "main": [
+        [
+          {
+            "node": "Get Inventory Headers",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres PGVector Store": {
+      "main": [
+        []
+      ]
+    },
+    "Default Data Loader": {
+      "ai_document": [
+        [
+          {
+            "node": "Postgres PGVector Store",
+            "type": "ai_document",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get All Inventory": {
+      "main": [
+        [
+          {
+            "node": "Code2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Inventory Headers": {
+      "main": [
+        [
+          {
+            "node": "Code1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code1": {
+      "main": [
+        [
+          {
+            "node": "Get All Inventory",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code2": {
+      "main": [
+        [
+          {
+            "node": "Postgres PGVector Store",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres PGVector Store1": {
+      "main": [
+        [
+          {
+            "node": "Get All Inventory1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "023f80ec-7f4a-4c28-ad38-80bd1d64486c",
+  "triggerCount": 0,
+  "tags": []
+}
