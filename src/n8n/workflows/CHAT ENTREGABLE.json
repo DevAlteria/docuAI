@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-07-24T12:51:14.372Z",
-  "updatedAt": "2025-07-24T14:54:54.000Z",
+  "updatedAt": "2025-07-24T19:13:12.000Z",
   "id": "AeL15q2p7x2TtYUZ",
   "name": "CHAT ENTREGABLE",
   "active": true,
@@ -9,50 +9,22 @@
     {
       "parameters": {
         "public": true,
+        "initialMessages": "Hola ¿como te puedo ayudar? ",
         "options": {
-          "responseMode": "responseNode"
+          "responseMode": "responseNode",
+          "subtitle": "Algunas de las cosas que puedo hacer es responder preguntas sobre el inventario en Appflowy y las poyectos de KICAD.",
+          "title": "Demo Chat"
         }
       },
       "type": "@n8n/n8n-nodes-langchain.chatTrigger",
       "typeVersion": 1.1,
       "position": [
         -560,
-        -20
+        40
       ],
       "id": "24abe67f-5cc9-48e5-9539-d0681e766a45",
       "name": "When chat message received",
       "webhookId": "c8e12287-f478-4d66-a7d2-1488f7a36221"
-    },
-    {
-      "parameters": {
-        "inputText": "={{ $json.chatInput }}",
-        "categories": {
-          "categories": [
-            {
-              "category": "INVENTARIO",
-              "description": "Esta clase es para cosas relativas al inventario, busquedas de inventario preguntas sobre elementos de inventario etc"
-            },
-            {
-              "category": "KICAD",
-              "description": "Esta categoria es para projectos relacionados con kicad"
-            }
-          ]
-        },
-        "options": {
-          "systemPromptTemplate": "Please classify the text provided by the user into one of the following categories: {INVENTARIO o KICAD}, the 90% of the times wiil be inventory, and use the provided formatting instructions below. Don't explain, and only output the json.",
-          "enableAutoFixing": false
-        }
-      },
-      "type": "@n8n/n8n-nodes-langchain.textClassifier",
-      "typeVersion": 1.1,
-      "position": [
-        -120,
-        -120
-      ],
-      "id": "dc25e2e0-2fc6-4d4b-9da2-42c8c7c067cf",
-      "name": "Text Classifier",
-      "retryOnFail": true,
-      "maxTries": 5
     },
     {
       "parameters": {
@@ -71,7 +43,7 @@
       "typeVersion": 1,
       "position": [
         -560,
-        -220
+        -320
       ],
       "id": "1218cd01-059b-4439-bc69-fe2d8b1aac5e",
       "name": "AppFlowy Trigger",
@@ -90,7 +62,7 @@
       "typeVersion": 2,
       "position": [
         -340,
-        -20
+        40
       ],
       "id": "b4a92aff-dfcc-4e33-8a1d-826dc43a2a03",
       "name": "Parse and mark chat question"
@@ -103,14 +75,14 @@
       "typeVersion": 2,
       "position": [
         -340,
-        -220
+        -320
       ],
       "id": "3b94b0a9-8d76-4c70-9d9b-c52725b83457",
       "name": "Parse and mark row question"
     },
     {
       "parameters": {
-        "model": "llama3.2:1b",
+        "model": "deepseek-r1:8b",
         "options": {
           "temperature": 0.7,
           "penalizeNewline": true
@@ -119,8 +91,8 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
       "typeVersion": 1,
       "position": [
-        -40,
-        100
+        -560,
+        800
       ],
       "id": "f4cae071-76e8-49ee-b231-1d040f2d4812",
       "name": "Ollama Chat Model",
@@ -145,7 +117,7 @@
                 },
                 "conditions": [
                   {
-                    "leftValue": "={{ $json.type }}",
+                    "leftValue": "={{ $json.chat.type }}",
                     "rightValue": "CHAT",
                     "operator": {
                       "type": "string",
@@ -170,7 +142,7 @@
                 "conditions": [
                   {
                     "id": "46fc20d6-bb8a-47ec-9e63-508d82e02f54",
-                    "leftValue": "={{ $json.type }}",
+                    "leftValue": "={{ $json.chat.type }}",
                     "rightValue": "ROW",
                     "operator": {
                       "type": "string",
@@ -192,7 +164,7 @@
       "typeVersion": 3.2,
       "position": [
         680,
-        -120
+        265
       ],
       "id": "80e59a28-fb18-4c91-b88f-3fe52e0ccb1e",
       "name": "Switch"
@@ -205,15 +177,15 @@
       "typeVersion": 2,
       "position": [
         460,
-        -120
+        540
       ],
       "id": "6b1914b7-4d5e-4536-b014-7eafc857d85b",
       "name": "Code"
     },
     {
       "parameters": {
-        "respondWith": "json",
-        "responseBody": "={{ $json }}",
+        "respondWith": "text",
+        "responseBody": "={{ $json.reply }}",
         "options": {
           "responseCode": 200
         }
@@ -222,7 +194,7 @@
       "typeVersion": 1.4,
       "position": [
         900,
-        -220
+        165
       ],
       "id": "3f9b564f-288a-4cf1-86ab-1256b5506c6e",
       "name": "Respond to Webhook"
@@ -238,7 +210,7 @@
       "typeVersion": 1,
       "position": [
         900,
-        -20
+        365
       ],
       "id": "67964ea8-5ee4-4942-bcf0-38c0dd6af94a",
       "name": "Create or update a database row",
@@ -270,50 +242,87 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
       "position": [
-        240,
-        -320
+        -120,
+        40
       ],
       "id": "77175d90-75ea-4932-9a1e-717f1fcd4f9b",
       "name": "Execute Workflow"
     },
     {
       "parameters": {
-        "options": {}
-      },
-      "type": "n8n-nodes-base.executeWorkflow",
-      "typeVersion": 1.2,
-      "position": [
-        240,
-        80
-      ],
-      "id": "e1c9d6b5-e94d-4bb3-a1b2-8f3af3e14b4b",
-      "name": "Execute Workflow1"
-    },
-    {
-      "parameters": {
         "jsCode": "var ret = $input.first();\nret.json.reply = \"UNKNOWN\";\nreturn [ret];"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
         460,
-        80
+        340
       ],
       "id": "43e786b3-0510-41cb-9729-6222f536e4b9",
       "name": "Code1"
     },
     {
       "parameters": {
-        "jsCode": "var ret = $input.first();\nret.json.reply = \"UNKNOWN\";\nreturn [ret];"
+        "jsCode": "var reply = $input.first().json.output\nconst patronInicio = \"<think>\";\nconst patronFin = \"</think>\\n\\n\";\nconst regex = new RegExp(`${patronInicio}[\\\\s\\\\S]*?${patronFin}`, 'g');\n\nvar ret = {}\nret.reply = reply.replace(regex, '');\nret.chat = $('Parse and mark chat question').first().json\nreturn [ret];"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        460,
-        -320
+        520,
+        -60
       ],
       "id": "44555ccd-094b-4ea7-b375-7c78715bfb75",
       "name": "Code2"
+    },
+    {
+      "parameters": {
+        "content": "## TODO\n\nAdd text clasifier",
+        "height": 540,
+        "width": 360
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -700,
+        400
+      ],
+      "typeVersion": 1,
+      "id": "f2fd6323-d353-446b-a734-ca7b86ba87fb",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Responde a la siguiente pregunta [PREGUNTA] usando el contexto [CONTEXTO] que dispongo abajo.\nEl contexto seran filas de los elementos relacionados con la pregunta. La ubicacion de un elemento esta formada por BOX, COL y ROW. En caso de que la respuesta sea negativa anade el contexto [CONTEXTO] a tu respuesta.\n\n[PREGUNTA]\n{{ $('Parse and mark chat question').item.json.chatInput }}\n\n[CONTEXTO]\n{{ $json.toJsonString() }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        100,
+        -60
+      ],
+      "id": "1b3a7e18-b52d-430b-8261-63076171dabd",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": "deepseek-r1:14b",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
+      "typeVersion": 1,
+      "position": [
+        180,
+        160
+      ],
+      "id": "4f162bc6-7a92-480a-bb31-b61c773aad34",
+      "name": "Ollama Chat Model1",
+      "credentials": {
+        "ollamaApi": {
+          "id": "oEKNS3tm8YNi0WhW",
+          "name": "ollama"
+        }
+      }
     }
   ],
   "connections": {
@@ -343,7 +352,7 @@
       "main": [
         [
           {
-            "node": "Text Classifier",
+            "node": "Execute Workflow",
             "type": "main",
             "index": 0
           }
@@ -352,36 +361,11 @@
     },
     "Parse and mark row question": {
       "main": [
-        [
-          {
-            "node": "Text Classifier",
-            "type": "main",
-            "index": 0
-          }
-        ]
+        []
       ]
     },
     "Ollama Chat Model": {
       "ai_languageModel": [
-        [
-          {
-            "node": "Text Classifier",
-            "type": "ai_languageModel",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Text Classifier": {
-      "main": [
-        [
-          {
-            "node": "Execute Workflow",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [],
         []
       ]
     },
@@ -414,22 +398,11 @@
         ]
       ]
     },
-    "Execute Workflow1": {
-      "main": [
-        [
-          {
-            "node": "Code1",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "Execute Workflow": {
       "main": [
         [
           {
-            "node": "Code2",
+            "node": "AI Agent",
             "type": "main",
             "index": 0
           }
@@ -457,6 +430,28 @@
           }
         ]
       ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Code2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ollama Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
@@ -479,7 +474,7 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "e4d49546-c5f4-418a-ab70-be872edee8c8",
+  "versionId": "8dd8b003-906c-4dd3-92fc-f0d3ad2547b0",
   "triggerCount": 2,
   "tags": []
 }

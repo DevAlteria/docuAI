@@ -151,7 +151,12 @@
   "settings": {
     "executionOrder": "v1"
   },
-  "staticData": null,
+  "staticData": {
+    "node:Get ROW": {
+      "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1MGY0MDhmYS0xNTM3LTRjZTEtODIyMi02MjllZTZjMzllZTAiLCJhdWQiOiIiLCJleHAiOjE3NTMzODk2NjEsImlhdCI6MTc1MzM4MjQ2MSwiZW1haWwiOiJkZWZhdWx0QGRlZmF1bHQuZGVmYXVsdCIsInBob25lIjoiIiwiYXBwX21ldGFkYXRhIjp7InByb3ZpZGVyIjoiZW1haWwiLCJwcm92aWRlcnMiOlsiZW1haWwiXX0sInVzZXJfbWV0YWRhdGEiOnsiZW1haWwiOiJkZWZhdWx0QGRlZmF1bHQuZGVmYXVsdCIsImVtYWlsX3ZlcmlmaWVkIjpmYWxzZSwicGhvbmVfdmVyaWZpZWQiOmZhbHNlLCJzdWIiOiI1MGY0MDhmYS0xNTM3LTRjZTEtODIyMi02MjllZTZjMzllZTAifSwicm9sZSI6IiIsImFhbCI6ImFhbDEiLCJhbXIiOlt7Im1ldGhvZCI6InBhc3N3b3JkIiwidGltZXN0YW1wIjoxNzUzMzgyNDYxfV0sInNlc3Npb25faWQiOiI4MjFlMGNkMi1iMjNmLTQ1MjgtYmYxZS1jZDNkMDI5ZDNmYmMiLCJpc19hbm9ueW1vdXMiOmZhbHNlfQ.quFguVK_Jzf8W3y4YMrHOdEp0AqqON6Bbc7R01waehQ",
+      "refreshToken": "LL1XQZlJyLVKn6K_0ELZWQ"
+    }
+  },
   "meta": {
     "templateCredsSetupCompleted": true
   },
