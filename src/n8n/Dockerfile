@@ -11,7 +11,7 @@ WORKDIR /home/node/.n8n
 RUN npm i iconv-lite
 
 ENV N8N_COMMUNITY_PACKAGES_ALLOW_TOOL_USAGE=true
-RUN npm i -g n8n-nodes-appflowy
+# RUN npm i -g n8n-nodes-appflowy
 RUN npm i n8n-nodes-appflowy
 
 WORKDIR /home/node

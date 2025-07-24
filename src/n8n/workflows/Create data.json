@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-07-15T13:19:15.850Z",
-  "updatedAt": "2025-07-23T11:00:35.000Z",
+  "updatedAt": "2025-07-24T13:30:47.000Z",
   "id": "4kSTvQKW8uzJVur4",
   "name": "Create data",
   "active": false,
@@ -469,46 +469,6 @@
     },
     {
       "parameters": {
-        "workspaceId": "={{ $('Create Demo Workspace').item.json.data.workspace_id }}",
-        "databaseId": "={{ $json.kicadDB }}"
-      },
-      "type": "n8n-nodes-appflowy.appflowy",
-      "typeVersion": 1,
-      "position": [
-        -760,
-        380
-      ],
-      "id": "5e554b5f-1284-44c1-8c90-e73d3fbdf67e",
-      "name": "Get many database rows",
-      "credentials": {
-        "appflowyApi": {
-          "id": "YODmFLRKL0nTWCx6",
-          "name": "Default"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "workspaceId": "={{ $('Create Demo Workspace').item.json.data.workspace_id }}",
-        "databaseId": "={{ $('Find KICAD database').item.json.kicadDB }}"
-      },
-      "type": "n8n-nodes-appflowy.appflowy",
-      "typeVersion": 1,
-      "position": [
-        -540,
-        380
-      ],
-      "id": "3331a4c1-75d8-4710-98cf-2530e2d36b47",
-      "name": "Get many database rows1",
-      "credentials": {
-        "appflowyApi": {
-          "id": "YODmFLRKL0nTWCx6",
-          "name": "Default"
-        }
-      }
-    },
-    {
-      "parameters": {
         "method": "POST",
         "url": "=http://appflowy.iadoc.alteria.vpn.alonsom.com/api/workspace/{{ $('Create Demo Workspace').item.json.data.workspace_id }}/database/{{ $('Find KICAD database').item.json.kicadDB }}/fields",
         "sendHeaders": true,
@@ -832,6 +792,137 @@
       "name": "Get rows of Inventory",
       "executeOnce": true,
       "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=http://appflowy.iadoc.alteria.vpn.alonsom.com/api/workspace/{{ $('Create Demo Workspace').item.json.data.workspace_id }}/space",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $('Get access token').item.json.access_token }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "{\"name\":\"Preguntas\",\"space_icon\":\"\",\"space_icon_color\":\"\",\"space_permission\":0}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1440,
+        360
+      ],
+      "id": "de5db43d-a641-483b-a588-2384af13c6e7",
+      "name": "Create preguntas space1",
+      "executeOnce": false
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=http://appflowy.iadoc.alteria.vpn.alonsom.com/api/workspace/{{ $('Create Demo Workspace').item.json.data.workspace_id }}/page-view",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $('Get access token').item.json.access_token }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"layout\": 1,\n  \"parent_view_id\": \"{{ $('Create preguntas space1').item.json.data.view_id }}\",\n  \"name\": \"Preguntas\"\n} ",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1660,
+        360
+      ],
+      "id": "621da049-ba43-4a1b-80dc-afe8c33c0c5b",
+      "name": "Create Preguntas Grid1"
+    },
+    {
+      "parameters": {
+        "url": "=http://appflowy.iadoc.alteria.vpn.alonsom.com/api/workspace/{{ $('Create Demo Workspace').item.json.data.workspace_id }}/database/",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $('Get access token').item.json.access_token }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1900,
+        360
+      ],
+      "id": "a930737b-4a43-4130-994d-be697c4bd251",
+      "name": "Get PREGUNTAS database1"
+    },
+    {
+      "parameters": {
+        "jsCode": "const target = $('Create Preguntas Grid1').first().json.data.view_id;\n\nfor (const item of $input.first().json.data) {\n  for (const view of item.views) {\n    if (view.view_id == target) {\n      return [ { preguntasDB: item.id} ]\n    }\n  }\n}\n\nreturn [ { } ];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2080,
+        360
+      ],
+      "id": "468d405f-9dc0-43fd-8f2b-be1e57683c80",
+      "name": "Find Preguntas database1"
+    },
+    {
+      "parameters": {
+        "jsCode": "return [ \n  {\n    \"name\": \"Pregunta\",\n    \"field_type\": 0\n  },\n  {\n    \"name\": \"Respuesta\",\n    \"field_type\": 0\n  },\n  {\n    \"name\": \"Last Update\",\n    \"field_type\": 8\n  },\n  {\n    \"name\": \"Created at\",\n    \"field_type\": 9\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2300,
+        360
+      ],
+      "id": "f9ec9fc8-3c7d-43d4-9098-f6e125057cdd",
+      "name": "Prepare fields for PREGUNTAS"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=http://appflowy.iadoc.alteria.vpn.alonsom.com/api/workspace/{{ $('Create Demo Workspace').item.json.data.workspace_id }}/database/{{ $('Find Preguntas database1').item.json.preguntasDB }}/fields",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $('Get access token').item.json.access_token }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ $json }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2560,
+        360
+      ],
+      "id": "91e584c0-48e6-4441-820b-5448ee2015a1",
+      "name": "Add fields to Preguntas"
     }
   ],
   "connections": {
@@ -968,6 +1059,11 @@
             "node": "Create kicad space",
             "type": "main",
             "index": 0
+          },
+          {
+            "node": "Create preguntas space1",
+            "type": "main",
+            "index": 0
           }
         ]
       ]
@@ -1032,17 +1128,6 @@
         [
           {
             "node": "Prepare fields for KICAD",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Get many database rows": {
-      "main": [
-        [
-          {
-            "node": "Get many database rows1",
             "type": "main",
             "index": 0
           }
@@ -1241,6 +1326,61 @@
           }
         ]
       ]
+    },
+    "Create preguntas space1": {
+      "main": [
+        [
+          {
+            "node": "Create Preguntas Grid1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Preguntas Grid1": {
+      "main": [
+        [
+          {
+            "node": "Get PREGUNTAS database1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get PREGUNTAS database1": {
+      "main": [
+        [
+          {
+            "node": "Find Preguntas database1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Find Preguntas database1": {
+      "main": [
+        [
+          {
+            "node": "Prepare fields for PREGUNTAS",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare fields for PREGUNTAS": {
+      "main": [
+        [
+          {
+            "node": "Add fields to Preguntas",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
@@ -1251,7 +1391,7 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "2c0d291b-8d0e-4426-8bc6-19dfe5a9c698",
+  "versionId": "a55b2c43-c654-4e79-982d-52d1fdc688a2",
   "triggerCount": 0,
   "tags": []
 }
