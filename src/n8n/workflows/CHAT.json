@@ -1,0 +1,139 @@
+{
+  "createdAt": "2025-07-24T12:51:14.372Z",
+  "updatedAt": "2025-07-24T21:02:09.000Z",
+  "id": "AeL15q2p7x2TtYUZ",
+  "name": "CHAT",
+  "active": true,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "public": true,
+        "initialMessages": "Hola ¿como te puedo ayudar? ",
+        "options": {
+          "responseMode": "responseNode",
+          "subtitle": "Algunas de las cosas que puedo hacer es responder preguntas sobre el inventario en Appflowy y las poyectos de KICAD.",
+          "title": "Demo Chat"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -560,
+        40
+      ],
+      "id": "24abe67f-5cc9-48e5-9539-d0681e766a45",
+      "name": "When chat message received",
+      "webhookId": "c8e12287-f478-4d66-a7d2-1488f7a36221"
+    },
+    {
+      "parameters": {
+        "jsCode": "var ret = $input.first();\nret.json.type = \"CHAT\";\nreturn [ret];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -340,
+        40
+      ],
+      "id": "b4a92aff-dfcc-4e33-8a1d-826dc43a2a03",
+      "name": "Parse and mark chat question"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "ZCRfNkstg7juNzEV",
+          "mode": "list",
+          "cachedResultName": "CHILD - CEREBRO"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "question": "={{ $json.chatInput }}"
+          },
+          "matchingColumns": [
+            "question"
+          ],
+          "schema": [
+            {
+              "id": "question",
+              "displayName": "question",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "mode": "each",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        -120,
+        40
+      ],
+      "id": "77175d90-75ea-4932-9a1e-717f1fcd4f9b",
+      "name": "Execute Workflow",
+      "onError": "continueErrorOutput"
+    }
+  ],
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "Parse and mark chat question",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse and mark chat question": {
+      "main": [
+        [
+          {
+            "node": "Execute Workflow",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute Workflow": {
+      "main": [
+        []
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": {
+    "node:AppFlowy Trigger": {
+      "lastTimeChecked": "2025-07-24T14:56:13.008Z",
+      "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1MGY0MDhmYS0xNTM3LTRjZTEtODIyMi02MjllZTZjMzllZTAiLCJhdWQiOiIiLCJleHAiOjE3NTMzNjkxNzIsImlhdCI6MTc1MzM2MTk3MiwiZW1haWwiOiJkZWZhdWx0QGRlZmF1bHQuZGVmYXVsdCIsInBob25lIjoiIiwiYXBwX21ldGFkYXRhIjp7InByb3ZpZGVyIjoiZW1haWwiLCJwcm92aWRlcnMiOlsiZW1haWwiXX0sInVzZXJfbWV0YWRhdGEiOnsiZW1haWwiOiJkZWZhdWx0QGRlZmF1bHQuZGVmYXVsdCIsImVtYWlsX3ZlcmlmaWVkIjpmYWxzZSwicGhvbmVfdmVyaWZpZWQiOmZhbHNlLCJzdWIiOiI1MGY0MDhmYS0xNTM3LTRjZTEtODIyMi02MjllZTZjMzllZTAifSwicm9sZSI6IiIsImFhbCI6ImFhbDEiLCJhbXIiOlt7Im1ldGhvZCI6InBhc3N3b3JkIiwidGltZXN0YW1wIjoxNzUzMzYxOTcyfV0sInNlc3Npb25faWQiOiJjZjg1MzUwOC04MmY5LTRjZTItYWZjZC0wOTI3MTQ0OTJhM2YiLCJpc19hbm9ueW1vdXMiOmZhbHNlfQ.bCyEFRqIs_-JN2lJgFUul048tsER3M4gk1hAtfgcwU4",
+      "refreshToken": "9gVCvqbmfmLLj_TuJ_Npdg",
+      "rows": [
+        {
+          "updated_at": "2025-07-24T14:54:44.113Z",
+          "row_id": "576a415e-a818-4372-a8d1-c0dc8d0f6661"
+        }
+      ]
+    }
+  },
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "9241863e-f024-4a42-963c-1988bba636ef",
+  "triggerCount": 1,
+  "tags": []
+}

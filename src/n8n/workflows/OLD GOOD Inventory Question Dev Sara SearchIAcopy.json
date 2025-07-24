@@ -1,8 +1,8 @@
 {
   "createdAt": "2025-07-15T12:07:19.822Z",
-  "updatedAt": "2025-07-23T11:38:15.000Z",
+  "updatedAt": "2025-07-24T21:04:10.000Z",
   "id": "NvgM86eUEwCjHBck",
-  "name": "Inventory Question Dev Sara SearchIAcopy",
+  "name": "OLD GOOD Inventory Question Dev Sara SearchIAcopy",
   "active": false,
   "isArchived": false,
   "nodes": [
@@ -528,7 +528,7 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "25bb2cbc-f980-4217-82f2-51c74fca0963",
+  "versionId": "d80f5dcd-38e3-4c7b-8519-a458ce725cfd",
   "triggerCount": 1,
   "tags": []
 }

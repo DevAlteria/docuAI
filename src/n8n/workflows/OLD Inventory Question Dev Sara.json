@@ -1,15 +1,15 @@
 {
-  "createdAt": "2025-07-14T12:31:05.714Z",
-  "updatedAt": "2025-07-14T12:32:54.000Z",
-  "id": "Ivnni6lAlJ2awUlG",
-  "name": "Inventory Question Prod",
+  "createdAt": "2025-07-15T08:52:40.850Z",
+  "updatedAt": "2025-07-24T21:03:30.000Z",
+  "id": "IZkjy77I6AMNKuVp",
+  "name": "OLD Inventory Question Dev Sara",
   "active": false,
   "isArchived": false,
   "nodes": [
     {
       "parameters": {
         "promptType": "define",
-        "text": "=[INST]\n\nOffer a thorough and accurate solution that directly addresses the Question outlined in the [Question].\n\nIf you recibe a quetion asking for the position of a item, reply with Name, Box, Col and Row otherwise reply that you do not know. Always follow this rule.\n\n### [Table Text]\nThis is \n{{ JSON.stringify($json.headers) }}\n\n### [Table]\n```\n{{ $json.rowsCsv }}\n```\n\n### [Question]\n{{ $json.question }}\n\n### [Solution]\n\n[INST/]",
+        "text": "=[INST]Below are the first few lines of a CSV file. You need to write a Python program to solve the provided question.\n\n### [Table Text]\nThis is the description of the cols of the table\n{{ JSON.stringify($json.headers) }}\n\n### [Table]\n```\n{{ $json.rowsCsv }}\n```\n\n### [Question]\n{{ $json.question }}\n\n### [Solution]\nThe reply should follow the following format:\n  -search in all the elements of the csvFile and returns the elements that have any compatible information with the question.\n  - if you don't find anything, return \"UNKNOWN\"\n  - the output MUST be a JSON\n   - You are only allowed to solve the question using the EXACT Python script shown at [Python Script Template below]\n  - If you do NOT use this exact code structure, your response will be considered invalid and rejected.\n\n\n### [Python Script Template] — DO NOT MODIFY THIS CODE UNDER ANY CIRCUMSTANCES\nYou MUST use this exact script structure below to answer the question. DO NOT change any part of it.\n\n```python\nimport pandas as pd\nimport re\n\nsearch_query = \"{{ $('When chat message received').first().json.chatInput }}\"\ndf = pd.read_csv('data.csv')\nkeywords = search_query.lower().split()\n\ndef matches_keywords(name):\n    name = str(name).lower()\n    return any(re.search(r'\\b' + re.escape(word) + r'\\b', name) for word in keywords)\n\nfiltered_df = df[df['Name'].apply(matches_keywords)]\n\nif not filtered_df.empty:\n    result = filtered_df.to_dict('records')\nelse:\n    result = \"UNKNOWN\"\n\nprint(result)\n\n#You MUST NOT use any other logic or return type. This is the ONLY allowed script.\n\n[/INST]",
         "batching": {}
       },
       "type": "@n8n/n8n-nodes-langchain.chainLlm",
@@ -18,13 +18,13 @@
         360,
         -200
       ],
-      "id": "dffd7e2c-ced0-4f7c-96dd-a5ef8defaf93",
+      "id": "71bfae64-1cbd-4f8f-803d-c139594d2bce",
       "name": "Basic LLM Chain"
     },
     {
       "parameters": {
-        "workspaceId": "384c94b9-1510-49b8-ab8c-a440eb52ce81",
-        "databaseId": "c6442a99-781d-416f-acd4-a55f2d577c9b",
+        "workspaceId": "013a4efa-1bce-43cf-88bc-faf921d516be",
+        "databaseId": "f0dc0899-6864-46bc-ad79-4c44effb9850",
         "returnAll": true,
         "simplify": false
       },
@@ -34,23 +34,19 @@
         -80,
         -200
       ],
-      "id": "f0b51adb-76ce-4f5e-a6f8-86adf10cd5f7",
+      "id": "1989133d-d0a9-42e2-ab81-ddf9fad0d64f",
       "name": "Get All Inventory",
       "credentials": {
         "appflowyApi": {
-          "id": "OI6UJbWJx7J8v4SQ",
-          "name": "Prod"
+          "id": "caTURWHOYl4VW0ZV",
+          "name": "Dev"
         }
       }
     },
     {
       "parameters": {
         "model": "hf.co/QuantFactory/TableLLM-13b-GGUF:Q8_0",
-        "options": {
-          "numCtx": 20480,
-          "numPredict": 200,
-          "penalizeNewline": false
-        }
+        "options": {}
       },
       "type": "@n8n/n8n-nodes-langchain.lmOllama",
       "typeVersion": 1,
@@ -58,7 +54,7 @@
         320,
         0
       ],
-      "id": "cd5ec528-1c33-4f92-a4da-0d27ee50ce0d",
+      "id": "9dfc38ab-f991-4a23-9afa-136f7cd99673",
       "name": "Ollama Model",
       "credentials": {
         "ollamaApi": {
@@ -71,8 +67,8 @@
       "parameters": {
         "resource": "database",
         "operation": "getFields",
-        "workspaceId": "384c94b9-1510-49b8-ab8c-a440eb52ce81",
-        "databaseId": "c6442a99-781d-416f-acd4-a55f2d577c9b"
+        "workspaceId": "013a4efa-1bce-43cf-88bc-faf921d516be",
+        "databaseId": "f0dc0899-6864-46bc-ad79-4c44effb9850"
       },
       "type": "n8n-nodes-appflowy.appflowy",
       "typeVersion": 1,
@@ -80,12 +76,12 @@
         -520,
         -200
       ],
-      "id": "6a687cff-bae7-4a8c-966a-b27027ff2f95",
+      "id": "885a27cc-79ca-4876-93e6-45ef00d9be59",
       "name": "Get Inventory Headers",
       "credentials": {
         "appflowyApi": {
-          "id": "OI6UJbWJx7J8v4SQ",
-          "name": "Prod"
+          "id": "caTURWHOYl4VW0ZV",
+          "name": "Dev"
         }
       }
     },
@@ -99,7 +95,7 @@
         140,
         -200
       ],
-      "id": "49517c69-673c-4a25-8b17-2df8aeb5be6a",
+      "id": "2dec16d6-cc07-4860-b8b3-f1886a0cdd0f",
       "name": "Gen promt",
       "executeOnce": false
     },
@@ -113,7 +109,7 @@
         -300,
         -200
       ],
-      "id": "624e9a59-8a59-4165-b276-121e8bb1581e",
+      "id": "bfd1f1fb-4a2f-439c-a1f3-1340d23b18aa",
       "name": "Code"
     },
     {
@@ -137,22 +133,99 @@
         -880,
         -200
       ],
-      "id": "879fec3b-a192-4223-8d63-718e6ce854ab",
+      "id": "6376604b-75c1-4c40-bb31-60e5a7a59533",
       "name": "When chat message received",
-      "webhookId": "ea862da5-c054-4d14-8766-8eac6c7585a0"
+      "webhookId": "397b3a6f-ad37-416c-8fbe-aac9b54a7a51"
     },
     {
       "parameters": {
-        "contextWindowLength": 50
+        "promptType": "define",
+        "text": "=[INST]\n\nOffer a thorough and accurate solution that directly addresses the Question outlined in the [Question].\n\nIf you recibe a quetion asking for the position of a item, reply with Name, Box, Col and Row ofg the given table otherwise reply that you do not know. Always follow this rule.\n\n### [Table Text]\nThis is the description of the cols of the table\n{{ $('Gen promt').item.json.headers }}\n\n### [Table]\n```\n{{ $('Execute python Code').item.json.stdout }}\n```\n\n### [Question]\n{{ $('When chat message received').first().json.chatInput }}\n\n### [Solution]\nThe reply should follow the following format:\n  - If element was not found: \"UNKOWN\"\n  - If element was found: \"The elements XXXX is on the box XXX, on thhe row XXXX and on the col XXXX\"\n\n\n[INST/]",
+        "batching": {}
       },
-      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
-      "typeVersion": 1.3,
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.7,
       "position": [
-        -800,
-        20
+        1880,
+        -200
       ],
-      "id": "665c2678-924f-4a26-a1b4-bb795d57e082",
-      "name": "Simple Memory"
+      "id": "46ebece0-0a5e-432d-bd3a-80305d5f931c",
+      "name": "Basic LLM Chain1"
+    },
+    {
+      "parameters": {
+        "jsCode": "const content = $json[\"text\"];\nconst buffer = Buffer.from(content, 'utf-8');\n// Obtener sessionId desde otro nodo\nconst sessionId = $('When chat message received').first().json.sessionId;  // ← trim aquí\nconst filename = `/home/node/data-${sessionId}.py`;\n\n\nreturn [{\n  binary: {\n    data: await this.helpers.prepareBinaryData(buffer, filename, 'text/x-python')\n  }\n}];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        720,
+        -200
+      ],
+      "id": "baa28d3a-b442-49c7-90da-e136b974547c",
+      "name": "Make text into binary File",
+      "executeOnce": false
+    },
+    {
+      "parameters": {
+        "operation": "write",
+        "fileName": "=/home/node/data-{{$('When chat message received').first().json.sessionId}}.py",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1,
+      "position": [
+        980,
+        -200
+      ],
+      "id": "a2e0f850-5536-469c-81f7-7b51d50d97fb",
+      "name": "Read/Write Files from Disk"
+    },
+    {
+      "parameters": {
+        "model": "hf.co/QuantFactory/TableLLM-13b-GGUF:Q8_0",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmOllama",
+      "typeVersion": 1,
+      "position": [
+        1680,
+        -40
+      ],
+      "id": "fb68b918-e1da-43f2-a4f0-7a9dfda5a596",
+      "name": "Ollama Model1",
+      "credentials": {
+        "ollamaApi": {
+          "id": "oEKNS3tm8YNi0WhW",
+          "name": "ollama"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "command": "=python3 /home/node/data-{{$('When chat message received').first().json.sessionId}}.py\n\n"
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        1220,
+        -200
+      ],
+      "id": "fb7d1ded-44da-4eea-8353-efee4f9d1bc1",
+      "name": "Execute python Code"
+    },
+    {
+      "parameters": {
+        "command": "=rm /home/node/data-{{ $('When chat message received').first().json.sessionId }}.py"
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        1460,
+        -180
+      ],
+      "id": "3f1154c9-1ae0-446e-b066-98d784be6ca2",
+      "name": "Delete data-id.py"
     }
   ],
   "connections": {
@@ -222,20 +295,75 @@
         ]
       ]
     },
-    "Simple Memory": {
-      "ai_memory": [
+    "Basic LLM Chain": {
+      "main": [
         [
           {
-            "node": "When chat message received",
-            "type": "ai_memory",
+            "node": "Make text into binary File",
+            "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Basic LLM Chain": {
+    "Make text into binary File": {
+      "main": [
+        [
+          {
+            "node": "Read/Write Files from Disk",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read/Write Files from Disk": {
+      "main": [
+        [
+          {
+            "node": "Execute python Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ollama Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain1": {
       "main": [
         []
+      ]
+    },
+    "Execute python Code": {
+      "main": [
+        [
+          {
+            "node": "Delete data-id.py",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Delete data-id.py": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain1",
+            "type": "main",
+            "index": 0
+          }
+        ]
       ]
     }
   },
@@ -255,18 +383,8 @@
   "meta": {
     "templateCredsSetupCompleted": true
   },
-  "pinData": {
-    "When chat message received": [
-      {
-        "json": {
-          "action": "sendMessage",
-          "sessionId": "4553af3d-34be-4e1b-8546-cb98bf91d68a",
-          "chatInput": "cuantos integrados hay\n"
-        }
-      }
-    ]
-  },
-  "versionId": "81c449d7-050c-49b6-bb3e-2eead0c70c4f",
+  "pinData": {},
+  "versionId": "f9bf908d-f1cb-4eae-aa05-55e42f059112",
   "triggerCount": 1,
   "tags": []
 }

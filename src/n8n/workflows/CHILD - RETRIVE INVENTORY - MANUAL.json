@@ -1,8 +1,8 @@
 {
   "createdAt": "2025-07-24T14:34:22.778Z",
-  "updatedAt": "2025-07-24T14:42:45.000Z",
+  "updatedAt": "2025-07-24T20:58:34.000Z",
   "id": "0Av55mBiFgoet5yZ",
-  "name": "RETRIVE INVENTORY",
+  "name": "CHILD - RETRIVE INVENTORY - MANUAL",
   "active": false,
   "isArchived": false,
   "nodes": [
@@ -53,8 +53,8 @@
     {
       "parameters": {
         "operation": "get",
-        "workspaceId": "273d82d8-1caa-44ce-9a4a-90e55dbbf4e3",
-        "databaseId": "ae6b9ae3-e4eb-4c09-b07d-b3a1a12afd96",
+        "workspaceId": "8ae13e1f-196d-4a3d-8682-bcc06c0c8634",
+        "databaseId": "2b6f3380-39a5-4e7c-a67d-6e60f6a21ae6",
         "databaseRowId": "={{ $json.document.metadata.appflowy.rowID }}",
         "includeDocumentData": true,
         "simplify": false
@@ -67,6 +67,7 @@
       ],
       "id": "63c6fd0f-f5e6-4c95-8332-54697b9839f8",
       "name": "Get ROW",
+      "alwaysOutputData": true,
       "credentials": {
         "appflowyApi": {
           "id": "YODmFLRKL0nTWCx6",
@@ -161,7 +162,7 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "2d523a94-0f0f-499f-8622-1cc41607fe2b",
+  "versionId": "b707b30a-66bd-47a5-ad39-b4c627186a11",
   "triggerCount": 0,
   "tags": []
 }

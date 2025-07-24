@@ -1,8 +1,8 @@
 {
   "createdAt": "2025-07-23T13:22:17.749Z",
-  "updatedAt": "2025-07-24T10:55:29.000Z",
+  "updatedAt": "2025-07-24T21:04:24.000Z",
   "id": "xnMqcmAwIVsoyXRz",
-  "name": "Search In CSV ENTREGABLE",
+  "name": "OLD GOOD Search In CSV",
   "active": false,
   "isArchived": false,
   "nodes": [
@@ -650,7 +650,7 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "cad621ef-97f6-4a7e-8dd2-ba7d29432bfd",
+  "versionId": "8afb916a-b950-4ab4-93a4-f376dfd86c57",
   "triggerCount": 1,
   "tags": []
 }

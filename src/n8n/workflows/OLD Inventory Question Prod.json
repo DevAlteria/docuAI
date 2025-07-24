@@ -1,15 +1,15 @@
 {
-  "createdAt": "2025-07-14T08:40:47.774Z",
-  "updatedAt": "2025-07-14T13:06:05.000Z",
-  "id": "CChnvz1Hv1hCgNsy",
-  "name": "Inventory Question Dev",
-  "active": true,
+  "createdAt": "2025-07-14T12:31:05.714Z",
+  "updatedAt": "2025-07-24T21:03:42.000Z",
+  "id": "Ivnni6lAlJ2awUlG",
+  "name": "OLD Inventory Question Prod",
+  "active": false,
   "isArchived": false,
   "nodes": [
     {
       "parameters": {
         "promptType": "define",
-        "text": "=[INST]\n\nOffer a thorough and accurate solution that directly addresses the Question outlined in the [Question].\n\nIf you recibe a quetion asking for the position of a item, reply with Name, Box, Col and Row ofg the given table otherwise reply that you do not know. Always follow this rule.\n\n### [Table Text]\nThis is the description of the cols of the table\n{{ JSON.stringify($json.headers) }}\n\n### [Table]\n```\n{{ $json.rowsCsv }}\n```\n\n### [Question]\n{{ $json.question }}\n\n### [Solution]\nThe reply should follow the following format:\n  - If element was found: \"UNKOWN\"\n  - If element was not found: \"The elements XXXX is on the box XXX, on thhe row XXXX and on the col XXXX\"\n\n\n[INST/]",
+        "text": "=[INST]\n\nOffer a thorough and accurate solution that directly addresses the Question outlined in the [Question].\n\nIf you recibe a quetion asking for the position of a item, reply with Name, Box, Col and Row otherwise reply that you do not know. Always follow this rule.\n\n### [Table Text]\nThis is \n{{ JSON.stringify($json.headers) }}\n\n### [Table]\n```\n{{ $json.rowsCsv }}\n```\n\n### [Question]\n{{ $json.question }}\n\n### [Solution]\n\n[INST/]",
         "batching": {}
       },
       "type": "@n8n/n8n-nodes-langchain.chainLlm",
@@ -18,13 +18,13 @@
         360,
         -200
       ],
-      "id": "660d2537-048b-449a-81c9-5b64ab00ee1f",
+      "id": "dffd7e2c-ced0-4f7c-96dd-a5ef8defaf93",
       "name": "Basic LLM Chain"
     },
     {
       "parameters": {
-        "workspaceId": "013a4efa-1bce-43cf-88bc-faf921d516be",
-        "databaseId": "f0dc0899-6864-46bc-ad79-4c44effb9850",
+        "workspaceId": "384c94b9-1510-49b8-ab8c-a440eb52ce81",
+        "databaseId": "c6442a99-781d-416f-acd4-a55f2d577c9b",
         "returnAll": true,
         "simplify": false
       },
@@ -34,19 +34,23 @@
         -80,
         -200
       ],
-      "id": "ae1756b5-d75d-49ce-aec4-b860156d1d6f",
+      "id": "f0b51adb-76ce-4f5e-a6f8-86adf10cd5f7",
       "name": "Get All Inventory",
       "credentials": {
         "appflowyApi": {
-          "id": "caTURWHOYl4VW0ZV",
-          "name": "Dev"
+          "id": "OI6UJbWJx7J8v4SQ",
+          "name": "Prod"
         }
       }
     },
     {
       "parameters": {
         "model": "hf.co/QuantFactory/TableLLM-13b-GGUF:Q8_0",
-        "options": {}
+        "options": {
+          "numCtx": 20480,
+          "numPredict": 200,
+          "penalizeNewline": false
+        }
       },
       "type": "@n8n/n8n-nodes-langchain.lmOllama",
       "typeVersion": 1,
@@ -54,7 +58,7 @@
         320,
         0
       ],
-      "id": "365a31bb-bf52-4aed-a8e9-27b74366ea1e",
+      "id": "cd5ec528-1c33-4f92-a4da-0d27ee50ce0d",
       "name": "Ollama Model",
       "credentials": {
         "ollamaApi": {
@@ -67,8 +71,8 @@
       "parameters": {
         "resource": "database",
         "operation": "getFields",
-        "workspaceId": "013a4efa-1bce-43cf-88bc-faf921d516be",
-        "databaseId": "f0dc0899-6864-46bc-ad79-4c44effb9850"
+        "workspaceId": "384c94b9-1510-49b8-ab8c-a440eb52ce81",
+        "databaseId": "c6442a99-781d-416f-acd4-a55f2d577c9b"
       },
       "type": "n8n-nodes-appflowy.appflowy",
       "typeVersion": 1,
@@ -76,12 +80,12 @@
         -520,
         -200
       ],
-      "id": "fb43e6aa-2bb7-4198-a7af-c9e01bc958a1",
+      "id": "6a687cff-bae7-4a8c-966a-b27027ff2f95",
       "name": "Get Inventory Headers",
       "credentials": {
         "appflowyApi": {
-          "id": "caTURWHOYl4VW0ZV",
-          "name": "Dev"
+          "id": "OI6UJbWJx7J8v4SQ",
+          "name": "Prod"
         }
       }
     },
@@ -95,7 +99,7 @@
         140,
         -200
       ],
-      "id": "dc7f77a7-d10b-4acf-9326-16f67290b07e",
+      "id": "49517c69-673c-4a25-8b17-2df8aeb5be6a",
       "name": "Gen promt",
       "executeOnce": false
     },
@@ -109,7 +113,7 @@
         -300,
         -200
       ],
-      "id": "502dba62-e633-40c7-9f73-9e196a69b917",
+      "id": "624e9a59-8a59-4165-b276-121e8bb1581e",
       "name": "Code"
     },
     {
@@ -133,9 +137,9 @@
         -880,
         -200
       ],
-      "id": "7d2e7a64-1901-4ed0-925a-0b0c7e435f60",
+      "id": "879fec3b-a192-4223-8d63-718e6ce854ab",
       "name": "When chat message received",
-      "webhookId": "200cbf2b-2c05-4364-a5b0-f3b3d8c29614"
+      "webhookId": "ea862da5-c054-4d14-8766-8eac6c7585a0"
     },
     {
       "parameters": {
@@ -147,7 +151,7 @@
         -800,
         20
       ],
-      "id": "7690286b-785b-4a84-b0e2-fa4a35d3fe41",
+      "id": "665c2678-924f-4a26-a1b4-bb795d57e082",
       "name": "Simple Memory"
     }
   ],
@@ -251,8 +255,18 @@
   "meta": {
     "templateCredsSetupCompleted": true
   },
-  "pinData": {},
-  "versionId": "75b563d2-30a4-4cbf-9198-09604c9c56d1",
+  "pinData": {
+    "When chat message received": [
+      {
+        "json": {
+          "action": "sendMessage",
+          "sessionId": "4553af3d-34be-4e1b-8546-cb98bf91d68a",
+          "chatInput": "cuantos integrados hay\n"
+        }
+      }
+    ]
+  },
+  "versionId": "a410e6ed-15e8-49dc-bc65-a549a6fe1ff7",
   "triggerCount": 1,
   "tags": []
 }

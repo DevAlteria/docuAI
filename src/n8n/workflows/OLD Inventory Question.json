@@ -1,8 +1,8 @@
 {
   "createdAt": "2025-07-14T08:40:47.774Z",
-  "updatedAt": "2025-07-14T09:48:59.000Z",
+  "updatedAt": "2025-07-24T21:03:21.000Z",
   "id": "CChnvz1Hv1hCgNsy",
-  "name": "Inventory Question",
+  "name": "OLD Inventory Question",
   "active": false,
   "isArchived": false,
   "nodes": [
@@ -224,7 +224,7 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "07f7e011-7f1e-429f-8ff0-9d075d066aaa",
+  "versionId": "7fc04d22-d084-4861-bf82-73d20be34154",
   "triggerCount": 0,
   "tags": []
 }
