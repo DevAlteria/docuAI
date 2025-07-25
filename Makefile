@@ -36,7 +36,7 @@ up: build
 	docker compose -f ./envs/dev/docker-compose.yml up -d
 
 ollamaPull:
-	cat models.txt | xargs -n 1 docker exec ollama ollama pull 
+	cat models.txt | xargs -n 1 docker exec ollama ollama pull || true 
 
 re: clean build up ollamaPull
 	@echo http://iadoc.alteria.vpn.alonsom.com/

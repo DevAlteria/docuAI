@@ -1,3 +1,2 @@
-nomic-embed-text:latest
 deepseek-r1:8b
 nomic-embed-text:v1.5
