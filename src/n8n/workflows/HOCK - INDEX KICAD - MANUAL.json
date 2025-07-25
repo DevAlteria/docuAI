@@ -1,8 +1,8 @@
 {
-  "createdAt": "2025-07-24T09:55:15.885Z",
-  "updatedAt": "2025-07-25T08:26:28.000Z",
-  "id": "X7ZHKxUOQUK56zoS",
-  "name": "HOCK - INDEX INVENTORY - MANUAL",
+  "createdAt": "2025-07-25T08:10:32.110Z",
+  "updatedAt": "2025-07-25T08:25:15.000Z",
+  "id": "lCXeRTy7rsoSyTVu",
+  "name": "HOCK - INDEX KICAD - MANUAL",
   "active": false,
   "isArchived": false,
   "nodes": [
@@ -13,10 +13,10 @@
       "type": "@n8n/n8n-nodes-langchain.embeddingsOllama",
       "typeVersion": 1,
       "position": [
-        1260,
-        180
+        900,
+        460
       ],
-      "id": "4eb4cf8f-6d4a-4b06-a3ae-791787f9b29b",
+      "id": "5e90401b-3783-49a0-a082-d8d31819d0d2",
       "name": "Embeddings Ollama",
       "credentials": {
         "ollamaApi": {
@@ -28,16 +28,16 @@
     {
       "parameters": {
         "mode": "insert",
-        "tableName": "n8n_inventory_embedings",
+        "tableName": "n8n_kicad_embedings",
         "options": {}
       },
       "type": "@n8n/n8n-nodes-langchain.vectorStorePGVector",
       "typeVersion": 1.3,
       "position": [
-        1520,
-        -60
+        880,
+        240
       ],
-      "id": "71dfcdfd-ac90-45f5-a178-9bf88d2c08fc",
+      "id": "df20c302-51cb-4f1f-a15a-abfd38c7dd7a",
       "name": "Postgres PGVector Store",
       "credentials": {
         "postgres": {
@@ -57,9 +57,9 @@
         },
         "table": {
           "__rl": true,
-          "value": "n8n_inventory_embedings",
+          "value": "n8n_kicad_embedings",
           "mode": "list",
-          "cachedResultName": "n8n_inventory_embedings"
+          "cachedResultName": "n8n_kicad_embedings"
         },
         "deleteCommand": "drop",
         "options": {}
@@ -67,10 +67,10 @@
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.6,
       "position": [
-        290,
-        -40
+        220,
+        240
       ],
-      "id": "85acdf65-d46c-4d7f-adf8-cd9839edad32",
+      "id": "d73fe9fd-10a5-48d9-b7be-8a17caed1325",
       "name": "Delete table or rows",
       "credentials": {
         "postgres": {
@@ -81,42 +81,18 @@
     },
     {
       "parameters": {
-        "jsonMode": "expressionData",
-        "jsonData": "={{ $json.text }}",
-        "options": {
-          "metadata": {
-            "metadataValues": [
-              {
-                "name": "appflowy",
-                "value": "={{ $json.appflowy }}"
-              }
-            ]
-          }
-        }
-      },
-      "type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
-      "typeVersion": 1.1,
-      "position": [
-        1380,
-        180
-      ],
-      "id": "e221d928-b620-4c39-8ed3-60ac4f39f422",
-      "name": "Default Data Loader"
-    },
-    {
-      "parameters": {
         "workspaceId": "90b57632-e024-410e-8a3a-cb0ee8ff8f94",
-        "databaseId": "6eaa9316-201b-4f2e-9ee0-55489ff673b6",
+        "databaseId": "33575e93-f92e-4a26-bad4-c87b7792e06f",
         "returnAll": true,
         "simplify": false
       },
       "type": "n8n-nodes-appflowy.appflowy",
       "typeVersion": 1,
       "position": [
-        580,
-        -40
+        440,
+        240
       ],
-      "id": "143b7071-b5a3-477e-80bc-429ea47633b7",
+      "id": "1d1d1413-0793-44d4-8e89-c1ab610ce941",
       "name": "Get All Inventory",
       "credentials": {
         "appflowyApi": {
@@ -127,15 +103,15 @@
     },
     {
       "parameters": {
-        "jsCode": "// Loop over input items and add a new field called 'myNewField' to the JSON of each one\nvar data = []\n\nfor (const item of $input.all()) {\n  if (item.json.cells.Name == \"\") continue ;\n  data.push({\n    text: item.json.cells.Name + \"-\" + item.json.cells.Class + \"\\n\" + item.json.cells[\"Executive summary\"],\n    appflowy: {\n      rowID: item.json.id\n    }\n  })\n  item.json.myNewField = 1;\n}\n\nreturn data;"
+        "jsCode": "// Loop over input items and add a new field called 'myNewField' to the JSON of each one\nvar data = []\n\nfor (const item of $input.all()) {\n  if (item.json.cells.Name == \"\" && item.json.cells.Repo == \"\") continue ;\n  data.push({\n    data: item.json.cells.Name,\n    appflowy: {\n      rowID: item.json.id\n    }\n  })\n  item.json.myNewField = 1;\n}\n\nreturn data;"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1240,
-        -40
+        660,
+        240
       ],
-      "id": "a370b757-794e-4998-947f-212a759e706b",
+      "id": "5b8feab6-da76-41fb-9b1c-7b0a21c4cc1a",
       "name": "Code2"
     },
     {
@@ -148,17 +124,17 @@
           ]
         },
         "workspaceId": "90b57632-e024-410e-8a3a-cb0ee8ff8f94",
-        "databaseId": "6eaa9316-201b-4f2e-9ee0-55489ff673b6",
+        "databaseId": "33575e93-f92e-4a26-bad4-c87b7792e06f",
         "includeDocumentData": true,
         "simplify": false
       },
       "type": "n8n-nodes-appflowy.appflowyTrigger",
       "typeVersion": 1,
       "position": [
-        360,
+        0,
         -380
       ],
-      "id": "61538051-8a0f-47b9-b76a-3fad3dde1b78",
+      "id": "b7accf35-e138-4b87-83d6-598f5adf36ed",
       "name": "Added",
       "credentials": {
         "appflowyApi": {
@@ -178,17 +154,17 @@
         },
         "event": "rowUpdatedInDatabase",
         "workspaceId": "90b57632-e024-410e-8a3a-cb0ee8ff8f94",
-        "databaseId": "6eaa9316-201b-4f2e-9ee0-55489ff673b6",
+        "databaseId": "33575e93-f92e-4a26-bad4-c87b7792e06f",
         "includeDocumentData": true,
         "simplify": false
       },
       "type": "n8n-nodes-appflowy.appflowyTrigger",
       "typeVersion": 1,
       "position": [
-        360,
-        -220
+        0,
+        -120
       ],
-      "id": "3d8a9c7a-af30-4a54-9efd-e85fb52df1e0",
+      "id": "ae7af7e7-bde1-4761-9001-35644ef388a0",
       "name": "Updated",
       "credentials": {
         "appflowyApi": {
@@ -207,9 +183,9 @@
         },
         "table": {
           "__rl": true,
-          "value": "n8n_inventory_embedings",
+          "value": "n8n_kicad_embedings",
           "mode": "list",
-          "cachedResultName": "n8n_inventory_embedings"
+          "cachedResultName": "n8n_kicad_embedings"
         },
         "deleteCommand": "delete",
         "where": {
@@ -225,10 +201,10 @@
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.6,
       "position": [
-        1160,
-        -240
+        440,
+        -120
       ],
-      "id": "806e04b6-afb7-4cbe-a2c5-4af346fa16db",
+      "id": "ba1313f7-7802-41f1-997a-bd32b557e4dc",
       "name": "Delete table or rows1",
       "credentials": {
         "postgres": {
@@ -240,16 +216,16 @@
     {
       "parameters": {
         "operation": "executeQuery",
-        "query": "SELECT *\nFROM public.n8n_inventory_embedings\nWHERE metadata::text ILIKE '%{{ $json.id }}%';\n",
+        "query": "SELECT *\nFROM public.n8n_kicad_embedings\nWHERE metadata::text ILIKE '%{{ $json.id }}%';\n",
         "options": {}
       },
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.6,
       "position": [
-        860,
-        -240
+        220,
+        -120
       ],
-      "id": "3b85e89d-9890-432e-8f7d-66654e2a010d",
+      "id": "31a14941-790b-4b27-85a2-a6cb2690911d",
       "name": "Execute a SQL query",
       "credentials": {
         "postgres": {
@@ -264,9 +240,9 @@
       "typeVersion": 1,
       "position": [
         0,
-        -40
+        340
       ],
-      "id": "a6456534-91ba-46ea-81e0-ec72a6f92235",
+      "id": "c99351e2-2e15-45a7-b031-28f8570a2f1f",
       "name": "When clicking ‘Execute workflow’"
     },
     {
@@ -282,10 +258,10 @@
       "type": "n8n-nodes-base.scheduleTrigger",
       "typeVersion": 1.2,
       "position": [
-        20,
-        -200
+        0,
+        140
       ],
-      "id": "c8f3eb28-4c15-40a4-97a1-e92160a7bc06",
+      "id": "755061b6-a0f2-4b14-b85a-95a8c232dff6",
       "name": "Schedule Trigger"
     },
     {
@@ -295,11 +271,35 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1380,
-        -240
+        660,
+        -120
       ],
-      "id": "82beaed1-ccf4-418c-af19-2ed4f4726d24",
+      "id": "497cb12f-6c25-477c-8d37-4e7813a5625b",
       "name": "Code"
+    },
+    {
+      "parameters": {
+        "jsonMode": "=expressionData",
+        "jsonData": "={{ $json.data }}",
+        "options": {
+          "metadata": {
+            "metadataValues": [
+              {
+                "name": "appflowy",
+                "value": "={{ $json.appflowy }}"
+              }
+            ]
+          }
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+      "typeVersion": 1.1,
+      "position": [
+        1020,
+        460
+      ],
+      "id": "474aeb10-7828-42c5-b3ff-cbc0c6e098fb",
+      "name": "Default Data Loader"
     }
   ],
   "connections": {
@@ -328,17 +328,6 @@
     "Postgres PGVector Store": {
       "main": [
         []
-      ]
-    },
-    "Default Data Loader": {
-      "ai_document": [
-        [
-          {
-            "node": "Postgres PGVector Store",
-            "type": "ai_document",
-            "index": 0
-          }
-        ]
       ]
     },
     "Get All Inventory": {
@@ -426,6 +415,17 @@
     "Code": {
       "main": [
         []
+      ]
+    },
+    "Default Data Loader": {
+      "ai_document": [
+        [
+          {
+            "node": "Postgres PGVector Store",
+            "type": "ai_document",
+            "index": 0
+          }
+        ]
       ]
     }
   },
@@ -873,7 +873,7 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "06fc9cc8-a4bf-4a3f-a667-2f6d2bcd58c7",
+  "versionId": "af95c8c7-db96-4ab4-a66e-bafdcbef7405",
   "triggerCount": 3,
   "tags": []
 }

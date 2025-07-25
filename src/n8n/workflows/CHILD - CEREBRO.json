@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-07-24T19:34:02.914Z",
-  "updatedAt": "2025-07-24T21:00:47.000Z",
+  "updatedAt": "2025-07-24T21:40:46.000Z",
   "id": "ZCRfNkstg7juNzEV",
   "name": "CHILD - CEREBRO",
   "active": false,
@@ -29,7 +29,7 @@
     {
       "parameters": {
         "promptType": "define",
-        "text": "=Responde a la siguiente pregunta [PREGUNTA] usando el contexto [CONTEXTO] que dispongo abajo.\nEl contexto seran filas de los elementos relacionados con la pregunta. La ubicacion de un elemento esta formada por BOX, COL y ROW. En caso de que la respuesta sea negativa anade el contexto [CONTEXTO] a tu respuesta.\n\n[PREGUNTA]\n{{ $('Parse and mark chat question').item.json.chatInput }}\n\n[CONTEXTO]\n{{ $json.toJsonString() }}",
+        "text": "=Responde a la siguiente pregunta [PREGUNTA] usando el contexto [CONTEXTO] que dispongo abajo.\nEl contexto seran filas de los elementos relacionados con la pregunta. La ubicacion de un elemento esta formada por BOX, COL y ROW. En caso de que la respuesta sea negativa anade el contexto [CONTEXTO] a tu respuesta.\n\n[PREGUNTA]\n{{ $('Text Classifier').item.json.question }}\n\n[CONTEXTO]\n{{ $json.data.toJsonString() }}",
         "options": {}
       },
       "type": "@n8n/n8n-nodes-langchain.agent",
@@ -344,7 +344,7 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "3c442532-d1c2-47af-ad0f-eba46b175ed1",
+  "versionId": "96667c1f-cca9-45ba-b336-706262f0aa82",
   "triggerCount": 2,
   "tags": []
 }

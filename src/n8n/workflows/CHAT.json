@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-07-24T12:51:14.372Z",
-  "updatedAt": "2025-07-24T21:02:09.000Z",
+  "updatedAt": "2025-07-24T21:52:43.000Z",
   "id": "AeL15q2p7x2TtYUZ",
   "name": "CHAT",
   "active": true,
@@ -11,7 +11,7 @@
         "public": true,
         "initialMessages": "Hola ¿como te puedo ayudar? ",
         "options": {
-          "responseMode": "responseNode",
+          "responseMode": "lastNode",
           "subtitle": "Algunas de las cosas que puedo hacer es responder preguntas sobre el inventario en Appflowy y las poyectos de KICAD.",
           "title": "Demo Chat"
         }
@@ -82,6 +82,19 @@
       "id": "77175d90-75ea-4932-9a1e-717f1fcd4f9b",
       "name": "Execute Workflow",
       "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Loop over input items and add a new field called 'myNewField' to the JSON of each one\nfor (const item of $input.all()) {\n  item.json.myNewField = 1;\n}\n\nreturn [{\n  output:   $input.first().json.reply\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        100,
+        -60
+      ],
+      "id": "8cf693d3-7cd5-4b20-94ad-325073acfcb9",
+      "name": "Code"
     }
   ],
   "connections": {
@@ -109,6 +122,18 @@
     },
     "Execute Workflow": {
       "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
+      ]
+    },
+    "Code": {
+      "main": [
         []
       ]
     }
@@ -133,7 +158,7 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "9241863e-f024-4a42-963c-1988bba636ef",
+  "versionId": "eccbea95-7699-4c47-9037-2cadfbd11ba2",
   "triggerCount": 1,
   "tags": []
 }
