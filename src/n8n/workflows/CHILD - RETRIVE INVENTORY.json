@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-07-24T14:34:22.778Z",
-  "updatedAt": "2025-07-25T08:11:08.000Z",
+  "updatedAt": "2025-07-25T14:19:37.000Z",
   "id": "0Av55mBiFgoet5yZ",
   "name": "CHILD - RETRIVE INVENTORY",
   "active": false,
@@ -29,7 +29,7 @@
       "parameters": {
         "mode": "load",
         "tableName": "n8n_inventory_embedings",
-        "prompt": "={{ $json.question }}",
+        "prompt": "={{ $json.question.toLowerCase() }}",
         "topK": 1,
         "options": {
           "distanceStrategy": "cosine"
@@ -298,7 +298,7 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "83bbe282-0efd-4441-b883-49cf6d93d2de",
+  "versionId": "de6a0e95-9811-4701-b345-f83169b32dd0",
   "triggerCount": 0,
   "tags": []
 }

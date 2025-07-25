@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-07-25T08:47:02.112Z",
-  "updatedAt": "2025-07-25T08:47:59.000Z",
+  "updatedAt": "2025-07-25T14:19:15.000Z",
   "id": "ajpxDGMsYA45yhmR",
   "name": "CHILD - RETRIVE KICAD",
   "active": false,
@@ -29,7 +29,7 @@
       "parameters": {
         "mode": "load",
         "tableName": "n8n_kicad_embedings",
-        "prompt": "={{ $json.question }}",
+        "prompt": "={{ $json.question.toLowerCase() }}",
         "topK": 1,
         "options": {
           "distanceStrategy": "cosine"
@@ -298,7 +298,7 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "febdc0e1-2d4d-4fe4-afe3-47e9c3df915d",
+  "versionId": "6137ed5f-bbee-4b92-9e7e-a9903536ac1f",
   "triggerCount": 0,
   "tags": []
 }

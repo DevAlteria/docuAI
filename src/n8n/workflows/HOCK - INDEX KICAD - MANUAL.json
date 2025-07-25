@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-07-25T08:10:32.110Z",
-  "updatedAt": "2025-07-25T10:25:41.000Z",
+  "updatedAt": "2025-07-25T14:17:54.000Z",
   "id": "lCXeRTy7rsoSyTVu",
   "name": "HOCK - INDEX KICAD - MANUAL",
   "active": false,
@@ -81,8 +81,8 @@
     },
     {
       "parameters": {
-        "workspaceId": "90b57632-e024-410e-8a3a-cb0ee8ff8f94",
-        "databaseId": "33575e93-f92e-4a26-bad4-c87b7792e06f",
+        "workspaceId": "4cf36fe7-e96e-4887-96f0-bdf5fda9b3ac",
+        "databaseId": "ca577af4-3086-4c12-b9a9-7b4fa57b0ffb",
         "returnAll": true,
         "simplify": false
       },
@@ -103,7 +103,7 @@
     },
     {
       "parameters": {
-        "jsCode": "// Loop over input items and add a new field called 'myNewField' to the JSON of each one\nvar data = []\n\nfor (var i = 0; i < $input.all().length; i++ ) {\n  var README = $input.all()[i].json.data\n  var item = $('Filter').all()[i]\n  data.push({\n    data: item.json.cells.Name + \"\\n\\n\" + README,\n    appflowy: {\n      rowID: item.json.id\n    }\n  })\n  item.json.myNewField = 1;\n}\n\nreturn data;"
+        "jsCode": "// Loop over input items and add a new field called 'myNewField' to the JSON of each one\nvar data = []\n\nfor (var i = 0; i < $input.all().length; i++ ) {\n  var README = $input.all()[i].json.data\n  var item = $('Filter').all()[i]\n  data.push({\n    data: String(item.json.cells.Name + \"\\n\\n\" + README).toLowerCase(),\n    appflowy: {\n      rowID: item.json.id\n    }\n  })\n  item.json.myNewField = 1;\n}\n\nreturn data;"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -509,7 +509,7 @@
     },
     {
       "parameters": {
-        "jsCode": "// Loop over input items and add a new field called 'myNewField' to the JSON of each one\nvar data = []\n\nfor (var i = 0; i < $input.all().length; i++) {\n  data.push({\n    id: $('Filter').all()[i].json.id,\n    bom: $input.all()[i].json.stdout\n  })\n}\n\nreturn data;"
+        "jsCode": "// Loop over input items and add a new field called 'myNewField' to the JSON of each one\nvar data = []\n\nfor (var i = 0; i < $input.all().length; i++) {\n  data.push({\n    id: $('Filter').all()[i].json.id,\n    bom: $input.all()[i].json.stdout,\n    pre_hash: $('Filter').all()[i].json.cells.Name\n  })\n}\n\nreturn data;"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -522,7 +522,7 @@
     },
     {
       "parameters": {
-        "jsCode": "// Loop over input items and add a new field called 'myNewField' to the JSON of each one\nvar data = []\nvar dbId = $input.first().json.data.find(el => el.views.find(v => v.name == \"KICAD\")).id;\n\nfor (const item of $('Parse bom').all()) {\n  data.push({\n    \"workspace\": $('Get workspaces').first().json.data[0].workspace_id,\n    \"dbID\": dbId,\n    \"bom\": item.json.bom,\n    \"id\": item.json.id\n  })\n}\n\nreturn data;"
+        "jsCode": "// Loop over input items and add a new field called 'myNewField' to the JSON of each one\nvar data = []\nvar dbId = $input.first().json.data.find(el => el.views.find(v => v.name == \"KICAD\")).id;\n\nfor (const item of $('Parse bom').all()) {\n  data.push({\n    \"workspace\": $('Get workspaces').first().json.data[0].workspace_id,\n    \"dbID\": dbId,\n    \"bom\": item.json.bom,\n    \"id\": item.json.id,\n    \"pre_hash\": item.json.pre_hash\n  })\n}\n\nreturn data;"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -548,7 +548,7 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n  \"pre_hash\": \"{{ $json.id }}\",\n  \"cells\": {\n    \"Done\": true\n  }\n} ",
+        "jsonBody": "={\n  \"pre_hash\": \"{{ $json.pre_hash }}\",\n  \"cells\": {\n    \"BOM\": {{ JSON.stringify($json.bom) }}\n  }\n} ",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
@@ -559,8 +559,7 @@
       ],
       "id": "22d78d61-6a3f-4fa8-a386-59cc7d45488f",
       "name": "Update rows of Inventory",
-      "executeOnce": false,
-      "onError": "continueErrorOutput"
+      "executeOnce": false
     },
     {
       "parameters": {
@@ -809,13 +808,7 @@
             "index": 0
           }
         ],
-        [
-          {
-            "node": "Loop Rows",
-            "type": "main",
-            "index": 0
-          }
-        ]
+        []
       ]
     },
     "Loop Rows": {
@@ -1275,7 +1268,7 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "b7e986ff-a7a8-4140-be08-5229710a58dc",
+  "versionId": "1d7677e1-4d19-4b93-8786-216ccbbc0015",
   "triggerCount": 3,
   "tags": []
 }
