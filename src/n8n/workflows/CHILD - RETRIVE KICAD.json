@@ -1,0 +1,304 @@
+{
+  "createdAt": "2025-07-25T08:47:02.112Z",
+  "updatedAt": "2025-07-25T08:47:59.000Z",
+  "id": "ajpxDGMsYA45yhmR",
+  "name": "CHILD - RETRIVE KICAD",
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "model": "tazarov/all-minilm-l6-v2-f32:latest"
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOllama",
+      "typeVersion": 1,
+      "position": [
+        520,
+        220
+      ],
+      "id": "0a2b1c1d-30dd-4355-9526-af6aaa790979",
+      "name": "Embeddings Ollama",
+      "credentials": {
+        "ollamaApi": {
+          "id": "oEKNS3tm8YNi0WhW",
+          "name": "ollama"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "load",
+        "tableName": "n8n_kicad_embedings",
+        "prompt": "={{ $json.question }}",
+        "topK": 1,
+        "options": {
+          "distanceStrategy": "cosine"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStorePGVector",
+      "typeVersion": 1.3,
+      "position": [
+        440,
+        0
+      ],
+      "id": "a4bc3cab-d0e1-4eae-b01c-ed8196fb7118",
+      "name": "Postgres PGVector Store1",
+      "credentials": {
+        "postgres": {
+          "id": "rUrocHl8XaJ8Jwox",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "inputSource": "passthrough"
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "fa3f5235-c3ec-4058-b54c-77271654c9dd",
+      "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -20,
+        240
+      ],
+      "id": "52a1ee5a-b1fd-4c19-915f-11b14b30d92e",
+      "name": "When chat message received",
+      "webhookId": "df8002c5-bfa3-47ad-9517-d81a80fee781"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Loop over input items and add a new field called 'myNewField' to the JSON of each one\nfor (const item of $input.all()) {\n  item.json.question = item.json.chatInput;\n}\n\nreturn $input.all();"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        200,
+        240
+      ],
+      "id": "de09c542-cdd2-49cf-b437-b4659610f6b2",
+      "name": "Code"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://appflowy.iadoc.alteria.vpn.alonsom.com/gotrue/token",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpCustomAuth",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        820,
+        0
+      ],
+      "id": "76e3017f-e8d6-4ee5-b74b-ccf7c9b58d6e",
+      "name": "Get access token",
+      "credentials": {
+        "httpCustomAuth": {
+          "id": "8u4k4uALem7ZjQHK",
+          "name": "default@default.default"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "http://appflowy.iadoc.alteria.vpn.alonsom.com/api/workspace",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $('Get access token').item.json.access_token }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "workspace_name",
+              "value": "demo"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1040,
+        0
+      ],
+      "id": "02132a55-7bf7-4e45-80f3-d6d1212efdb5",
+      "name": "Get workspaces"
+    },
+    {
+      "parameters": {
+        "url": "=http://appflowy.iadoc.alteria.vpn.alonsom.com/api/workspace/{{ $('Get workspaces').item.json.data.filter(item => item.workspace_name == \"demo\").last().workspace_id }}/database/",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $('Get access token').item.json.access_token }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1240,
+        0
+      ],
+      "id": "9fe5fb0e-e698-4327-abe4-1cdc95ae5581",
+      "name": "Get Inventory database"
+    },
+    {
+      "parameters": {
+        "url": "=http://appflowy.iadoc.alteria.vpn.alonsom.com/api/workspace/{{ $('Get workspaces').item.json.data.filter(item => item.workspace_name == \"demo\").last().workspace_id }}/database/{{ $('Get Inventory database').item.json.data.filter(item => item.views[0].name == \"KICAD\").last().id }}/row/detail?ids=urn:uuid:{{ $('Postgres PGVector Store1').item.json.document.metadata.appflowy.rowID }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $('Get access token').item.json.access_token }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"ids\": [ ]\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1460,
+        0
+      ],
+      "id": "09a9484a-5d18-4fe1-9323-db5dbaaa53ea",
+      "name": "Get Inventory Row"
+    }
+  ],
+  "connections": {
+    "Embeddings Ollama": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Postgres PGVector Store1",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres PGVector Store1": {
+      "main": [
+        [
+          {
+            "node": "Get access token",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "Postgres PGVector Store1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Postgres PGVector Store1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get access token": {
+      "main": [
+        [
+          {
+            "node": "Get workspaces",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get workspaces": {
+      "main": [
+        [
+          {
+            "node": "Get Inventory database",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Inventory database": {
+      "main": [
+        [
+          {
+            "node": "Get Inventory Row",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": {
+    "node:Get ROW": {
+      "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1MGY0MDhmYS0xNTM3LTRjZTEtODIyMi02MjllZTZjMzllZTAiLCJhdWQiOiIiLCJleHAiOjE3NTMzODk2NjEsImlhdCI6MTc1MzM4MjQ2MSwiZW1haWwiOiJkZWZhdWx0QGRlZmF1bHQuZGVmYXVsdCIsInBob25lIjoiIiwiYXBwX21ldGFkYXRhIjp7InByb3ZpZGVyIjoiZW1haWwiLCJwcm92aWRlcnMiOlsiZW1haWwiXX0sInVzZXJfbWV0YWRhdGEiOnsiZW1haWwiOiJkZWZhdWx0QGRlZmF1bHQuZGVmYXVsdCIsImVtYWlsX3ZlcmlmaWVkIjpmYWxzZSwicGhvbmVfdmVyaWZpZWQiOmZhbHNlLCJzdWIiOiI1MGY0MDhmYS0xNTM3LTRjZTEtODIyMi02MjllZTZjMzllZTAifSwicm9sZSI6IiIsImFhbCI6ImFhbDEiLCJhbXIiOlt7Im1ldGhvZCI6InBhc3N3b3JkIiwidGltZXN0YW1wIjoxNzUzMzgyNDYxfV0sInNlc3Npb25faWQiOiI4MjFlMGNkMi1iMjNmLTQ1MjgtYmYxZS1jZDNkMDI5ZDNmYmMiLCJpc19hbm9ueW1vdXMiOmZhbHNlfQ.quFguVK_Jzf8W3y4YMrHOdEp0AqqON6Bbc7R01waehQ",
+      "refreshToken": "LL1XQZlJyLVKn6K_0ELZWQ"
+    }
+  },
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "febdc0e1-2d4d-4fe4-afe3-47e9c3df915d",
+  "triggerCount": 0,
+  "tags": []
+}

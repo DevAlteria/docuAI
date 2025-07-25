@@ -34,6 +34,8 @@ RUN chmod 777 voice
 COPY ./entrypoint.sh .
 RUN chmod a+x ./entrypoint.sh
 
+RUN apk add --update --no-cache kicad
+
 USER node
 
 ENTRYPOINT [ "sh", "-xc", "./entrypoint.sh" ]
