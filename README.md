@@ -287,15 +287,15 @@ Ollama ejecuta modelos de lenguaje completamente en local:
 Una vez desplegado, los servicios estarán disponibles en las siguientes URLs:
 
 ### Servicios Principales
-- **🏠 Página Principal**: http://docuai.alteria.vpn.alonsom.com/
-- **🤖 Open WebUI (Chat IA)**: http://docuai.alteria.vpn.alonsom.com/webui
-- **⚡ N8N (Automatización)**: http://docuai.alteria.vpn.alonsom.com/n8n
-- **📝 AppFlowy (Documentación)**: http://appflowy.docuai.alteria.vpn.alonsom.com/
+- **🏠 Página Principal**: http://localhost
+- **🤖 Open WebUI (Chat IA)**: http://localhost/webui
+- **⚡ N8N (Automatización)**: http://localhost/n8n
+- **📝 AppFlowy (Documentación)**: http://appflowy.localhost
 
 ### Servicios de Administración
-- **🗄️ MinIO (Almacenamiento)**: http://docuai.alteria.vpn.alonsom.com/minio
+- **🗄️ MinIO (Almacenamiento)**: http://localhost/minio
 - **🐘 PgAdmin (Base de Datos)**: Accesible a través del proxy
-- **📊 Ollama API**: http://docuai.alteria.vpn.alonsom.com:7869/api
+- **📊 Ollama API**: http://localhost:7869/api
 
 ### Credenciales por Defecto
 - **MinIO**: `minioadmin` / `minioadmin`
