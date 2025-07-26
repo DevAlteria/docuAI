@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-07-25T16:09:43.160Z",
-  "updatedAt": "2025-07-25T17:53:54.000Z",
+  "updatedAt": "2025-07-26T21:54:22.000Z",
   "id": "dT2HKnRoTQwU7Zj1",
   "name": "GET DATABASE ROW BY WORKSPACE_NAME, DATABASE_NAME AND ROW IDS",
   "active": false,
@@ -139,7 +139,7 @@
     },
     {
       "parameters": {
-        "jsCode": "for (const item of $input.all()) {\n  item.json.workspace_name = \"demo\";\n  item.json.database_view_name = \"Inventory\";\n\n  const rowsIds = [\n    \"d05836b0-afb2-43ce-bebd-ce2e2e3feaf6\",\n    \"ffb9315d-cab7-4685-8fb1-c205a62dcab4\"\n  ];\n\n  if (!item.json.rowsIds) {\n    item.json.rowsIds = [];\n  }\n\n  rowsIds.forEach(id => {\n    item.json.rowsIds.push(id);\n  });\n}\n\nreturn $input.all();\n"
+        "jsCode": "for (const item of $input.all()) {\n  item.json.workspace_name = \"demo\";\n  item.json.database_view_name = \"Inventory\";\n\n  const rowsIds = [\n    \"d1de8ca1-9353-9e75-6b32-6a66a90e7bc6\",\n    \"ffb9315d-cab7-4685-8fb1-c205a62dcab4\"\n  ];\n\n  if (!item.json.rowsIds) {\n    item.json.rowsIds = [];\n  }\n\n  rowsIds.forEach(id => {\n    item.json.rowsIds.push(id);\n  });\n}\n\nreturn $input.all();\n"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -916,7 +916,7 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "1b53d616-a849-4481-85de-ccc36572eb0a",
+  "versionId": "9cf64fe0-ff2e-4b63-b1c8-19fef3f9412e",
   "triggerCount": 3,
   "tags": []
 }

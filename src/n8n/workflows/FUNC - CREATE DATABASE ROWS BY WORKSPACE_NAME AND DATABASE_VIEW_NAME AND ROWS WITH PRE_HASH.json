@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-07-25T12:30:20.798Z",
-  "updatedAt": "2025-07-26T12:11:19.000Z",
+  "updatedAt": "2025-07-26T22:42:47.000Z",
   "id": "0QhYah6uWHSRJ1yK",
   "name": "FUNC - CREATE DATABASE ROWS BY WORKSPACE_NAME AND DATABASE_VIEW_NAME AND ROWS WITH PRE_HASH",
   "active": false,
@@ -17,7 +17,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        1880,
+        2100,
         900
       ],
       "id": "dd812575-d161-4df5-b482-dab86fd8edd7",
@@ -56,7 +56,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        2100,
+        2320,
         900
       ],
       "id": "9becfbaf-b8e7-461e-97e8-fd937cd218c0",
@@ -79,7 +79,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        2540,
+        2760,
         900
       ],
       "id": "c4b603c3-8ddc-4813-b13a-96a247371dc9",
@@ -139,7 +139,7 @@
     },
     {
       "parameters": {
-        "jsCode": "// Loop over input items and add a new field called 'myNewField' to the JSON of each one\nfor (const item of $input.all()) {\n  // Parámetros comunes a cualquier base de datos\n  const workspace = \"demo\";\n  const table = \"Preguntas\";// item.json.table_name; \n  const rowData = { Pregunta: \"¿Qué es Juena?\", Type: \"programación\", Name: \"cora\" };//item.json.data;\nreturn [\n  {\n    json: {\n      workspace_name: workspace,\n      database_view_name: table,\n      rows:  [rowData] \n    }\n  }\n];\n\n}\n\nreturn $input.all();"
+        "jsCode": "// Loop over input items and add a new field called 'myNewField' to the JSON of each one\nfor (const item of $input.all()) {\n  // Parámetros comunes a cualquier base de datos\n  const workspace = \"demo\";\n  const table = \"Preguntas\";// item.json.table_name; \n  const rowData = { Pregunta: \"¿Qué es Juena?\", Type: \"programación\", Name: \"cora\" };//item.json.data;\nreturn [\n  {\n    \"workspace_name\": \"demo\",\n    \"database_view_name\": \"Preguntas\",\n    \"rows\": [\n      {\n        \"json\": {\n          \"Pregunta\": \"busca en el inventario, cuantos ESP32 H4 de tipo integrados hay\",\n          \"Respuesta\": \"En el inventario hay 1 ESP32 H4 de tipo integrados.\\n\\n**Detalle del contexto:**\\n- **Nombre:** ESP32 H4\\n- **Clase:** INTEGRADOS\\n- **Cantidad:** 1\",\n          \"Name\": \"IC10\"\n        },\n        \"pairedItem\": {\n          \"item\": 0\n        }\n      }\n    ]\n  }\n];\n\n}\n\nreturn $input.all();"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -178,12 +178,12 @@
     },
     {
       "parameters": {
-        "jsCode": "\nreturn $input.all();"
+        "jsCode": "var ret = [];\n\nfor (var i = 0; i < $input.first().json.rows.length; i++) {\n  var new_row = $input.first().json.rows[i].json;\n  $json.rows[i] = new_row;\n  ret.push({\n    row: new_row,\n    workspace_name: $input.first().json.workspace_name,\n    database_view_name: $input.first().json.database_view_name\n  });\n}\n\nreturn ret;"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1660,
+        1880,
         900
       ],
       "id": "3c3506dc-db59-40b4-a2c9-75917d68b002",
@@ -197,7 +197,7 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        2320,
+        2540,
         900
       ],
       "id": "cfd4bfd3-01d4-460e-b8da-f70e406b4e6a",
@@ -211,7 +211,7 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        2760,
+        2980,
         900
       ],
       "id": "863914c5-fc6a-454c-8cbc-a19646946fa7",
@@ -219,12 +219,12 @@
     },
     {
       "parameters": {
-        "jsCode": "const row = $('Aux join').first().json.rows;\nif (!row) {\n  return [];\n}\n\nconst cellsObject = {};\nlet pre_hash = \"\";\nlet docLines = [];\n\nfor (const [key, value] of Object.entries(row)) {\n  if (key.toLowerCase() === \"type\") {\n  cellsObject[key] = { name: value }; // para campos tipo Select\n} else {\n  cellsObject[key] = value;\n}\n\n  if (key.toLowerCase() === \"name\") {\n    pre_hash = value;\n  }\n\n  docLines.push(`${key}: ${value}`);\n}\n\nreturn [\n  {\n    json: {\n      data:{\n        pre_hash,\n        cells: cellsObject,\n        document: docLines.join(\"\\n\")\n      }\n    }\n  }\n];\n"
+        "jsCode": "var ret = [];\n\n$('Aux join').all().forEach(row => ret.push({\n  cells: row.json.row,\n  pre_hash: row.json.row.Name\n}))\n\nreturn ret;"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        2980,
+        3200,
         900
       ],
       "id": "582944cd-0fd2-4ee8-b470-c87db4de81fc",
@@ -237,7 +237,7 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        3440,
+        3660,
         900
       ],
       "id": "48581ebf-c1bf-46c2-8b60-eb43c10ed2a4",
@@ -258,17 +258,31 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={{ $json.data }}",
+        "jsonBody": "={{ $json.toJsonString() }}",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        3220,
+        3440,
         900
       ],
       "id": "8fb5fa97-8040-42f2-b39d-66a1fd7d12a2",
       "name": "Post row"
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "\nvar ret = {\n ...$input.item.json\n}\n\nreturn ret;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1660,
+        1000
+      ],
+      "id": "568d82cb-7573-4fc5-b2c5-58e8f03de53b",
+      "name": "Code2"
     }
   ],
   "connections": {
@@ -355,7 +369,7 @@
       "main": [
         [
           {
-            "node": "Aux join",
+            "node": "Code2",
             "type": "main",
             "index": 0
           }
@@ -411,6 +425,17 @@
         [
           {
             "node": "Code1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code2": {
+      "main": [
+        [
+          {
+            "node": "Aux join",
             "type": "main",
             "index": 0
           }
@@ -862,7 +887,7 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "1924ca2f-e797-492d-a0e1-1f19359641cc",
+  "versionId": "c83caa38-ba43-484e-9da2-6429692057a7",
   "triggerCount": 3,
   "tags": []
 }

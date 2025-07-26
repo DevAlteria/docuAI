@@ -32,6 +32,7 @@ kill -9 $(ps -a | grep "n8n start" | awk '{ print $1 }' | head -n1)
 n8n execute --id=4kSTvQKW8uzJVur4
 n8n execute --id=X7ZHKxUOQUK56zoS
 n8n execute --id=lCXeRTy7rsoSyTVu
+n8n execute --id=UalLl0IkBftP4pfU
 
 echo PROSIONED
 touch /home/node/.n8n/.prosioned

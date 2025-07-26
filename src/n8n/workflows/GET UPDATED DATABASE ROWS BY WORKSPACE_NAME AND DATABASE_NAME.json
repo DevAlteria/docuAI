@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-07-25T16:57:45.598Z",
-  "updatedAt": "2025-07-25T17:54:49.000Z",
+  "updatedAt": "2025-07-26T21:56:49.000Z",
   "id": "azL1enYBqtKNEp0T",
   "name": "GET UPDATED DATABASE ROWS BY WORKSPACE_NAME AND DATABASE_NAME",
   "active": false,
@@ -159,6 +159,9 @@
             },
             {
               "name": "database_view_name"
+            },
+            {
+              "name": "after"
             }
           ]
         }
@@ -830,7 +833,7 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "b2f0ef49-6415-41bf-8380-89d262cd91e2",
+  "versionId": "f04ea1c2-1c54-4950-9e2a-74de17357be8",
   "triggerCount": 3,
   "tags": []
 }
