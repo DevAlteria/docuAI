@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-07-25T08:10:32.110Z",
-  "updatedAt": "2025-07-25T17:46:09.000Z",
+  "updatedAt": "2025-07-26T08:59:36.000Z",
   "id": "lCXeRTy7rsoSyTVu",
   "name": "HOCK - INDEX KICAD",
   "active": false,
@@ -383,28 +383,6 @@
     },
     {
       "parameters": {
-        "workspaceId": "9b8e8db6-c1f5-4947-a931-f26e9b179ab5",
-        "databaseId": "938b67a6-b2c4-40ba-8817-1d7338cd9832",
-        "returnAll": true,
-        "simplify": false
-      },
-      "type": "n8n-nodes-appflowy.appflowy",
-      "typeVersion": 1,
-      "position": [
-        440,
-        1100
-      ],
-      "id": "1d1d1413-0793-44d4-8e89-c1ab610ce941",
-      "name": "Get All KICADs",
-      "credentials": {
-        "appflowyApi": {
-          "id": "YODmFLRKL0nTWCx6",
-          "name": "Default"
-        }
-      }
-    },
-    {
-      "parameters": {
         "workflowId": {
           "__rl": true,
           "value": "6vmqq4cOYNHYVzjr",
@@ -664,11 +642,6 @@
             "index": 0
           }
         ]
-      ]
-    },
-    "Get All KICADs": {
-      "main": [
-        []
       ]
     },
     "Execute Workflow": {
@@ -1138,7 +1111,7 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "17cc0c40-4e6f-4056-aa7e-ad43ad5344cf",
+  "versionId": "7fa76d37-3015-4e69-98cb-44170a3ef3ff",
   "triggerCount": 3,
   "tags": []
 }

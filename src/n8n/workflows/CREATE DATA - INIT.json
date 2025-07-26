@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-07-15T13:19:15.850Z",
-  "updatedAt": "2025-07-25T11:30:43.000Z",
+  "updatedAt": "2025-07-26T09:10:50.000Z",
   "id": "4kSTvQKW8uzJVur4",
   "name": "CREATE DATA - INIT",
   "active": false,
@@ -599,7 +599,7 @@
     },
     {
       "parameters": {
-        "jsCode": "return [\n  {\n    \"name\": \"Quantity\",\n    \"field_type\": 1\n  },\n  {\n    \"name\": \"BOX\",\n    \"field_type\": 0\n  },\n  {\n    \"name\": \"COL\",\n    \"field_type\": 0\n  },\n  {\n    \"name\": \"ROW\",\n    \"field_type\": 0\n  },\n  {\n    \"name\": \"Seller 1\",\n    \"field_type\": 6\n  },\n  {\n    \"name\": \"Seller 2\",\n    \"field_type\": 6\n  },\n  {\n    \"name\": \"Executive summary\",\n    \"field_type\": 0\n  }\n];"
+        "jsCode": "return [\n  {\n    \"name\": \"Quantity\",\n    \"field_type\": 1\n  },\n  {\n    \"name\":\"Class\",\n    \"field_type\": 0\n  },\n  {\n    \"name\": \"BOX\",\n    \"field_type\": 0\n  },\n  {\n    \"name\": \"COL\",\n    \"field_type\": 0\n  },\n  {\n    \"name\": \"ROW\",\n    \"field_type\": 0\n  },\n  {\n    \"name\": \"Seller 1\",\n    \"field_type\": 6\n  },\n  {\n    \"name\": \"Seller 2\",\n    \"field_type\": 6\n  },\n  {\n    \"name\": \"Executive summary\",\n    \"field_type\": 0\n  }\n];"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -1391,7 +1391,7 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "cc71db0d-4446-4b7a-875a-c611dcc8adac",
+  "versionId": "40436a79-3590-4155-af6c-fe40730ab926",
   "triggerCount": 0,
   "tags": []
 }

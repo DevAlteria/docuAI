@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-07-24T09:55:15.885Z",
-  "updatedAt": "2025-07-25T17:42:01.000Z",
+  "updatedAt": "2025-07-26T09:10:30.000Z",
   "id": "X7ZHKxUOQUK56zoS",
   "name": "HOCK - INDEX INVENTORY",
   "active": false,
@@ -105,29 +105,7 @@
     },
     {
       "parameters": {
-        "workspaceId": "9b8e8db6-c1f5-4947-a931-f26e9b179ab5",
-        "databaseId": "b251f529-ed0a-4c20-a922-283d01cdb364",
-        "returnAll": true,
-        "simplify": false
-      },
-      "type": "n8n-nodes-appflowy.appflowy",
-      "typeVersion": 1,
-      "position": [
-        260,
-        460
-      ],
-      "id": "143b7071-b5a3-477e-80bc-429ea47633b7",
-      "name": "Get All Inventory",
-      "credentials": {
-        "appflowyApi": {
-          "id": "YODmFLRKL0nTWCx6",
-          "name": "Default"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "jsCode": "// Loop over input items and add a new field called 'myNewField' to the JSON of each one\nvar data = []\nfor (const item of $input.first().json.data.data) {\n  if (item.cells.Name == \"\") continue ;\n  data.push({\n    text: String(item.cells.Name + \"-\" + item.cells.Type + \"\\n\" + item.cells[\"Executive summary\"]).toLowerCase(),\n    appflowy: {\n      rowID: item.id\n    }\n  })\n}\n\nreturn data;"
+        "jsCode": "// Loop over input items and add a new field called 'myNewField' to the JSON of each one\nvar data = []\nfor (const item of $input.first().json.data.data) {\n  if (item.cells.Name == \"\") continue ;\n  data.push({\n    text: String(item.cells.Name + \"-\" + item.cells.Class + \"\\n\" + item.cells[\"Executive summary\"]).toLowerCase(),\n    appflowy: {\n      rowID: item.id\n    }\n  })\n}\n\nreturn data;"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -255,11 +233,6 @@
             "index": 0
           }
         ]
-      ]
-    },
-    "Get All Inventory": {
-      "main": [
-        []
       ]
     },
     "Code2": {
@@ -751,7 +724,7 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "c0974a5b-803a-4e8a-bcd0-90856c9c3cc5",
+  "versionId": "9c76d5da-d8a3-4407-a3c6-463aac1b61ca",
   "triggerCount": 3,
   "tags": []
 }
