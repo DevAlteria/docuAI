@@ -9,7 +9,7 @@
     {
       "parameters": {
         "method": "POST",
-        "url": "http://appflowy.iadoc.alteria.vpn.alonsom.com/gotrue/token",
+        "url": "http://appflowy.docuai.alteria.vpn.alonsom.com/gotrue/token",
         "authentication": "genericCredentialType",
         "genericAuthType": "httpCustomAuth",
         "options": {}
@@ -32,7 +32,7 @@
     },
     {
       "parameters": {
-        "url": "http://appflowy.iadoc.alteria.vpn.alonsom.com/api/workspace",
+        "url": "http://appflowy.docuai.alteria.vpn.alonsom.com/api/workspace",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [

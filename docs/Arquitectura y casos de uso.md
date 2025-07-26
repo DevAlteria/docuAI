@@ -2,7 +2,7 @@
 
 ### Arquitectura de Referencia
 
-La arquitectura de referencia del proyecto DOCUAI está diseñada para integrar componentes tecnológicos avanzados, garantizando la interoperabilidad, seguridad, escalabilidad y facilidad de mantenimiento para interactuar con lenguaje natural con documentacion tecnica en distintos formatos (pdf, excel, png, ...).
+La arquitectura de referencia del proyecto docuAI está diseñada para integrar componentes tecnológicos avanzados, garantizando la interoperabilidad, seguridad, escalabilidad y facilidad de mantenimiento para interactuar con lenguaje natural con documentacion tecnica en distintos formatos (pdf, excel, png, ...).
 
 #### Componentes Principales
 

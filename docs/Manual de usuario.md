@@ -1,4 +1,4 @@
-# Manual de Usuario - iaDoc
+# Manual de Usuario - docuAI
 ## Plataforma de Documentación Inteligente con IA
 
 
@@ -18,9 +18,9 @@
 
 ## 📖 Introducción
 
-### ¿Qué es iaDoc?
+### ¿Qué es docuAI?
 
-**iaDoc** es una plataforma integral que combina inteligencia artificial, automatización y colaboración para revolucionar la gestión de documentación técnica. Permite:
+**docuAI** es una plataforma integral que combina inteligencia artificial, automatización y colaboración para revolucionar la gestión de documentación técnica. Permite:
 
 - **Consultar documentos con lenguaje natural**: Haz preguntas sobre tu documentación como si hablaras con un experto
 - **Automatizar tareas repetitivas**: Procesa inventarios, analiza diseños KiCad y convierte audio a texto
@@ -79,15 +79,15 @@ free -h
 
 ## 🛠️ Instalación del Sistema
 
-### Paso 1: Descargar iaDoc
+### Paso 1: Descargar docuAI
 
 1. **Abrir terminal** en tu sistema
-2. **Navegar** a la carpeta donde quieres instalar iaDoc
+2. **Navegar** a la carpeta donde quieres instalar docuAI
 3. **Clonar el repositorio**:
 
 ```bash
-git clone --recursive https://github.com/DevAlteria/iaDoc.git
-cd iaDoc
+git clone --recursive https://github.com/DevAlteria/docuAI.git
+cd docuAI
 ```
 
 ### Paso 2: Configuración Inicial
@@ -327,7 +327,7 @@ Descripción del proyecto...
 
 **Escenario**: Tienes un manual de 200 páginas y necesitas encontrar información específica.
 
-**Solución con iaDoc**:
+**Solución con docuAI**:
 
 1. **Subir documento** a Open WebUI
 2. **Hacer preguntas específicas**:
@@ -342,7 +342,7 @@ Descripción del proyecto...
 
 **Escenario**: Necesitas consultar disponibilidad de componentes para un nuevo proyecto.
 
-**Solución con iaDoc**:
+**Solución con docuAI**:
 
 1. **Configurar base de datos** de inventario en AppFlowy
 2. **Usar flujo N8N** "CHILD - RETRIVE INVENTORY"
@@ -356,7 +356,7 @@ Descripción del proyecto...
 
 **Escenario**: Quieres extraer automáticamente la lista de materiales de un diseño PCB.
 
-**Solución con iaDoc**:
+**Solución con docuAI**:
 
 1. **Subir archivos KiCad** a MinIO
 2. **Activar flujo** "CHILD - RETRIVE KICAD"
@@ -369,7 +369,7 @@ Descripción del proyecto...
 
 **Escenario**: Un equipo de 5 ingenieros necesita documentar un proyecto complejo.
 
-**Solución con iaDoc**:
+**Solución con docuAI**:
 
 1. **Crear workspace** en AppFlowy para el proyecto
 2. **Estructurar documentación**:
@@ -384,7 +384,7 @@ Descripción del proyecto...
 
 **Escenario**: Tienes grabaciones de reuniones técnicas que quieres convertir en documentos.
 
-**Solución con iaDoc**:
+**Solución con docuAI**:
 
 1. **Subir archivo de audio** (.oga, .wav) a N8N
 2. **Usar script SpeechToText.py** automáticamente
@@ -492,7 +492,7 @@ docker stats
 
 # Verificar conectividad de red
 docker network ls
-docker network inspect iadoc_default
+docker network inspect docuai_default
 ```
 
 ---
@@ -504,7 +504,7 @@ docker network inspect iadoc_default
 **P: ¿Cuánto espacio necesito en disco?**
 R: Mínimo 100GB, recomendado 200GB. Los modelos de IA ocupan mucho espacio.
 
-**P: ¿Puedo usar iaDoc sin GPU?**
+**P: ¿Puedo usar docuAI sin GPU?**
 R: Sí, pero será más lento. Los modelos funcionan solo con CPU, aunque tardará más en responder.
 
 **P: ¿Necesito conexión a internet constantemente?**
@@ -565,7 +565,7 @@ R: Absolutamente. Usa la interfaz web de N8N para crear flujos personalizados.
 ### Canales de Soporte
 
 - **Email técnico**: dev@alteriaautomation.com
-- **Issues en GitHub**: [https://github.com/DevAlteria/iaDoc/issues]
+- **Issues en GitHub**: [https://github.com/DevAlteria/docuAI/issues]
 - **Documentación técnica**: Carpeta `docs/` del repositorio
 
 ### Tiempos de Respuesta
@@ -614,7 +614,7 @@ R: Absolutamente. Usa la interfaz web de N8N para crear flujos personalizados.
 
 <div align="center">
 
-**Manual de Usuario iaDoc v1.0**
+**Manual de Usuario docuAI v1.0**
 
 *Desarrollado por [Alteria Automation SL](https://alteriaautomation.com)*
 

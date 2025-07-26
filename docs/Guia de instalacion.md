@@ -1,4 +1,4 @@
-# Guía de Instalación - iaDoc
+# Guía de Instalación - docuAI
 ## Plataforma de Documentación Inteligente con IA
 
 <p align="center">
@@ -25,7 +25,7 @@
 
 ## 📖 Introducción
 
-Esta guía te llevará paso a paso a través del proceso de instalación de **iaDoc**, una plataforma integral de documentación inteligente que combina IA, automatización y colaboración.
+Esta guía te llevará paso a paso a través del proceso de instalación de **docuAI**, una plataforma integral de documentación inteligente que combina IA, automatización y colaboración.
 
 ### ¿Qué se instalará?
 
@@ -253,10 +253,10 @@ mkdir -p ~/proyectos
 cd ~/proyectos
 
 # Clonar el repositorio con todos los submódulos
-git clone --recursive https://github.com/DevAlteria/iaDoc.git
+git clone --recursive https://github.com/DevAlteria/docuAI.git
 
 # Entrar al directorio
-cd iaDoc
+cd docuAI
 
 # Verificar que los submódulos se descargaron
 ls -la src/appflowy/
@@ -319,7 +319,7 @@ make re
 En otra terminal, puedes monitorear el progreso:
 
 ```bash
-cd iaDoc
+cd docuAI
 
 # Ver estado de contenedores
 make ps
@@ -596,7 +596,7 @@ make logs
 
 # Ver detalles de red Docker
 docker network ls
-docker network inspect iadoc_default
+docker network inspect docuai_default
 
 # Ver volúmenes de datos
 docker volume ls
@@ -619,17 +619,17 @@ make down
 make clean
 
 # Eliminar imágenes Docker
-docker rmi $(docker images | grep iadoc | awk '{print $3}')
+docker rmi $(docker images | grep docuai | awk '{print $3}')
 
 # Eliminar volúmenes
-docker volume rm $(docker volume ls | grep iadoc | awk '{print $2}')
+docker volume rm $(docker volume ls | grep docuai | awk '{print $2}')
 
 # Eliminar redes
-docker network rm iadoc_default
+docker network rm docuai_default
 
 # Eliminar directorio del proyecto
 cd ..
-rm -rf iaDoc
+rm -rf docuAI
 ```
 
 ### Desinstalación Parcial (Mantener Datos)
@@ -639,7 +639,7 @@ rm -rf iaDoc
 make down
 
 # Eliminar solo imágenes (mantener datos)
-docker rmi $(docker images | grep iadoc | awk '{print $3}')
+docker rmi $(docker images | grep docuai | awk '{print $3}')
 ```
 
 ### Backup Antes de Desinstalar
@@ -653,7 +653,7 @@ make n8n-export-workflows
 make n8n-export-credentials
 
 # Crear backup manual de datos importantes
-cp -r envs/dev/data/ backup-iadoc-$(date +%Y%m%d)/
+cp -r envs/dev/data/ backup-docuai-$(date +%Y%m%d)/
 ```
 
 ---
@@ -681,7 +681,7 @@ docker stats --no-stream > uso-recursos.txt
 ### Canales de Soporte
 
 - **Email**: dev@alteriaautomation.com
-- **GitHub Issues**: https://github.com/DevAlteria/iaDoc/issues
+- **GitHub Issues**: https://github.com/DevAlteria/docuAI/issues
 - **Documentación**: `docs/Manual de usuario.md`
 
 ### Información a Incluir en Solicitudes de Soporte
@@ -737,7 +737,7 @@ docker stats --no-stream > uso-recursos.txt
 
 <div align="center">
 
-**Guía de Instalación iaDoc v1.0**
+**Guía de Instalación docuAI v1.0**
 
 *Desarrollado por [Alteria Automation SL](https://alteriaautomation.com)*
 

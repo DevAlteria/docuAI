@@ -25,7 +25,7 @@ do
   echo -n .
 done
 echo 
-curl -X POST http://iadoc.alteria.vpn.alonsom.com/n8n/rest/owner/setup -H "Content-Type: application/json" -d '{"email":"dev@alteriaautomation.com","firstName":"alteria","lastName":"dev","password":"AlteriaKillM3!"}' >/dev/null 2>&1
+curl -X POST http://docuai.alteria.vpn.alonsom.com/n8n/rest/owner/setup -H "Content-Type: application/json" -d '{"email":"dev@alteriaautomation.com","firstName":"alteria","lastName":"dev","password":"AlteriaKillM3!"}' >/dev/null 2>&1
 
 kill -9 $(ps -a | grep "n8n start" | awk '{ print $1 }' | head -n1)
 

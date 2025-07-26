@@ -9,7 +9,7 @@
     {
       "parameters": {
         "method": "POST",
-        "url": "http://appflowy.iadoc.alteria.vpn.alonsom.com/gotrue/token",
+        "url": "http://appflowy.docuai.alteria.vpn.alonsom.com/gotrue/token",
         "authentication": "genericCredentialType",
         "genericAuthType": "httpCustomAuth",
         "options": {}
@@ -32,7 +32,7 @@
     },
     {
       "parameters": {
-        "url": "http://appflowy.iadoc.alteria.vpn.alonsom.com/api/workspace",
+        "url": "http://appflowy.docuai.alteria.vpn.alonsom.com/api/workspace",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
@@ -64,7 +64,7 @@
     },
     {
       "parameters": {
-        "url": "=http://appflowy.iadoc.alteria.vpn.alonsom.com/api/workspace/{{ $json.data.workspace_id }}/database/",
+        "url": "=http://appflowy.docuai.alteria.vpn.alonsom.com/api/workspace/{{ $json.data.workspace_id }}/database/",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
@@ -88,7 +88,7 @@
     {
       "parameters": {
         "method": "PUT",
-        "url": "=http://appflowy.iadoc.alteria.vpn.alonsom.com/api/workspace/{{ $json.workspace }}/database/{{ $json.dbID }}/row",
+        "url": "=http://appflowy.docuai.alteria.vpn.alonsom.com/api/workspace/{{ $json.workspace }}/database/{{ $json.dbID }}/row",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
@@ -246,7 +246,7 @@
     {
       "parameters": {
         "method": "PUT",
-        "url": "=http://appflowy.iadoc.alteria.vpn.alonsom.com/api/workspace/{{ $('Filter worlspace').item.json.data.workspace_id }}/database/{{ $('Filter database').item.json.data.id }}/row",
+        "url": "=http://appflowy.docuai.alteria.vpn.alonsom.com/api/workspace/{{ $('Filter worlspace').item.json.data.workspace_id }}/database/{{ $('Filter database').item.json.data.id }}/row",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [

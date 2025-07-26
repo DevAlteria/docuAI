@@ -1,4 +1,4 @@
-NAM=iaDoc
+NAM=docuAI
 APPFLOWY_TAG=0.9.64
 
 $(NAME):
@@ -39,7 +39,7 @@ ollamaPull:
 	cat models.txt | xargs -n 1 docker exec ollama ollama pull || true 
 
 re: clean build up ollamaPull
-	@echo http://iadoc.alteria.vpn.alonsom.com/
+	@echo http://docuai.alteria.vpn.alonsom.com/
 
 n8n-export-workflows:
 	docker exec n8n rm -rf ./exports

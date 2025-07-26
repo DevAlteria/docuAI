@@ -1,4 +1,4 @@
-# iaDoc - Plataforma de Documentación Inteligente con IA
+# docuAI - Plataforma de Documentación Inteligente con IA
 
 <p align="center">
   <img src="assets/logoNextGen.png" width="25%"/>
@@ -9,7 +9,7 @@
 
 ## 📋 Descripción del Proyecto
 
-**iaDoc** es una plataforma integral de documentación inteligente que integra múltiples tecnologías de IA para proporcionar una solución completa de gestión documental, automatización de flujos de trabajo y colaboración empresarial. 
+**docuAI** es una plataforma integral de documentación inteligente que integra múltiples tecnologías de IA para proporcionar una solución completa de gestión documental, automatización de flujos de trabajo y colaboración empresarial. 
 
 El sistema permite la **interacción con documentación técnica en distintos formatos** (PDF, Excel, PNG, etc.) mediante **lenguaje natural**, combinando:
 
@@ -108,7 +108,7 @@ graph TD
 ## 📁 Estructura del Proyecto
 
 ```
-iaDoc/
+docuAI/
 ├── assets/                 # Recursos gráficos y logos institucionales
 ├── docs/                   # Documentación técnica del proyecto
 │   └── arquitecturaCasosUso.md  # Arquitectura detallada y casos de uso
@@ -172,8 +172,8 @@ El sistema descarga automáticamente estos modelos:
 
 1. **Clonar el repositorio con submódulos**:
 ```bash
-git clone --recursive https://github.com/DevAlteria/iaDoc.git
-cd iaDoc
+git clone --recursive https://github.com/DevAlteria/docuAI.git
+cd docuAI
 ```
 
 2. **Inicializar submódulos (si no se clonó con --recursive)**:
@@ -287,15 +287,15 @@ Ollama ejecuta modelos de lenguaje completamente en local:
 Una vez desplegado, los servicios estarán disponibles en las siguientes URLs:
 
 ### Servicios Principales
-- **🏠 Página Principal**: http://iadoc.alteria.vpn.alonsom.com/
-- **🤖 Open WebUI (Chat IA)**: http://iadoc.alteria.vpn.alonsom.com/webui
-- **⚡ N8N (Automatización)**: http://iadoc.alteria.vpn.alonsom.com/n8n
-- **📝 AppFlowy (Documentación)**: http://appflowy.iadoc.alteria.vpn.alonsom.com/
+- **🏠 Página Principal**: http://docuai.alteria.vpn.alonsom.com/
+- **🤖 Open WebUI (Chat IA)**: http://docuai.alteria.vpn.alonsom.com/webui
+- **⚡ N8N (Automatización)**: http://docuai.alteria.vpn.alonsom.com/n8n
+- **📝 AppFlowy (Documentación)**: http://appflowy.docuai.alteria.vpn.alonsom.com/
 
 ### Servicios de Administración
-- **🗄️ MinIO (Almacenamiento)**: http://iadoc.alteria.vpn.alonsom.com/minio
+- **🗄️ MinIO (Almacenamiento)**: http://docuai.alteria.vpn.alonsom.com/minio
 - **🐘 PgAdmin (Base de Datos)**: Accesible a través del proxy
-- **📊 Ollama API**: http://iadoc.alteria.vpn.alonsom.com:7869/api
+- **📊 Ollama API**: http://docuai.alteria.vpn.alonsom.com:7869/api
 
 ### Credenciales por Defecto
 - **MinIO**: `minioadmin` / `minioadmin`
@@ -479,7 +479,7 @@ Las contribuciones son bienvenidas y apreciadas. Para contribuir:
 Para soporte técnico, preguntas sobre el proyecto o reportar issues:
 
 - **Email**: dev@alteriaautomation.com
-- **Issues**: [GitHub Issues](https://github.com/DevAlteria/iaDoc/issues)
+- **Issues**: [GitHub Issues](https://github.com/DevAlteria/docuAI/issues)
 - **Documentación**: Ver carpeta `docs/` para documentación técnica detallada
 
 ### Reportar Problemas

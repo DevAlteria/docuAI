@@ -57,7 +57,7 @@ services:
       - PENDING_USER_OVERLAY_TITLE=""
       - ENV=dev
       - ENABLE_PERSISTENT_CONFIG=true
-      - WEBUI_NAME=iaDoc
+      - WEBUI_NAME=docuAI
       - PORT=8080
       - WEBUI_AUTH=False
       - WEBUI_SECRET_KEY=t0p-s3cr3t
@@ -99,13 +99,13 @@ services:
     environment:
       - N8N_PATH=/n8n/
       - N8N_LOG_LEVEL=debug
-      - N8N_HOST=iadoc.alteria.vpn.alonsom.com
+      - N8N_HOST=docuai.alteria.vpn.alonsom.com
       - N8N_LISTEN_ADDRESS=0.0.0.0
       - N8N_PROTOCOL=$WEB_PROTOCOL
       - N8N_SECURE_COOKIE=false
       - N8N_RUNNERS_ENABLED=true
       - N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS=false
-      - WEBHOOK_URL=http://iadoc.alteria.vpn.alonsom.com/n8n/
+      - WEBHOOK_URL=http://docuai.alteria.vpn.alonsom.com/n8n/
       - N8N_BLOCK_FILE_ACCESS_TO_N8N_FILES=true
       - N8N_COMMUNITY_PACKAGES_ALLOW_TOOL_USAGE=true
   nginx:
@@ -123,7 +123,7 @@ services:
     volumes:
       - ../../src/nginx/conf/http.d:/etc/nginx/http.d:ro
       - ../../src/nginx/conf/nginx.conf:/etc/nginx/nginx.conf:ro
-      - ../../src/nginx/public/:/var/www/html/iaDoc/:ro
+      - ../../src/nginx/public/:/var/www/html/docuAI/:ro
     networks:
       - ollama-docker
     depends_on:

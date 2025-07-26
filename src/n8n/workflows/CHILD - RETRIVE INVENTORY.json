@@ -93,7 +93,7 @@
     {
       "parameters": {
         "method": "POST",
-        "url": "http://appflowy.iadoc.alteria.vpn.alonsom.com/gotrue/token",
+        "url": "http://appflowy.docuai.alteria.vpn.alonsom.com/gotrue/token",
         "authentication": "genericCredentialType",
         "genericAuthType": "httpCustomAuth",
         "options": {}
@@ -115,7 +115,7 @@
     },
     {
       "parameters": {
-        "url": "http://appflowy.iadoc.alteria.vpn.alonsom.com/api/workspace",
+        "url": "http://appflowy.docuai.alteria.vpn.alonsom.com/api/workspace",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
@@ -147,7 +147,7 @@
     },
     {
       "parameters": {
-        "url": "=http://appflowy.iadoc.alteria.vpn.alonsom.com/api/workspace/{{ $('Get workspaces').item.json.data.filter(item => item.workspace_name == \"demo\").last().workspace_id }}/database/",
+        "url": "=http://appflowy.docuai.alteria.vpn.alonsom.com/api/workspace/{{ $('Get workspaces').item.json.data.filter(item => item.workspace_name == \"demo\").last().workspace_id }}/database/",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
@@ -170,7 +170,7 @@
     },
     {
       "parameters": {
-        "url": "=http://appflowy.iadoc.alteria.vpn.alonsom.com/api/workspace/{{ $('Get workspaces').item.json.data.filter(item => item.workspace_name == \"demo\").last().workspace_id }}/database/{{ $('Get Inventory database').item.json.data.filter(item => item.views[0].name == \"Inventory\").last().id }}/row/detail?ids=urn:uuid:{{ $('Postgres PGVector Store1').item.json.document.metadata.appflowy.rowID }}",
+        "url": "=http://appflowy.docuai.alteria.vpn.alonsom.com/api/workspace/{{ $('Get workspaces').item.json.data.filter(item => item.workspace_name == \"demo\").last().workspace_id }}/database/{{ $('Get Inventory database').item.json.data.filter(item => item.views[0].name == \"Inventory\").last().id }}/row/detail?ids=urn:uuid:{{ $('Postgres PGVector Store1').item.json.document.metadata.appflowy.rowID }}",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
