@@ -1,0 +1,448 @@
+{
+  "createdAt": "2025-07-24T19:34:02.914Z",
+  "updatedAt": "2025-07-25T09:16:52.000Z",
+  "id": "ZCRfNkstg7juNzEV",
+  "name": "CHILD - CEREBRO",
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "model": "mistral-nemo:12b",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
+      "typeVersion": 1,
+      "position": [
+        -380,
+        660
+      ],
+      "id": "40d92a51-7924-4bd1-a80f-cced9f37a449",
+      "name": "Ollama Chat Model",
+      "credentials": {
+        "ollamaApi": {
+          "id": "oEKNS3tm8YNi0WhW",
+          "name": "ollama"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Responde a la siguiente pregunta [PREGUNTA] usando el contexto [CONTEXTO] que dispongo abajo.\nEl contexto seran filas de los elementos relacionados con la pregunta. La ubicacion de un elemento esta formada por BOX, COL y ROW. En caso de que la respuesta sea negativa anade el contexto [CONTEXTO] a tu respuesta.\n\n[PREGUNTA]\n{{ $('Text Classifier').item.json.question }}\n\n[CONTEXTO]\n{{ $json.data.toJsonString() }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        120,
+        -60
+      ],
+      "id": "ce4f1731-b61e-44f6-8133-cd87bd79d10c",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": "deepseek-r1:14b",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
+      "typeVersion": 1,
+      "position": [
+        200,
+        160
+      ],
+      "id": "af37adc6-555c-46b9-b8a8-57bb18e355b3",
+      "name": "Ollama Chat Model1",
+      "credentials": {
+        "ollamaApi": {
+          "id": "oEKNS3tm8YNi0WhW",
+          "name": "ollama"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "0Av55mBiFgoet5yZ",
+          "mode": "list",
+          "cachedResultName": "CHILD - RETRIVE INVENTORY"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "mode": "each",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        -100,
+        40
+      ],
+      "id": "9fac5425-1e82-48ff-b9a7-fdee43b77779",
+      "name": "Obtener inventario",
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "var reply = $input.first().json.output\nconst patronInicio = \"<think>\";\nconst patronFin = \"</think>\\n\\n\";\nconst regex = new RegExp(`${patronInicio}[\\\\s\\\\S]*?${patronFin}`, 'g');\n\nvar ret = {}\nret.reply = \"UNKOWN\";\nret.chat = $('Text Classifier').first().json.chatInput\nreturn [ret];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -100,
+        640
+      ],
+      "id": "4e19c577-2b74-4db2-bdbd-6510d2af65a6",
+      "name": "UNKOWN"
+    },
+    {
+      "parameters": {
+        "jsCode": "var reply = $input.first().json.output\nconst patronInicio = \"<think>\";\nconst patronFin = \"</think>\\n\\n\";\nconst regex = new RegExp(`${patronInicio}[\\\\s\\\\S]*?${patronFin}`, 'g');\n\nvar ret = {}\nret.reply = reply.replace(regex, '');\nret.chat = $('Text Classifier').first().json\nreturn [ret];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        480,
+        40
+      ],
+      "id": "c9ab6390-43fd-48f2-a3f8-d2a464c071b9",
+      "name": "Parse inventory reply"
+    },
+    {
+      "parameters": {
+        "jsCode": "var reply = $input.first().json.output\nconst patronInicio = \"<think>\";\nconst patronFin = \"</think>\\n\\n\";\nconst regex = new RegExp(`${patronInicio}[\\\\s\\\\S]*?${patronFin}`, 'g');\n\nvar ret = {}\nret.reply = reply.replace(regex, '')\nret.chat = $('Text Classifier').first().json.chatInput\nreturn [ret];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        480,
+        440
+      ],
+      "id": "53576a0d-bdba-4ee2-a762-919ab50c7933",
+      "name": "Parse KICAD reply"
+    },
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "question"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -680,
+        540
+      ],
+      "id": "8087e127-9ca5-4295-a355-f4415f7cacbd",
+      "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
+        "inputText": "={{ $json.question }}",
+        "categories": {
+          "categories": [
+            {
+              "category": "Inventario",
+              "description": "Esta categoría incluye todas las preguntas o frases relacionadas con la gestión y estado del inventario. Se refiere a aspectos como la cantidad de artículos, su ubicación física, disponibilidad, códigos, cajas, estanterías, niveles de stock, o cualquier otra información vinculada a la organización, almacenamiento o trazabilidad de componentes o productos. Si el mensaje continene la palabra inventario si o si es esta clase"
+            },
+            {
+              "category": "KICAD",
+              "description": "Esta categoría abarca todas las preguntas relacionadas con el diseño electrónico en KiCad. Incluye consultas sobre esquemáticos, valores de componentes, footprints, listas de materiales (BOM), hojas de datos, conexiones eléctricas, documentación del diseño, y cualquier otro contenido disponible en un repositorio de KiCad."
+            }
+          ]
+        },
+        "options": {
+          "fallback": "other"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.textClassifier",
+      "typeVersion": 1.1,
+      "position": [
+        -460,
+        440
+      ],
+      "id": "445e840b-ae1c-4ec8-8122-1ceafac3a8ba",
+      "name": "Text Classifier",
+      "retryOnFail": false
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -900,
+        340
+      ],
+      "id": "c503e51f-962e-40a7-836c-6482b8361a73",
+      "name": "When chat message received",
+      "webhookId": "8ea3df07-267f-4b4f-b0cb-806efa39e44c"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Loop over input items and add a new field called 'myNewField' to the JSON of each one\nfor (const item of $input.all()) {\n  item.json.question = item.json.chatInput;\n}\n\nreturn $input.all();"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -680,
+        340
+      ],
+      "id": "44ecc9cd-904a-41c0-98ef-d7ff71ba8bcf",
+      "name": "Code1"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "ajpxDGMsYA45yhmR",
+          "mode": "list",
+          "cachedResultName": "CHILD - RETRIVE KICAD"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "mode": "each",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        -100,
+        440
+      ],
+      "id": "e7f86f79-d455-404c-a241-f1c556345a6b",
+      "name": "Execute Workflow",
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Responde a la siguiente pregunta [PREGUNTA] usando el contexto [CONTEXTO] que dispongo abajo.\n\n[PREGUNTA]\n{{ $('Text Classifier').item.json.question }}\n\n[CONTEXTO]\n{{ $json.data.toJsonString() }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        120,
+        440
+      ],
+      "id": "3ac5e530-4693-4cc2-aabe-b2a0b63bbf2d",
+      "name": "AI Agent1"
+    },
+    {
+      "parameters": {
+        "model": "deepseek-r1:14b",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
+      "typeVersion": 1,
+      "position": [
+        200,
+        660
+      ],
+      "id": "ac9872b1-a313-4b05-87ef-cab6ed9e66eb",
+      "name": "Ollama Chat Model2",
+      "credentials": {
+        "ollamaApi": {
+          "id": "oEKNS3tm8YNi0WhW",
+          "name": "ollama"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Ollama Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Text Classifier",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Parse inventory reply",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ollama Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Obtener inventario": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
+      ]
+    },
+    "UNKOWN": {
+      "main": [
+        []
+      ]
+    },
+    "Parse inventory reply": {
+      "main": [
+        []
+      ]
+    },
+    "Parse KICAD reply": {
+      "main": [
+        []
+      ]
+    },
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "Text Classifier",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "Code1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code1": {
+      "main": [
+        [
+          {
+            "node": "Text Classifier",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Text Classifier": {
+      "main": [
+        [
+          {
+            "node": "Obtener inventario",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Execute Workflow",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "UNKOWN",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute Workflow": {
+      "main": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent1": {
+      "main": [
+        [
+          {
+            "node": "Parse KICAD reply",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ollama Chat Model2": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": {
+    "node:AppFlowy Trigger": {
+      "lastTimeChecked": "2025-07-24T14:56:13.008Z",
+      "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1MGY0MDhmYS0xNTM3LTRjZTEtODIyMi02MjllZTZjMzllZTAiLCJhdWQiOiIiLCJleHAiOjE3NTMzNjkxNzIsImlhdCI6MTc1MzM2MTk3MiwiZW1haWwiOiJkZWZhdWx0QGRlZmF1bHQuZGVmYXVsdCIsInBob25lIjoiIiwiYXBwX21ldGFkYXRhIjp7InByb3ZpZGVyIjoiZW1haWwiLCJwcm92aWRlcnMiOlsiZW1haWwiXX0sInVzZXJfbWV0YWRhdGEiOnsiZW1haWwiOiJkZWZhdWx0QGRlZmF1bHQuZGVmYXVsdCIsImVtYWlsX3ZlcmlmaWVkIjpmYWxzZSwicGhvbmVfdmVyaWZpZWQiOmZhbHNlLCJzdWIiOiI1MGY0MDhmYS0xNTM3LTRjZTEtODIyMi02MjllZTZjMzllZTAifSwicm9sZSI6IiIsImFhbCI6ImFhbDEiLCJhbXIiOlt7Im1ldGhvZCI6InBhc3N3b3JkIiwidGltZXN0YW1wIjoxNzUzMzYxOTcyfV0sInNlc3Npb25faWQiOiJjZjg1MzUwOC04MmY5LTRjZTItYWZjZC0wOTI3MTQ0OTJhM2YiLCJpc19hbm9ueW1vdXMiOmZhbHNlfQ.bCyEFRqIs_-JN2lJgFUul048tsER3M4gk1hAtfgcwU4",
+      "refreshToken": "9gVCvqbmfmLLj_TuJ_Npdg",
+      "rows": [
+        {
+          "updated_at": "2025-07-24T14:54:44.113Z",
+          "row_id": "576a415e-a818-4372-a8d1-c0dc8d0f6661"
+        }
+      ]
+    }
+  },
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "5e3bb406-001e-4580-b840-60bb9f1db615",
+  "triggerCount": 2,
+  "tags": []
+}

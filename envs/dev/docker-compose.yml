@@ -63,13 +63,22 @@ services:
       - WEBUI_SECRET_KEY=t0p-s3cr3t
       # OLLAMA
       - ENABLE_OLLAMA_API=true
-      - OLLAMA_BASE_URLS=http://ollama:7869 #comma separated ollama hosts
+      - OLLAMA_BASE_URLS=http://ollama:11434 #comma separated ollama hosts
       - USE_OLLAMA_DOCKER=false #always false we have another container for this
       - K8S_FLAG=false #for helm deployment
     restart: unless-stopped
     networks:
       - ollama-docker
   n8n:
+    healthcheck:
+      test: >
+        stat /home/node/.n8n/.prosioned &&
+        curl --silent --fail http://localhost:5679/healthz |
+        grep -q '"status":"ok"'
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 5s 
     restart: unless-stopped
     build:
       context: ../../src/n8n/

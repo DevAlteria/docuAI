@@ -1,0 +1,1117 @@
+{
+  "createdAt": "2025-07-25T08:10:32.110Z",
+  "updatedAt": "2025-07-26T08:59:36.000Z",
+  "id": "lCXeRTy7rsoSyTVu",
+  "name": "HOCK - INDEX KICAD",
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "model": "tazarov/all-minilm-l6-v2-f32:latest"
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOllama",
+      "typeVersion": 1,
+      "position": [
+        1320,
+        620
+      ],
+      "id": "5e90401b-3783-49a0-a082-d8d31819d0d2",
+      "name": "Embeddings Ollama",
+      "credentials": {
+        "ollamaApi": {
+          "id": "oEKNS3tm8YNi0WhW",
+          "name": "ollama"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "insert",
+        "tableName": "n8n_kicad_embedings",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStorePGVector",
+      "typeVersion": 1.3,
+      "position": [
+        1340,
+        400
+      ],
+      "id": "df20c302-51cb-4f1f-a15a-abfd38c7dd7a",
+      "name": "Postgres PGVector Store",
+      "credentials": {
+        "postgres": {
+          "id": "rUrocHl8XaJ8Jwox",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "deleteTable",
+        "schema": {
+          "__rl": true,
+          "value": "public",
+          "mode": "list",
+          "cachedResultName": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "n8n_kicad_embedings",
+          "mode": "list",
+          "cachedResultName": "n8n_kicad_embedings"
+        },
+        "deleteCommand": "drop",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        220,
+        800
+      ],
+      "id": "d73fe9fd-10a5-48d9-b7be-8a17caed1325",
+      "name": "Delete table or rows",
+      "credentials": {
+        "postgres": {
+          "id": "rUrocHl8XaJ8Jwox",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Loop over input items and add a new field called 'myNewField' to the JSON of each one\nvar data = []\n\nfor (var i = 0; i < $input.all().length; i++ ) {\n  var README = $input.all()[i].json.data\n  var item = $('Filter').all()[i]\n  data.push({\n    data: String(item.json.cells.Name + \"\\n\\n\" + README).toLowerCase(),\n    appflowy: {\n      rowID: item.json.id\n    }\n  })\n  item.json.myNewField = 1;\n}\n\nreturn data;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1100,
+        600
+      ],
+      "id": "5b8feab6-da76-41fb-9b1c-7b0a21c4cc1a",
+      "name": "Code2"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        900
+      ],
+      "id": "c99351e2-2e15-45a7-b031-28f8570a2f1f",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 2
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        700
+      ],
+      "id": "755061b6-a0f2-4b14-b85a-95a8c232dff6",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "jsonMode": "=expressionData",
+        "jsonData": "={{ $json.data }}",
+        "textSplittingMode": "custom",
+        "options": {
+          "metadata": {
+            "metadataValues": [
+              {
+                "name": "appflowy",
+                "value": "={{ $json.appflowy }}"
+              }
+            ]
+          }
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+      "typeVersion": 1.1,
+      "position": [
+        1440,
+        622.5
+      ],
+      "id": "474aeb10-7828-42c5-b3ff-cbc0c6e098fb",
+      "name": "Default Data Loader"
+    },
+    {
+      "parameters": {
+        "url": "=https://raw.githubusercontent.com/{{ $json.cells.Repo.replace('https://github.com/', '') }}/refs/heads/main/README.md",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        880,
+        600
+      ],
+      "id": "3fb5ff30-a565-4884-b1bd-c3dbf37462db",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "912c8e9c-e746-4f94-8c40-84e47713ad77",
+              "leftValue": "={{ $json.cells.Name }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "6fc29e8b-a3ba-4f9d-ac41-2992bca75d0b",
+              "leftValue": "={{ $json.cells.Repo }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.2,
+      "position": [
+        660,
+        800
+      ],
+      "id": "3493febc-b08c-4ecd-89af-f15d62405a72",
+      "name": "Filter"
+    },
+    {
+      "parameters": {
+        "chunkSize": 120,
+        "chunkOverlap": 20,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.textSplitterRecursiveCharacterTextSplitter",
+      "typeVersion": 1,
+      "position": [
+        1520,
+        820
+      ],
+      "id": "b8abf074-2c2a-4a8c-9c21-6b7cf50eebd3",
+      "name": "Recursive Character Text Splitter"
+    },
+    {
+      "parameters": {
+        "executeOnce": false,
+        "command": "=sh scripts/gen_bom_csv_from_repo.sh {{ $json.cells.Repo }}"
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        880,
+        1000
+      ],
+      "id": "0e35ba99-0f0a-42e9-a0cd-fa8139c6d7e7",
+      "name": "Generate BOM",
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://appflowy.iadoc.alteria.vpn.alonsom.com/gotrue/token",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpCustomAuth",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1450,
+        1000
+      ],
+      "id": "73801fde-8823-454e-bf04-8f0dfddae37e",
+      "name": "Get access token",
+      "executeOnce": true,
+      "credentials": {
+        "httpCustomAuth": {
+          "id": "8u4k4uALem7ZjQHK",
+          "name": "default@default.default"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "http://appflowy.iadoc.alteria.vpn.alonsom.com/api/workspace",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $('Get access token').item.json.access_token }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "workspace_name",
+              "value": "demo"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1800,
+        1000
+      ],
+      "id": "5557c7ff-801d-4780-a8e5-f5ad40e55593",
+      "name": "Get workspaces"
+    },
+    {
+      "parameters": {
+        "url": "=http://appflowy.iadoc.alteria.vpn.alonsom.com/api/workspace/{{ $('Get workspaces').item.json.data[0].workspace_id }}/database/",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $('Get access token').item.json.access_token }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2020,
+        1000
+      ],
+      "id": "f1763726-4637-421e-8ca2-ef7c6f31a21c",
+      "name": "Get Inventory database"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Loop over input items and add a new field called 'myNewField' to the JSON of each one\nvar data = []\n\nfor (var i = 0; i < $input.all().length; i++) {\n  data.push({\n    id: $('Filter').all()[i].json.id,\n    bom: $input.all()[i].json.stdout,\n    pre_hash: $('Filter').all()[i].json.cells.Name\n  })\n}\n\nreturn data;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1100,
+        1000
+      ],
+      "id": "0167ced0-67ad-40d1-a254-80b79be9e138",
+      "name": "Parse bom"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Loop over input items and add a new field called 'myNewField' to the JSON of each one\nvar data = []\nvar dbId = $input.first().json.data.find(el => el.views.find(v => v.name == \"KICAD\")).id;\n\nfor (const item of $('Parse bom').all()) {\n  data.push({\n    \"workspace\": $('Get workspaces').first().json.data[0].workspace_id,\n    \"dbID\": dbId,\n    \"bom\": item.json.bom,\n    \"id\": item.json.id,\n    \"pre_hash\": item.json.pre_hash\n  })\n}\n\nreturn data;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2240,
+        1000
+      ],
+      "id": "a95ea05d-5656-4b0e-9b1c-576ffb0d1287",
+      "name": "Prepare update"
+    },
+    {
+      "parameters": {
+        "method": "PUT",
+        "url": "=http://appflowy.iadoc.alteria.vpn.alonsom.com/api/workspace/{{ $json.workspace }}/database/{{ $json.dbID }}/row",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $('Get access token').item.json.access_token }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"pre_hash\": \"{{ $json.pre_hash }}\",\n  \"cells\": {\n    \"BOM\": {{ JSON.stringify($json.bom) }}\n  }\n} ",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2680,
+        1000
+      ],
+      "id": "22d78d61-6a3f-4fa8-a386-59cc7d45488f",
+      "name": "Update rows of Inventory",
+      "executeOnce": false
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        2460,
+        1000
+      ],
+      "id": "7cca2839-5524-4583-bac4-f90470f1d935",
+      "name": "Loop Rows"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "6vmqq4cOYNHYVzjr",
+          "mode": "list",
+          "cachedResultName": "SARA FUNC - GET DATABASE ROWS BY WORKSPACE_NAME AND DATABASE_VIEW_NAME"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "workspace_name": "demo",
+            "database_view_name": "KICAD"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "workspace_name",
+              "displayName": "workspace_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "database_view_name",
+              "displayName": "database_view_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        420,
+        780
+      ],
+      "id": "8ec38df3-847d-4f51-a11c-f7faf067dac8",
+      "name": "Execute Workflow"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Loop over input items and add a new field called 'myNewField' to the JSON of each one\nlet data = [];\nfor (const item of $input.first().json.data.data ) {\n  data.push(item);\n}\n\nreturn data;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        540,
+        640
+      ],
+      "id": "86110256-bac1-4dd8-b789-3830c9863c01",
+      "name": "Code"
+    }
+  ],
+  "connections": {
+    "Embeddings Ollama": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Postgres PGVector Store",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Delete table or rows": {
+      "main": [
+        [
+          {
+            "node": "Execute Workflow",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres PGVector Store": {
+      "main": [
+        []
+      ]
+    },
+    "Code2": {
+      "main": [
+        [
+          {
+            "node": "Postgres PGVector Store",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Delete table or rows",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Delete table or rows",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Default Data Loader": {
+      "ai_document": [
+        [
+          {
+            "node": "Postgres PGVector Store",
+            "type": "ai_document",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Code2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter": {
+      "main": [
+        [
+          {
+            "node": "Generate BOM",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Recursive Character Text Splitter": {
+      "ai_textSplitter": [
+        [
+          {
+            "node": "Default Data Loader",
+            "type": "ai_textSplitter",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate BOM": {
+      "main": [
+        [
+          {
+            "node": "Parse bom",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get access token": {
+      "main": [
+        [
+          {
+            "node": "Get workspaces",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get workspaces": {
+      "main": [
+        [
+          {
+            "node": "Get Inventory database",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Inventory database": {
+      "main": [
+        [
+          {
+            "node": "Prepare update",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse bom": {
+      "main": [
+        [
+          {
+            "node": "Get access token",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare update": {
+      "main": [
+        [
+          {
+            "node": "Loop Rows",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update rows of Inventory": {
+      "main": [
+        [
+          {
+            "node": "Loop Rows",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
+      ]
+    },
+    "Loop Rows": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Update rows of Inventory",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute Workflow": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Filter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": {
+    "node:AppFlowy Trigger": {
+      "lastTimeChecked": "2025-07-24T19:41:06.822Z",
+      "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1MGY0MDhmYS0xNTM3LTRjZTEtODIyMi02MjllZTZjMzllZTAiLCJhdWQiOiIiLCJleHAiOjE3NTMzOTMxMTIsImlhdCI6MTc1MzM4NTkxMiwiZW1haWwiOiJkZWZhdWx0QGRlZmF1bHQuZGVmYXVsdCIsInBob25lIjoiIiwiYXBwX21ldGFkYXRhIjp7InByb3ZpZGVyIjoiZW1haWwiLCJwcm92aWRlcnMiOlsiZW1haWwiXX0sInVzZXJfbWV0YWRhdGEiOnsiZW1haWwiOiJkZWZhdWx0QGRlZmF1bHQuZGVmYXVsdCIsImVtYWlsX3ZlcmlmaWVkIjpmYWxzZSwicGhvbmVfdmVyaWZpZWQiOmZhbHNlLCJzdWIiOiI1MGY0MDhmYS0xNTM3LTRjZTEtODIyMi02MjllZTZjMzllZTAifSwicm9sZSI6IiIsImFhbCI6ImFhbDEiLCJhbXIiOlt7Im1ldGhvZCI6InBhc3N3b3JkIiwidGltZXN0YW1wIjoxNzUzMzg1OTEyfV0sInNlc3Npb25faWQiOiI1NmU5Y2QyZC1jOGQ1LTQ5NDQtYTAwNS1iMGE5OTg2ZmYyZDgiLCJpc19hbm9ueW1vdXMiOmZhbHNlfQ._QZuc0qr5wXU3ruZGp1jcF8ZPJaydTtZjN6qWPa1DfE",
+      "refreshToken": "kg8Ph-kt2zQ7Ehh-PUZSjQ",
+      "rows": [
+        {
+          "updated_at": "2025-07-24T19:40:16.031Z",
+          "row_id": "40b6e206-2798-41d0-96d7-f46d64fc1b84"
+        }
+      ]
+    },
+    "node:AppFlowy Trigger1": {
+      "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1MGY0MDhmYS0xNTM3LTRjZTEtODIyMi02MjllZTZjMzllZTAiLCJhdWQiOiIiLCJleHAiOjE3NTMzOTMxMTMsImlhdCI6MTc1MzM4NTkxMywiZW1haWwiOiJkZWZhdWx0QGRlZmF1bHQuZGVmYXVsdCIsInBob25lIjoiIiwiYXBwX21ldGFkYXRhIjp7InByb3ZpZGVyIjoiZW1haWwiLCJwcm92aWRlcnMiOlsiZW1haWwiXX0sInVzZXJfbWV0YWRhdGEiOnsiZW1haWwiOiJkZWZhdWx0QGRlZmF1bHQuZGVmYXVsdCIsImVtYWlsX3ZlcmlmaWVkIjpmYWxzZSwicGhvbmVfdmVyaWZpZWQiOmZhbHNlLCJzdWIiOiI1MGY0MDhmYS0xNTM3LTRjZTEtODIyMi02MjllZTZjMzllZTAifSwicm9sZSI6IiIsImFhbCI6ImFhbDEiLCJhbXIiOlt7Im1ldGhvZCI6InBhc3N3b3JkIiwidGltZXN0YW1wIjoxNzUzMzg1OTEzfV0sInNlc3Npb25faWQiOiIxYzExZjRkMC05Mjg1LTQ4YmYtOGU1OC01ODBlZjE5ZmFhNmEiLCJpc19hbm9ueW1vdXMiOmZhbHNlfQ.8T2gNqxOFWo9760ZckZnMoC00ThQQWvP3-yw_k1XsAk",
+      "refreshToken": "8xn8fAk0MpK-EoUv2zaxyQ",
+      "rowIds": [
+        "40b6e206-2798-41d0-96d7-f46d64fc1b84",
+        "c85f6808-840e-4c31-85f3-de1ecf3fb2b6",
+        "803ff631-689d-4102-af6b-3a024ec75f80",
+        "e790f6c7-02a3-4d67-a061-bc2143bb8fdf",
+        "ffa9f064-b264-4013-8030-86fe23149757",
+        "3ef7de94-530e-423e-bef5-dbcf470f0edd",
+        "406e06da-42e3-41d0-b2f8-e082813c6e20",
+        "1c8d69b6-5dd8-498b-8f72-11ea874e6c33",
+        "549e63d2-a2a3-4b75-9808-ef2ef0ec5e89",
+        "e303ea87-b4e2-471d-85da-f0e454f62224",
+        "2e571705-5adc-4e07-97aa-39822f5e6e64",
+        "bf74374f-2b60-47c0-826e-1361e3f1c5f4",
+        "f49b5e95-4c14-45aa-8b80-52d57b342b03",
+        "c98a4e2e-e2f7-43ff-9d8d-b060eaecb666",
+        "0c6b5e65-d658-4784-9805-3f4e8ddf6a89",
+        "1ec7dc6a-8460-4700-8e1f-2439bac08600",
+        "4c9c4d37-1eb6-441d-a8ab-dc1f6d85a708",
+        "2692ddde-8d02-4b4d-92cb-8bc1fe12e838",
+        "9cfdff90-be7d-4753-8c35-c0680ab9beb7",
+        "d482b4dd-225f-4129-82f7-34ed512b565e",
+        "3bd068e6-c175-4f98-845e-77194629d440",
+        "c37cd207-9335-4326-84c5-a9ec94ef9210",
+        "ffd0acc7-4c25-4249-af4f-d7aaa53187e7",
+        "414c7485-3075-4e2a-8043-bb7d9e51f6ac",
+        "75ede83a-83a0-4949-8a49-a689acf53b37",
+        "274e7012-7313-4452-a079-74bdb6d8b28f",
+        "71bd0bcd-44f8-4798-9a88-2a94b77088d3",
+        "1c2a5152-57d9-4857-b7f8-0e92a99c5ec8",
+        "fa91a84a-6047-44f6-9bce-f321844b6358",
+        "30384080-b445-4e7f-bfc8-f28d219fe21d",
+        "1ea0cf28-e232-4d11-a40c-2155e237a816",
+        "db130603-6c65-43e3-abcb-13411c97b917",
+        "18b08475-de37-4600-b369-4c363e192530",
+        "6a625519-c7e1-4850-a730-1fbc0e50b667",
+        "d3e34e2b-c6b6-4fc9-8571-8d1cebe4d54b",
+        "f982e214-3b0c-4d44-93dd-5be09d98bae2",
+        "cba39546-3310-4800-82a0-b82001c5f052",
+        "641bc80c-f43f-4deb-aa12-f73577eeab5c",
+        "a1081b8a-9164-4341-9cb9-ba3f3340f2d0",
+        "a152e773-4bf0-4b25-9ae4-abb1b3649749",
+        "bfb47438-407e-4413-88c8-c29edf0688e4",
+        "c20b6543-3f81-4f44-af28-3d7d1b8ac70f",
+        "3b4b40b3-aa5d-4b2e-96ba-7386a0ffab7d",
+        "ab374340-ea95-441c-aa4f-84b6ec470d88",
+        "2cf9c27e-43fb-4bf1-93b1-dfc1c05b3939",
+        "992f61c2-3c99-4e0d-a635-343aff913989",
+        "97fa72f1-82e4-415b-9bcc-9aaa944efe36",
+        "5cfc03f6-4fe4-4bf4-98f4-d2783ba3bd74",
+        "a002779e-25fa-4e78-a34a-e136c65996d0",
+        "bfb14829-e08c-4df5-9d2f-c52ea536dc86",
+        "5c7f0643-1bce-480e-ab96-8b453671d9d8",
+        "8d7b726a-a875-4a7d-b674-9d46175bc2ef",
+        "c0d10755-ade4-44ba-8398-92f96088fbaa",
+        "711bba64-bcb7-4642-926c-5b26cbf93471",
+        "ff55b11a-22c9-41fd-8074-cd981d70e3f2",
+        "cd493cec-bd47-4bba-96df-c44e37167ed4",
+        "65d7439a-56ed-4865-88db-bb4e70bf6c6f",
+        "3cc82ad9-e887-45d0-98c9-7e9a5e7f6335",
+        "0a2a74b9-5f8d-4087-b5b0-93003b37f52c",
+        "c7102969-aaa4-49b6-9613-4acdb8015439",
+        "a952cd9d-db86-4137-aa5c-f877eca8f41e",
+        "a1ed8cda-64cf-4c76-8083-8121ebe56a48",
+        "240ade3e-347f-415e-8164-541da6b8bcf5",
+        "6b5faf07-20c3-44b2-bd9a-8579863a4427",
+        "4d508a33-3ed5-4746-88e8-210fddd6dc02",
+        "6e4dbc5b-fd20-4584-aa7c-cea28d541b47",
+        "433c0824-e19e-4b5b-90b8-1c82cb2acf5e"
+      ]
+    },
+    "node:Added": {
+      "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1MGY0MDhmYS0xNTM3LTRjZTEtODIyMi02MjllZTZjMzllZTAiLCJhdWQiOiIiLCJleHAiOjE3NTMzOTMzMDEsImlhdCI6MTc1MzM4NjEwMSwiZW1haWwiOiJkZWZhdWx0QGRlZmF1bHQuZGVmYXVsdCIsInBob25lIjoiIiwiYXBwX21ldGFkYXRhIjp7InByb3ZpZGVyIjoiZW1haWwiLCJwcm92aWRlcnMiOlsiZW1haWwiXX0sInVzZXJfbWV0YWRhdGEiOnsiZW1haWwiOiJkZWZhdWx0QGRlZmF1bHQuZGVmYXVsdCIsImVtYWlsX3ZlcmlmaWVkIjpmYWxzZSwicGhvbmVfdmVyaWZpZWQiOmZhbHNlLCJzdWIiOiI1MGY0MDhmYS0xNTM3LTRjZTEtODIyMi02MjllZTZjMzllZTAifSwicm9sZSI6IiIsImFhbCI6ImFhbDEiLCJhbXIiOlt7Im1ldGhvZCI6InBhc3N3b3JkIiwidGltZXN0YW1wIjoxNzUzMzg2MTAxfV0sInNlc3Npb25faWQiOiI5MjE2NTBiZi1lMTEwLTQ0ODUtYjE1OC0wNGIzMjgxZmJhZmIiLCJpc19hbm9ueW1vdXMiOmZhbHNlfQ.6EdW8GCO7iZCs38GxF8CO0XFXJHgDBG8D9cjF5QR1NA",
+      "refreshToken": "FbdcON5q2xobt-T_F-M3Ig",
+      "rowIds": [
+        "281e6211-c9ce-44c6-b94e-d5c9e0621715",
+        "8b3a9cf9-f45e-495e-ac29-dccac9823fa3",
+        "77b11da0-4eec-476a-8a70-6f6c58cb4786",
+        "f45ea90a-9d86-423f-a271-d6da4ea59f2d",
+        "e567fea6-bf65-4fe6-98c6-814518f760f8",
+        "64b82941-971d-4061-8d33-1cf6cbed5929",
+        "a556a5ba-4710-4f2a-98f0-ea0643f58b61",
+        "50ed4318-d493-4076-90fd-65ca82799a3e",
+        "4134700c-ab2f-4a8d-bcf3-4495744da233",
+        "e0b58446-f89f-43a6-a5b4-dbaf328f3dbb",
+        "dab609d0-bf90-4eff-8f6f-2ebfa09490c1",
+        "d8a25378-853d-4f53-8121-539d80f28a4b",
+        "c42ed5c7-3c1c-4a7f-b42f-5c3a47becfce",
+        "77eab75a-9ea6-4cf9-8263-07dedaf0a511",
+        "5be7e28e-f272-4e26-9602-e4b3e6eea27e",
+        "81095b0f-e880-43b0-900c-582bf18cc78b",
+        "10569740-1a46-49bc-a648-2ff98a5e6c87",
+        "1f2a4fae-0dd7-404f-8ee2-4fcbdbbf15a1",
+        "f4d12a9f-32fa-4344-aba3-1489a50a003a",
+        "6149f766-a1e8-4cc2-b20c-2fbaada8ccad",
+        "22cb149c-807d-495c-8149-07505466829b",
+        "fdd08940-494e-40d9-b672-fd9c73125546",
+        "0c05783f-4627-481c-a80d-984255dd9362",
+        "320de759-f3d0-4bd2-891a-794abe504336",
+        "91600bb5-bf99-4a4a-b8cf-2ec0e771c3bc",
+        "26736270-bd33-445d-8f8e-860dbcc375d9",
+        "05f2471b-ec0f-445c-9545-7a52a22c7aee",
+        "c2d767f2-c97f-4802-acc4-820eddba2254",
+        "a5958064-8a64-4036-8cd2-6f9684250bb7",
+        "51f9429f-d074-4785-b85e-bc79b49ea353",
+        "69337f38-2bc4-40b3-88c5-058165c93504",
+        "bda7b2cf-0740-48b0-89be-b3318cbb4fe1",
+        "1901d350-be07-48db-acc1-96ada714af34",
+        "18949897-094e-4b9b-9534-37650073cf35",
+        "58f512d7-4f78-4ef0-9b39-3c93c5cd9496",
+        "77f171c5-e73b-4ea3-b763-8df9f71825a0",
+        "e90589e7-5333-4ed6-ad6c-525fa49082ad",
+        "a7c5e797-00de-487a-8549-497cad18aafc",
+        "81351bce-ec38-47ab-8648-6754b9ab51fd",
+        "7ec762b5-4338-4be0-8115-a64146cbd424",
+        "c45c441c-56f8-4c85-a881-a127a7240a56",
+        "0da3188c-527b-4ad5-8a8a-448cd3832184",
+        "20ca2b13-a4d5-458e-8fcc-e024f3731b43",
+        "31f95d98-3321-45dc-a4f4-53ead45f3c1a",
+        "9d6adc0a-17d2-43a0-bcbe-79fd633914d1",
+        "cede2f6a-960f-4b7d-8eb1-6daf313adba6",
+        "30b3e5fc-aee2-466f-b59e-01f12abf7e55",
+        "41dc586c-1789-4f08-80a8-79d34e207535",
+        "23b5accb-da17-4fcb-9d11-4fa886d510fa",
+        "ce49ec4f-692f-4cdc-9cc3-109d89832637",
+        "4efdeaef-f1b2-475d-8190-311c183e8230",
+        "fe66106c-c078-4287-be96-ea876ee398e7",
+        "b786d210-7727-4e1a-961e-ab2e2b29e8ab",
+        "bada7141-0516-446d-8005-dec38755cc2a",
+        "3839ef62-7847-456e-a74c-77047604eec4",
+        "b2c469b1-d56e-44f0-86b0-74f7576f3a3e",
+        "d0e0309a-f52a-4272-aabe-dce59389c2e0",
+        "3bd59e89-7611-4da9-832b-e6777fbb4230",
+        "f7eca677-9f1e-4dd4-83f4-5d2be05ac603",
+        "fd1caf01-7387-4059-a540-6162eb576dd1",
+        "430cb87a-4f31-45ac-a01c-85ed26371cb9",
+        "5111df64-97c5-4326-bfb7-e83787c1bb75",
+        "1eeb6f0b-bd7c-4e19-a133-4846d48ce0ae",
+        "036796dd-a594-4b98-b229-2ee40663ff1c",
+        "e15c618f-783e-4208-9b9f-22cb2d9d6bf8",
+        "b274a3d9-062b-4611-aeb7-5532cf01c938",
+        "db35fc46-4b17-4601-ad51-b58a1aee4bdd"
+      ]
+    },
+    "node:Updated": {
+      "lastTimeChecked": "2025-07-24T21:01:51.590Z",
+      "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1MGY0MDhmYS0xNTM3LTRjZTEtODIyMi02MjllZTZjMzllZTAiLCJhdWQiOiIiLCJleHAiOjE3NTMzOTMzMDEsImlhdCI6MTc1MzM4NjEwMSwiZW1haWwiOiJkZWZhdWx0QGRlZmF1bHQuZGVmYXVsdCIsInBob25lIjoiIiwiYXBwX21ldGFkYXRhIjp7InByb3ZpZGVyIjoiZW1haWwiLCJwcm92aWRlcnMiOlsiZW1haWwiXX0sInVzZXJfbWV0YWRhdGEiOnsiZW1haWwiOiJkZWZhdWx0QGRlZmF1bHQuZGVmYXVsdCIsImVtYWlsX3ZlcmlmaWVkIjpmYWxzZSwicGhvbmVfdmVyaWZpZWQiOmZhbHNlLCJzdWIiOiI1MGY0MDhmYS0xNTM3LTRjZTEtODIyMi02MjllZTZjMzllZTAifSwicm9sZSI6IiIsImFhbCI6ImFhbDEiLCJhbXIiOlt7Im1ldGhvZCI6InBhc3N3b3JkIiwidGltZXN0YW1wIjoxNzUzMzg2MTAxfV0sInNlc3Npb25faWQiOiIzM2VmZDYwYS0xOTFjLTRiMTUtODg5Yi01NTRjNjU0ZDA1MDAiLCJpc19hbm9ueW1vdXMiOmZhbHNlfQ.qDjnaP78xT3OHwuXXyWg3TRc17uzDnNHdpWbvOrar_Y",
+      "refreshToken": "UM9iJPWCbqRb5nQFKQDw4w",
+      "rows": [
+        {
+          "updated_at": "2025-07-24T20:05:32.426885Z",
+          "row_id": "281e6211-c9ce-44c6-b94e-d5c9e0621715"
+        },
+        {
+          "updated_at": "2025-07-24T20:05:32.426885Z",
+          "row_id": "8b3a9cf9-f45e-495e-ac29-dccac9823fa3"
+        },
+        {
+          "updated_at": "2025-07-24T20:05:32.426885Z",
+          "row_id": "77b11da0-4eec-476a-8a70-6f6c58cb4786"
+        },
+        {
+          "updated_at": "2025-07-24T20:05:32.766686Z",
+          "row_id": "e567fea6-bf65-4fe6-98c6-814518f760f8"
+        },
+        {
+          "updated_at": "2025-07-24T20:05:32.737999Z",
+          "row_id": "f45ea90a-9d86-423f-a271-d6da4ea59f2d"
+        },
+        {
+          "updated_at": "2025-07-24T20:05:32.795753Z",
+          "row_id": "64b82941-971d-4061-8d33-1cf6cbed5929"
+        },
+        {
+          "updated_at": "2025-07-24T20:05:32.827796Z",
+          "row_id": "a556a5ba-4710-4f2a-98f0-ea0643f58b61"
+        },
+        {
+          "updated_at": "2025-07-24T20:05:32.896632Z",
+          "row_id": "4134700c-ab2f-4a8d-bcf3-4495744da233"
+        },
+        {
+          "updated_at": "2025-07-24T20:05:32.971383Z",
+          "row_id": "dab609d0-bf90-4eff-8f6f-2ebfa09490c1"
+        },
+        {
+          "updated_at": "2025-07-24T20:05:32.862382Z",
+          "row_id": "50ed4318-d493-4076-90fd-65ca82799a3e"
+        },
+        {
+          "updated_at": "2025-07-24T20:05:32.929021Z",
+          "row_id": "e0b58446-f89f-43a6-a5b4-dbaf328f3dbb"
+        },
+        {
+          "updated_at": "2025-07-24T20:05:33.010939Z",
+          "row_id": "d8a25378-853d-4f53-8121-539d80f28a4b"
+        },
+        {
+          "updated_at": "2025-07-24T20:05:33.049221Z",
+          "row_id": "c42ed5c7-3c1c-4a7f-b42f-5c3a47becfce"
+        },
+        {
+          "updated_at": "2025-07-24T20:05:33.090231Z",
+          "row_id": "77eab75a-9ea6-4cf9-8263-07dedaf0a511"
+        },
+        {
+          "updated_at": "2025-07-24T20:05:33.183469Z",
+          "row_id": "81095b0f-e880-43b0-900c-582bf18cc78b"
+        },
+        {
+          "updated_at": "2025-07-24T20:05:33.284902Z",
+          "row_id": "1f2a4fae-0dd7-404f-8ee2-4fcbdbbf15a1"
+        },
+        {
+          "updated_at": "2025-07-24T20:05:33.134092Z",
+          "row_id": "5be7e28e-f272-4e26-9602-e4b3e6eea27e"
+        },
+        {
+          "updated_at": "2025-07-24T20:05:33.233933Z",
+          "row_id": "10569740-1a46-49bc-a648-2ff98a5e6c87"
+        },
+        {
+          "updated_at": "2025-07-24T20:05:33.339044Z",
+          "row_id": "f4d12a9f-32fa-4344-aba3-1489a50a003a"
+        },
+        {
+          "updated_at": "2025-07-24T20:05:33.450009Z",
+          "row_id": "22cb149c-807d-495c-8149-07505466829b"
+        },
+        {
+          "updated_at": "2025-07-24T20:05:33.567396Z",
+          "row_id": "0c05783f-4627-481c-a80d-984255dd9362"
+        },
+        {
+          "updated_at": "2025-07-24T20:05:33.393288Z",
+          "row_id": "6149f766-a1e8-4cc2-b20c-2fbaada8ccad"
+        },
+        {
+          "updated_at": "2025-07-24T20:05:33.506627Z",
+          "row_id": "fdd08940-494e-40d9-b672-fd9c73125546"
+        },
+        {
+          "updated_at": "2025-07-24T20:05:33.630156Z",
+          "row_id": "320de759-f3d0-4bd2-891a-794abe504336"
+        },
+        {
+          "updated_at": "2025-07-24T20:05:33.696310Z",
+          "row_id": "91600bb5-bf99-4a4a-b8cf-2ec0e771c3bc"
+        },
+        {
+          "updated_at": "2025-07-24T20:05:33.837833Z",
+          "row_id": "05f2471b-ec0f-445c-9545-7a52a22c7aee"
+        },
+        {
+          "updated_at": "2025-07-24T20:05:33.989806Z",
+          "row_id": "a5958064-8a64-4036-8cd2-6f9684250bb7"
+        },
+        {
+          "updated_at": "2025-07-24T20:05:33.766969Z",
+          "row_id": "26736270-bd33-445d-8f8e-860dbcc375d9"
+        },
+        {
+          "updated_at": "2025-07-24T20:05:33.914462Z",
+          "row_id": "c2d767f2-c97f-4802-acc4-820eddba2254"
+        },
+        {
+          "updated_at": "2025-07-24T20:05:34.067778Z",
+          "row_id": "51f9429f-d074-4785-b85e-bc79b49ea353"
+        },
+        {
+          "updated_at": "2025-07-24T20:05:34.143124Z",
+          "row_id": "69337f38-2bc4-40b3-88c5-058165c93504"
+        },
+        {
+          "updated_at": "2025-07-24T20:05:34.303611Z",
+          "row_id": "1901d350-be07-48db-acc1-96ada714af34"
+        },
+        {
+          "updated_at": "2025-07-24T20:05:34.473887Z",
+          "row_id": "58f512d7-4f78-4ef0-9b39-3c93c5cd9496"
+        },
+        {
+          "updated_at": "2025-07-24T20:05:34.221824Z",
+          "row_id": "bda7b2cf-0740-48b0-89be-b3318cbb4fe1"
+        },
+        {
+          "updated_at": "2025-07-24T20:05:34.387123Z",
+          "row_id": "18949897-094e-4b9b-9534-37650073cf35"
+        },
+        {
+          "updated_at": "2025-07-24T20:05:34.557357Z",
+          "row_id": "77f171c5-e73b-4ea3-b763-8df9f71825a0"
+        },
+        {
+          "updated_at": "2025-07-24T20:05:34.645979Z",
+          "row_id": "e90589e7-5333-4ed6-ad6c-525fa49082ad"
+        },
+        {
+          "updated_at": "2025-07-24T20:05:34.826078Z",
+          "row_id": "81351bce-ec38-47ab-8648-6754b9ab51fd"
+        },
+        {
+          "updated_at": "2025-07-24T20:05:35.005808Z",
+          "row_id": "c45c441c-56f8-4c85-a881-a127a7240a56"
+        },
+        {
+          "updated_at": "2025-07-24T20:05:34.733942Z",
+          "row_id": "a7c5e797-00de-487a-8549-497cad18aafc"
+        },
+        {
+          "updated_at": "2025-07-24T20:05:34.914485Z",
+          "row_id": "7ec762b5-4338-4be0-8115-a64146cbd424"
+        },
+        {
+          "updated_at": "2025-07-24T20:05:35.092731Z",
+          "row_id": "0da3188c-527b-4ad5-8a8a-448cd3832184"
+        },
+        {
+          "updated_at": "2025-07-24T20:05:35.182831Z",
+          "row_id": "20ca2b13-a4d5-458e-8fcc-e024f3731b43"
+        },
+        {
+          "updated_at": "2025-07-24T20:05:35.378417Z",
+          "row_id": "9d6adc0a-17d2-43a0-bcbe-79fd633914d1"
+        },
+        {
+          "updated_at": "2025-07-24T20:05:35.565743Z",
+          "row_id": "30b3e5fc-aee2-466f-b59e-01f12abf7e55"
+        },
+        {
+          "updated_at": "2025-07-24T20:05:35.284894Z",
+          "row_id": "31f95d98-3321-45dc-a4f4-53ead45f3c1a"
+        },
+        {
+          "updated_at": "2025-07-24T20:05:35.471765Z",
+          "row_id": "cede2f6a-960f-4b7d-8eb1-6daf313adba6"
+        },
+        {
+          "updated_at": "2025-07-24T20:05:35.658193Z",
+          "row_id": "41dc586c-1789-4f08-80a8-79d34e207535"
+        },
+        {
+          "updated_at": "2025-07-24T20:05:35.753915Z",
+          "row_id": "23b5accb-da17-4fcb-9d11-4fa886d510fa"
+        },
+        {
+          "updated_at": "2025-07-24T20:05:35.944179Z",
+          "row_id": "4efdeaef-f1b2-475d-8190-311c183e8230"
+        },
+        {
+          "updated_at": "2025-07-24T20:05:36.147797Z",
+          "row_id": "b786d210-7727-4e1a-961e-ab2e2b29e8ab"
+        },
+        {
+          "updated_at": "2025-07-24T20:05:35.848181Z",
+          "row_id": "ce49ec4f-692f-4cdc-9cc3-109d89832637"
+        },
+        {
+          "updated_at": "2025-07-24T20:05:36.043236Z",
+          "row_id": "fe66106c-c078-4287-be96-ea876ee398e7"
+        },
+        {
+          "updated_at": "2025-07-24T20:05:36.256910Z",
+          "row_id": "bada7141-0516-446d-8005-dec38755cc2a"
+        },
+        {
+          "updated_at": "2025-07-24T20:05:36.359160Z",
+          "row_id": "3839ef62-7847-456e-a74c-77047604eec4"
+        },
+        {
+          "updated_at": "2025-07-24T20:05:36.558750Z",
+          "row_id": "d0e0309a-f52a-4272-aabe-dce59389c2e0"
+        },
+        {
+          "updated_at": "2025-07-24T20:05:36.461887Z",
+          "row_id": "b2c469b1-d56e-44f0-86b0-74f7576f3a3e"
+        },
+        {
+          "updated_at": "2025-07-24T20:05:36.662244Z",
+          "row_id": "3bd59e89-7611-4da9-832b-e6777fbb4230"
+        },
+        {
+          "updated_at": "2025-07-24T20:05:36.866217Z",
+          "row_id": "fd1caf01-7387-4059-a540-6162eb576dd1"
+        },
+        {
+          "updated_at": "2025-07-24T20:05:36.764070Z",
+          "row_id": "f7eca677-9f1e-4dd4-83f4-5d2be05ac603"
+        },
+        {
+          "updated_at": "2025-07-24T20:05:36.973557Z",
+          "row_id": "430cb87a-4f31-45ac-a01c-85ed26371cb9"
+        },
+        {
+          "updated_at": "2025-07-24T20:05:37.088131Z",
+          "row_id": "5111df64-97c5-4326-bfb7-e83787c1bb75"
+        },
+        {
+          "updated_at": "2025-07-24T20:05:37.321052Z",
+          "row_id": "036796dd-a594-4b98-b229-2ee40663ff1c"
+        },
+        {
+          "updated_at": "2025-07-24T20:05:37.554220Z",
+          "row_id": "b274a3d9-062b-4611-aeb7-5532cf01c938"
+        },
+        {
+          "updated_at": "2025-07-24T20:05:37.203037Z",
+          "row_id": "1eeb6f0b-bd7c-4e19-a133-4846d48ce0ae"
+        },
+        {
+          "updated_at": "2025-07-24T20:05:37.437655Z",
+          "row_id": "e15c618f-783e-4208-9b9f-22cb2d9d6bf8"
+        },
+        {
+          "updated_at": "2025-07-24T20:05:37.674798Z",
+          "row_id": "db35fc46-4b17-4601-ad51-b58a1aee4bdd"
+        }
+      ]
+    },
+    "node:Schedule Trigger": {
+      "recurrenceRules": []
+    }
+  },
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "7fa76d37-3015-4e69-98cb-44170a3ef3ff",
+  "triggerCount": 3,
+  "tags": []
+}
