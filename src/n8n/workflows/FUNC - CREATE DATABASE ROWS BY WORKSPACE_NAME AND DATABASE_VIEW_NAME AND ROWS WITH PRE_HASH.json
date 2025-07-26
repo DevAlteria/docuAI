@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-07-25T12:30:20.798Z",
-  "updatedAt": "2025-07-26T09:11:05.000Z",
+  "updatedAt": "2025-07-26T12:11:19.000Z",
   "id": "0QhYah6uWHSRJ1yK",
   "name": "FUNC - CREATE DATABASE ROWS BY WORKSPACE_NAME AND DATABASE_VIEW_NAME AND ROWS WITH PRE_HASH",
   "active": false,
@@ -139,7 +139,7 @@
     },
     {
       "parameters": {
-        "jsCode": "// Loop over input items and add a new field called 'myNewField' to the JSON of each one\nfor (const item of $input.all()) {\n  // Parámetros comunes a cualquier base de datos\n  const workspace = \"demo\";\n  const table = \"Preguntas\";// item.json.table_name; \n  const rowData = { Pregunta: \"¿Qué es Juena?\", Type: \"programación\", Name: \"cora\" };//item.json.data;\nreturn [\n  {\n    json: {\n      workspace_name: workspace,\n      database_view_name: table,\n      rows: [ rowData ]\n    }\n  }\n];\n\n}\n\nreturn $input.all();"
+        "jsCode": "// Loop over input items and add a new field called 'myNewField' to the JSON of each one\nfor (const item of $input.all()) {\n  // Parámetros comunes a cualquier base de datos\n  const workspace = \"demo\";\n  const table = \"Preguntas\";// item.json.table_name; \n  const rowData = { Pregunta: \"¿Qué es Juena?\", Type: \"programación\", Name: \"cora\" };//item.json.data;\nreturn [\n  {\n    json: {\n      workspace_name: workspace,\n      database_view_name: table,\n      rows:  [rowData] \n    }\n  }\n];\n\n}\n\nreturn $input.all();"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -159,6 +159,10 @@
             },
             {
               "name": "database_view_name"
+            },
+            {
+              "name": "rows",
+              "type": "array"
             }
           ]
         }
@@ -215,7 +219,7 @@
     },
     {
       "parameters": {
-        "jsCode": "const row = $('Code').first().json.rows[0];\nif (!row) {\n  return [];\n}\n\nconst cellsObject = {};\nlet pre_hash = \"\";\nlet docLines = [];\n\nfor (const [key, value] of Object.entries(row)) {\n  if (key.toLowerCase() === \"type\") {\n  cellsObject[key] = { name: value }; // para campos tipo Select\n} else {\n  cellsObject[key] = value;\n}\n\n  if (key.toLowerCase() === \"name\") {\n    pre_hash = value;\n  }\n\n  docLines.push(`${key}: ${value}`);\n}\n\nreturn [\n  {\n    json: {\n      data:{\n        pre_hash,\n        cells: cellsObject,\n        document: docLines.join(\"\\n\")\n      }\n    }\n  }\n];\n"
+        "jsCode": "const row = $('Aux join').first().json.rows;\nif (!row) {\n  return [];\n}\n\nconst cellsObject = {};\nlet pre_hash = \"\";\nlet docLines = [];\n\nfor (const [key, value] of Object.entries(row)) {\n  if (key.toLowerCase() === \"type\") {\n  cellsObject[key] = { name: value }; // para campos tipo Select\n} else {\n  cellsObject[key] = value;\n}\n\n  if (key.toLowerCase() === \"name\") {\n    pre_hash = value;\n  }\n\n  docLines.push(`${key}: ${value}`);\n}\n\nreturn [\n  {\n    json: {\n      data:{\n        pre_hash,\n        cells: cellsObject,\n        document: docLines.join(\"\\n\")\n      }\n    }\n  }\n];\n"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -241,7 +245,7 @@
     },
     {
       "parameters": {
-        "method": "POST",
+        "method": "PUT",
         "url": "=http://appflowy.iadoc.alteria.vpn.alonsom.com/api/workspace/{{ $('Filter worlspace').item.json.data.workspace_id }}/database/{{ $('Filter database').item.json.data.id }}/row",
         "sendHeaders": true,
         "headerParameters": {
@@ -858,7 +862,7 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "04feb7e6-84fb-4595-a9f5-5435acb3f7dc",
+  "versionId": "1924ca2f-e797-492d-a0e1-1f19359641cc",
   "triggerCount": 3,
   "tags": []
 }

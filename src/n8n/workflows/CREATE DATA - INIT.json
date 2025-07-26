@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-07-15T13:19:15.850Z",
-  "updatedAt": "2025-07-26T09:10:50.000Z",
+  "updatedAt": "2025-07-26T10:22:28.000Z",
   "id": "4kSTvQKW8uzJVur4",
   "name": "CREATE DATA - INIT",
   "active": false,
@@ -923,6 +923,111 @@
       ],
       "id": "91e584c0-48e6-4441-820b-5448ee2015a1",
       "name": "Add fields to Preguntas"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        3220,
+        540
+      ],
+      "id": "01f0f34f-6962-4560-a7cd-0325d0f9ac94",
+      "name": "Loop Over Items2"
+    },
+    {
+      "parameters": {
+        "url": "=http://appflowy.iadoc.alteria.vpn.alonsom.com/api/workspace/{{ $('Create Demo Workspace').item.json.data.workspace_id }}/database/{{ $('Find Preguntas database1').item.json.preguntasDB }}/fields",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $('Get access token').item.json.access_token }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2780,
+        540
+      ],
+      "id": "9f8e4621-9766-428c-b86a-72375637d77e",
+      "name": "Get fields of preguntas",
+      "executeOnce": true
+    },
+    {
+      "parameters": {
+        "jsCode": "function makeid(length) {\n    var result           = '';\n    var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';\n    var charactersLength = characters.length;\n    for ( var i = 0; i < length; i++ ) {\n        result += characters.charAt(Math.floor(Math.random() * charactersLength));\n    }\n    return result;\n}\n\nvar nameID = $input.first().json.data.find((el) => el.name == \"Name\");\nvar PreguntaID = $input.first().json.data.find((el) => el.name == \"Pregunta\");\nnameID = nameID.name + \"|\" + nameID.field_type;\nPreguntaID = PreguntaID.name + \"|\" + PreguntaID.field_type;\n\nvar items = [\n  {\n    \"name\": \"IL1\",\n    \"pregunta\": \"Busca en el inventario donde esta el chips mega\"\n  },\n  {\n    \"name\": \"IC2\",\n    \"pregunta\": \"busca en el Inventario cuantos big socket 5p hay\"\n  },\n  {\n    \"name\": \"IC3\",\n    \"pregunta\": \"busca en el Inventario cuantos AHT 20 hay\"\n  },\n  {\n    \"name\": \"IC4\",\n    \"pregunta\": \"busca en el inventario cuantos ESP32 N4\"\n  },\n  {\n    \"name\": \"IL6\",\n    \"pregunta\": \"busca en el inventario, donde esta el ZENER 15V\"\n  },\n  {\n    \"name\": \"IL2\",\n    \"pregunta\": \"Busca en el inventario, donde esta el 33K\"\n  },\n  {\n    \"name\": \"IL3\",\n    \"pregunta\": \"busca en el inventario, donde esta el resistor 6.8K\"\n  },\n  {\n    \"name\": \"IL4\",\n    \"pregunta\": \"busca en el inventario, donde esta el resistor 1.5M\"\n  },\n  {\n    \"name\": \"IL5\",\n    \"pregunta\": \"busca en el inventario, donde esta el superficial Zener 18V\"\n  },\n  {\n    \"name\": \"IC5\",\n    \"pregunta\": \"busca en el inventario, cuantos ISA 0509 de tipo integrados hay\"\n  },\n  {\n    \"name\": \"IC6\",\n    \"pregunta\": \"busca en el inventario, cuantos MCP41050 de tipo integrados hay\"\n  },\n  {\n    \"name\": \"IC7\",\n    \"pregunta\": \"Busca en el inventario, cuantos PVN012 de tipo integrados hay\"\n  },\n  {\n    \"name\": \"IC8\",\n    \"pregunta\": \"busca en el inventario, cuantos LM 358 de tipo integrados hay\"\n  },\n  {\n    \"name\": \"IC9\",\n    \"pregunta\": \"busca en el inventario, cuantos big socket 2P de tipo conector hay\"\n  },\n  {\n    \"name\": \"IC10\",\n    \"pregunta\": \"busca en el inventario, cuantos ESP32 H4 de tipo integrados hay\"\n  },\n  {\n    \"name\": \"KD1\",\n    \"pregunta\": \"busca en kicad, y devuelveme el repo del duplicator\"\n  },\n  {\n    \"name\": \"KD2\",\n    \"pregunta\": \"busca en kicad, cual es el valor de C1 en duplicator\"\n  },\n  {\n    \"name\": \"KD3\",\n    \"pregunta\": \"Busca en kicad, y dime todas las resistencias que tienen valor 75 en duplicator\"\n  },\n  {\n    \"name\": \"KD4\",\n    \"pregunta\": \"Busca en kicad, y dime el valor de C10 en duplicator\"\n  },\n  {\n    \"name\": \"KJ1\",\n    \"pregunta\": \"busca en kicad y devuelveme el repo de Jamma\"\n  },\n  {\n    \"name\": \"KJ2\",\n    \"pregunta\": \"busca en kicad, cual es el footprint de J4 en Jamma\"\n  },\n  {\n    \"name\": \"KJ3\",\n    \"pregunta\": \"busca en kicad, cual es el value de J9 en Jamma\"\n  },\n  {\n    \"name\": \"KJ4\",\n    \"pregunta\": \"busca en kicad, cual es el DNP de JP4 en Jamma\"\n  },\n  {\n    \"name\": \"KJ5\",\n    \"pregunta\": \"busca en kicad, cual es el footprint de U1 en Jamma\"\n  },\n  {\n    \"name\": \"KJ6\",\n    \"pregunta\": \"busca en kicad, cual es el value de J6 en Jamma\"\n  },\n  {\n    \"name\": \"KM1\",\n    \"pregunta\": \"busca en kicad y dame la repo de megadrive\"\n  },\n  {\n    \"name\": \"KM2\",\n    \"pregunta\": \"busca en kicad, y dime el valor de D1 en megadrive\"\n  },\n  {\n    \"name\": \"KM3\",\n    \"pregunta\": \"busca en kicad, y dime el footprint de RB1 en megadrive\"\n  },\n  {\n    \"name\": \"KM4\",\n    \"pregunta\": \"busca en kicad, y dime que resistores tienen valor 75 en megadrive\"\n  },\n  {\n    \"name\": \"KM5\",\n    \"pregunta\": \"busca en kicad, y dime el valor de C4 en megadrive\"\n  }\n];\n\nvar newItems = [];\n\n\nfor(let i=0; i<items.length; i++){\n  newItems.push(\n    {\n      \"json\":\n        {\n          \"name\": items[i].name,\n          \"pregunta\": items[i].pregunta,\n          nameID: nameID,\n          PreguntaID: PreguntaID,\n          workspace: $('Create Demo Workspace').first().json.data.workspace_id,\n          database: $('Find Preguntas database1').first().json.preguntasDB,\n          token: $('Get access token').first().json.access_token\n        },\n      \"pairedItem\": i\n    }    \n  )\n}\nreturn newItems;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3000,
+        540
+      ],
+      "id": "a3b368f9-d5ed-4d32-a0ff-0dd1b49e0b4e",
+      "name": "Prepare preguntas ROWs1",
+      "executeOnce": true
+    },
+    {
+      "parameters": {
+        "method": "PUT",
+        "url": "=http://appflowy.iadoc.alteria.vpn.alonsom.com/api/workspace/{{ $json.workspace }}/database/{{ $json.database }}/row",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $json.token }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"pre_hash\": \"{{ $json.name }}\",\n  \"cells\": {\n    \"Name\": \"{{ $json.name }}\",\n    \"Pregunta\": \"{{ $json.pregunta }}\"\n  },\n  \"document\": \"## NAME {{ $json.name }}\\nrepo {{ $json.pregunta }}\"\n} ",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        3440,
+        540
+      ],
+      "id": "69440e15-5a9e-4559-b36f-15f90a205543",
+      "name": "Create rows of Preguntas",
+      "executeOnce": false,
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "url": "=http://appflowy.iadoc.alteria.vpn.alonsom.com/api/workspace/{{ $('Create Demo Workspace').item.json.data.workspace_id }}/database/{{ $('Find Preguntas database1').item.json.preguntasDB }}/row",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $('Get access token').item.json.access_token }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        3440,
+        340
+      ],
+      "id": "376145ff-be24-4823-bd18-5e649bbe68ba",
+      "name": "get rows of pregunta",
+      "executeOnce": true,
+      "onError": "continueErrorOutput"
     }
   ],
   "connections": {
@@ -1381,6 +1486,75 @@
           }
         ]
       ]
+    },
+    "Loop Over Items2": {
+      "main": [
+        [
+          {
+            "node": "get rows of pregunta",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Create rows of Preguntas",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Add fields to Preguntas": {
+      "main": [
+        [
+          {
+            "node": "Get fields of preguntas",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get fields of preguntas": {
+      "main": [
+        [
+          {
+            "node": "Prepare preguntas ROWs1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare preguntas ROWs1": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create rows of Preguntas": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items2",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Loop Over Items2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
@@ -1391,7 +1565,7 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "40436a79-3590-4155-af6c-fe40730ab926",
+  "versionId": "802dedee-f287-41f3-8aed-2335ed2d2c49",
   "triggerCount": 0,
   "tags": []
 }
