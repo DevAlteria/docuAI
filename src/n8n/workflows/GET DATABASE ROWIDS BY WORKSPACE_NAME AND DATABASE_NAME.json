@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-07-25T16:28:41.327Z",
-  "updatedAt": "2025-07-25T16:29:48.000Z",
+  "updatedAt": "2025-07-25T17:55:37.000Z",
   "id": "Me6haZ2RFwf3M7mL",
   "name": "GET DATABASE ROWIDS BY WORKSPACE_NAME AND DATABASE_NAME",
   "active": false,
@@ -64,7 +64,7 @@
     },
     {
       "parameters": {
-        "url": "=http://appflowy.iadoc.alteria.vpn.alonsom.com/api/workspace/{{ $('Get workspaces').item.json.data[0].workspace_id }}/database/",
+        "url": "=http://appflowy.iadoc.alteria.vpn.alonsom.com/api/workspace/{{ $json.data.workspace_id }}/database/",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
@@ -215,7 +215,7 @@
     },
     {
       "parameters": {
-        "url": "=http://appflowy.iadoc.alteria.vpn.alonsom.com/api/workspace/{{ $('Get workspaces').item.json.data[0].workspace_id }}/database/{{ $('Filter database').item.json.data.id }}/row\n\n",
+        "url": "=http://appflowy.iadoc.alteria.vpn.alonsom.com/api/workspace/{{ $('Filter worlspace').item.json.data.workspace_id }}/database/{{ $('Filter database').item.json.data.id }}/row\n\n",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
@@ -830,7 +830,7 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "29b6cb59-2daf-4fd4-a65f-d87c4ff53afc",
+  "versionId": "b216a534-f7b8-4330-b8c9-5dc52900671a",
   "triggerCount": 3,
   "tags": []
 }

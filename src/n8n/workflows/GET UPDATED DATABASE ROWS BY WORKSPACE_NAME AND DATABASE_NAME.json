@@ -1,8 +1,8 @@
 {
-  "createdAt": "2025-07-25T16:09:43.160Z",
-  "updatedAt": "2025-07-25T17:53:54.000Z",
-  "id": "dT2HKnRoTQwU7Zj1",
-  "name": "GET DATABASE ROW BY WORKSPACE_NAME, DATABASE_NAME AND ROW IDS",
+  "createdAt": "2025-07-25T16:57:45.598Z",
+  "updatedAt": "2025-07-25T17:54:49.000Z",
+  "id": "azL1enYBqtKNEp0T",
+  "name": "GET UPDATED DATABASE ROWS BY WORKSPACE_NAME AND DATABASE_NAME",
   "active": false,
   "isArchived": false,
   "nodes": [
@@ -20,7 +20,7 @@
         1880,
         900
       ],
-      "id": "243dd547-58e9-48bd-8bdc-b3d83b4f1d26",
+      "id": "9a1e3e69-0875-429e-8338-219ca146c04e",
       "name": "Get access token",
       "executeOnce": true,
       "credentials": {
@@ -59,7 +59,7 @@
         2100,
         900
       ],
-      "id": "f7433c5c-16ff-46ce-ad7e-0c90734e5b55",
+      "id": "4274034f-0a26-4b01-9068-4125332de91c",
       "name": "Get workspaces"
     },
     {
@@ -82,7 +82,7 @@
         2540,
         900
       ],
-      "id": "687da59c-b729-44c0-934f-9fe822ec5bba",
+      "id": "ea38e0ec-62c7-45b9-b845-c72434a222d3",
       "name": "Get Inventory database"
     },
     {
@@ -109,7 +109,7 @@
         1440,
         1260
       ],
-      "id": "ce178dbf-fbe3-4dbc-bd72-73a4e2c9ead4",
+      "id": "bb6f5e5f-8dd6-4f80-91c6-6659aec83b99",
       "name": "Update rows of Inventory",
       "executeOnce": false
     },
@@ -123,7 +123,7 @@
         1220,
         1260
       ],
-      "id": "1d84b641-e063-48fa-854d-046e0a2f5c13",
+      "id": "97cfe49a-34b9-4872-a457-0d025ccba134",
       "name": "Loop Rows"
     },
     {
@@ -134,12 +134,12 @@
         1220,
         800
       ],
-      "id": "91865348-5d56-4125-9466-7b85170ee853",
+      "id": "76c2dfa7-3a1d-45e9-bf3f-6cdea62d8b7e",
       "name": "When clicking ‘Execute workflow’"
     },
     {
       "parameters": {
-        "jsCode": "for (const item of $input.all()) {\n  item.json.workspace_name = \"demo\";\n  item.json.database_view_name = \"Inventory\";\n\n  const rowsIds = [\n    \"d05836b0-afb2-43ce-bebd-ce2e2e3feaf6\",\n    \"ffb9315d-cab7-4685-8fb1-c205a62dcab4\"\n  ];\n\n  if (!item.json.rowsIds) {\n    item.json.rowsIds = [];\n  }\n\n  rowsIds.forEach(id => {\n    item.json.rowsIds.push(id);\n  });\n}\n\nreturn $input.all();\n"
+        "jsCode": "// Loop over input items and add a new field called 'myNewField' to the JSON of each one\nfor (const item of $input.all()) {\n  item.json.workspace_name = \"demo\";\n  item.json.database_view_name = \"Inventory\";\n}\n\nreturn $input.all();"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -147,7 +147,7 @@
         1440,
         800
       ],
-      "id": "b1c9d1d1-db62-4e62-aa33-bdd1eb94ab2d",
+      "id": "4855da1f-86d0-4693-9ed7-c88ccdcc04e9",
       "name": "Code"
     },
     {
@@ -159,10 +159,6 @@
             },
             {
               "name": "database_view_name"
-            },
-            {
-              "name": "rowsIds",
-              "type": "array"
             }
           ]
         }
@@ -173,7 +169,7 @@
         1440,
         1000
       ],
-      "id": "baef8b55-4017-4939-9024-dffe51d075e9",
+      "id": "9b2ca11d-ba84-4205-9f73-dff8c80eff2a",
       "name": "When Executed by Another Workflow"
     },
     {
@@ -186,7 +182,7 @@
         1660,
         900
       ],
-      "id": "3bed4a9e-dd89-4352-aef6-6e6ea40b2e6f",
+      "id": "dc1dc302-9644-454e-9adb-0f13c6dc2e5b",
       "name": "Aux join"
     },
     {
@@ -200,7 +196,7 @@
         2320,
         900
       ],
-      "id": "269afd20-e383-456a-824f-4cf9cb3c7b11",
+      "id": "5d1abac9-1293-466f-837f-cd3677d68825",
       "name": "Filter worlspace"
     },
     {
@@ -214,48 +210,25 @@
         2760,
         900
       ],
-      "id": "b512a56a-49b4-4360-b612-747649a177ca",
+      "id": "079fd47d-4fd4-478b-ac0a-69ce2d6ce5d7",
       "name": "Filter database"
     },
     {
       "parameters": {
-        "url": "=http://appflowy.iadoc.alteria.vpn.alonsom.com/api/workspace/{{ $('Filter worlspace').item.json.data.workspace_id }}/database/{{ $('Filter database').item.json.data.id }}/row/detail?ids={{ $json.joinedIds }}",
-        "sendHeaders": true,
-        "headerParameters": {
-          "parameters": [
-            {
-              "name": "Authorization",
-              "value": "=Bearer {{ $('Get access token').item.json.access_token }}"
-            }
-          ]
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [
-        3620,
-        900
-      ],
-      "id": "59124d85-9e3e-4c0d-9619-3bcc92acc59a",
-      "name": "get Rows"
-    },
-    {
-      "parameters": {
-        "jsCode": "const ids = $json.data.map(entry => `urn:uuid:${entry}`);\nconst joinedIds = ids.join(',');\n\nreturn [\n  {\n    json: {\n      ids,         // array de ids\n      joinedIds    // string final listo para la URL\n    }\n  }\n];\n"
+        "jsCode": "if ($json.code === 0) {\n  let rowsIds = [];\n  $input.first().json.data.forEach((d) => {\n    rowsIds.push(d.row_id);\n  });\n\n  return [{\n    json: {\n      data: rowsIds,\n      status: \"ok\"\n    }\n  }];\n} else {\n  return [{\n    json: {\n      data: {},\n      status: \"fail\"\n    }\n  }];\n}\n"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        3420,
-        920
+        3140,
+        900
       ],
-      "id": "389b3e64-8fe5-4cb0-b3ca-2f04c6996da7",
-      "name": "Format ids"
+      "id": "94462dcb-f5b2-423e-b34a-8d332e2a9320",
+      "name": "Code1"
     },
     {
       "parameters": {
-        "url": "=http://appflowy.iadoc.alteria.vpn.alonsom.com/api/workspace/{{ $('Filter worlspace').item.json.data.workspace_id }}/database/{{ $('Filter database').item.json.data.id }}/row\n\n",
+        "url": "=http://appflowy.iadoc.alteria.vpn.alonsom.com/api/workspace/{{ $('Filter worlspace').item.json.data.workspace_id }}/database/{{ $('Filter database').item.json.data.id }}/row/updated?after={{ new Date(Date.now() - (1 * 60 * 60 * 1000)).toISOString() }}\n\n\n\n\n",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
@@ -273,34 +246,8 @@
         2980,
         900
       ],
-      "id": "b1baa6be-d252-4f4b-8995-cbee6aca4217",
-      "name": "getIds Row ids"
-    },
-    {
-      "parameters": {
-        "jsCode": "if ($json.code === 0) {\n  return [{\n    json: {\n      data: $json,\n      status: \"ok\"\n    }\n  }];\n} else {\n  return [{\n    json: {\n      data: {},\n      status: \"fail\"\n    }\n  }];\n}\n"
-      },
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        3880,
-        900
-      ],
-      "id": "01f4fce9-0f66-46ef-bf81-ff0068713913",
-      "name": "Code1"
-    },
-    {
-      "parameters": {
-        "jsCode": "const rowsIds = $('Aux join').first().json.rowsIds;\nconst dataArray = $input.first().json.data;\n\nlet foundCount = 0;\n\nfor (const id of rowsIds) {\n  const match = dataArray.find(entry => entry.id === id);\n  if (match) {\n    foundCount++;\n  }\n}\n\nreturn [\n  {\n    json: {\n      data: rowsIds,\n      status: foundCount === rowsIds.length ? \"ok\" : \"partial\" // o \"fail\"\n    }\n  }\n];\n"
-      },
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        3200,
-        900
-      ],
-      "id": "ba1c5e77-946a-4dbb-a7cd-170a3214bbcd",
-      "name": "filter Rows Ids"
+      "id": "17099846-ff18-40f2-b865-394ada7f4469",
+      "name": "getUpdatedRows"
     }
   ],
   "connections": {
@@ -420,51 +367,18 @@
       "main": [
         [
           {
-            "node": "getIds Row ids",
+            "node": "getUpdatedRows",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Format ids": {
-      "main": [
-        [
-          {
-            "node": "get Rows",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "getIds Row ids": {
-      "main": [
-        [
-          {
-            "node": "filter Rows Ids",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "get Rows": {
+    "getUpdatedRows": {
       "main": [
         [
           {
             "node": "Code1",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "filter Rows Ids": {
-      "main": [
-        [
-          {
-            "node": "Format ids",
             "type": "main",
             "index": 0
           }
@@ -916,7 +830,7 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "1b53d616-a849-4481-85de-ccc36572eb0a",
+  "versionId": "b2f0ef49-6415-41bf-8380-89d262cd91e2",
   "triggerCount": 3,
   "tags": []
 }

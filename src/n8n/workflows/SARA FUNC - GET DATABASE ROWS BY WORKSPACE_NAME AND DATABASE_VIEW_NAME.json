@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-07-25T12:29:31.694Z",
-  "updatedAt": "2025-07-25T16:03:57.000Z",
+  "updatedAt": "2025-07-25T17:51:08.000Z",
   "id": "6vmqq4cOYNHYVzjr",
   "name": "SARA FUNC - GET DATABASE ROWS BY WORKSPACE_NAME AND DATABASE_VIEW_NAME",
   "active": false,
@@ -64,7 +64,7 @@
     },
     {
       "parameters": {
-        "url": "=http://appflowy.iadoc.alteria.vpn.alonsom.com/api/workspace/{{ $('Get workspaces').item.json.data[0].workspace_id }}/database/",
+        "url": "=http://appflowy.iadoc.alteria.vpn.alonsom.com/api/workspace/{{ $json.data.workspace_id }}/database/",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
@@ -215,7 +215,7 @@
     },
     {
       "parameters": {
-        "url": "=http://appflowy.iadoc.alteria.vpn.alonsom.com/api/workspace/{{ $('Get workspaces').item.json.data.filter(item => item.workspace_name == \"demo\").last().workspace_id }}/database/{{ $('Get Inventory database').item.json.data.filter(item => item.views[0].name == \"Inventory\").last().id }}/row/detail?ids={{ $json.joinedIds }}",
+        "url": "=http://appflowy.iadoc.alteria.vpn.alonsom.com/api/workspace/{{ $('Filter worlspace').item.json.data.workspace_id }}/database/{{ $('Filter database').item.json.data.id }}/row/detail?ids={{ $json.joinedIds }}",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
@@ -888,7 +888,7 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "726fbcc7-6232-4b25-b2c7-126d99d0f2dc",
+  "versionId": "a62b864c-8fd8-4480-a6be-0f322712688a",
   "triggerCount": 3,
   "tags": []
 }

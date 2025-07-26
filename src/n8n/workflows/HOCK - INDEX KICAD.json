@@ -1,11 +1,240 @@
 {
-  "createdAt": "2025-07-25T16:09:43.160Z",
-  "updatedAt": "2025-07-25T17:53:54.000Z",
-  "id": "dT2HKnRoTQwU7Zj1",
-  "name": "GET DATABASE ROW BY WORKSPACE_NAME, DATABASE_NAME AND ROW IDS",
+  "createdAt": "2025-07-25T08:10:32.110Z",
+  "updatedAt": "2025-07-25T17:46:09.000Z",
+  "id": "lCXeRTy7rsoSyTVu",
+  "name": "HOCK - INDEX KICAD",
   "active": false,
   "isArchived": false,
   "nodes": [
+    {
+      "parameters": {
+        "model": "tazarov/all-minilm-l6-v2-f32:latest"
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOllama",
+      "typeVersion": 1,
+      "position": [
+        1320,
+        620
+      ],
+      "id": "5e90401b-3783-49a0-a082-d8d31819d0d2",
+      "name": "Embeddings Ollama",
+      "credentials": {
+        "ollamaApi": {
+          "id": "oEKNS3tm8YNi0WhW",
+          "name": "ollama"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "insert",
+        "tableName": "n8n_kicad_embedings",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStorePGVector",
+      "typeVersion": 1.3,
+      "position": [
+        1340,
+        400
+      ],
+      "id": "df20c302-51cb-4f1f-a15a-abfd38c7dd7a",
+      "name": "Postgres PGVector Store",
+      "credentials": {
+        "postgres": {
+          "id": "rUrocHl8XaJ8Jwox",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "deleteTable",
+        "schema": {
+          "__rl": true,
+          "value": "public",
+          "mode": "list",
+          "cachedResultName": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "n8n_kicad_embedings",
+          "mode": "list",
+          "cachedResultName": "n8n_kicad_embedings"
+        },
+        "deleteCommand": "drop",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        220,
+        800
+      ],
+      "id": "d73fe9fd-10a5-48d9-b7be-8a17caed1325",
+      "name": "Delete table or rows",
+      "credentials": {
+        "postgres": {
+          "id": "rUrocHl8XaJ8Jwox",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Loop over input items and add a new field called 'myNewField' to the JSON of each one\nvar data = []\n\nfor (var i = 0; i < $input.all().length; i++ ) {\n  var README = $input.all()[i].json.data\n  var item = $('Filter').all()[i]\n  data.push({\n    data: String(item.json.cells.Name + \"\\n\\n\" + README).toLowerCase(),\n    appflowy: {\n      rowID: item.json.id\n    }\n  })\n  item.json.myNewField = 1;\n}\n\nreturn data;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1100,
+        600
+      ],
+      "id": "5b8feab6-da76-41fb-9b1c-7b0a21c4cc1a",
+      "name": "Code2"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        900
+      ],
+      "id": "c99351e2-2e15-45a7-b031-28f8570a2f1f",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 2
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        700
+      ],
+      "id": "755061b6-a0f2-4b14-b85a-95a8c232dff6",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "jsonMode": "=expressionData",
+        "jsonData": "={{ $json.data }}",
+        "textSplittingMode": "custom",
+        "options": {
+          "metadata": {
+            "metadataValues": [
+              {
+                "name": "appflowy",
+                "value": "={{ $json.appflowy }}"
+              }
+            ]
+          }
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+      "typeVersion": 1.1,
+      "position": [
+        1440,
+        622.5
+      ],
+      "id": "474aeb10-7828-42c5-b3ff-cbc0c6e098fb",
+      "name": "Default Data Loader"
+    },
+    {
+      "parameters": {
+        "url": "=https://raw.githubusercontent.com/{{ $json.cells.Repo.replace('https://github.com/', '') }}/refs/heads/main/README.md",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        880,
+        600
+      ],
+      "id": "3fb5ff30-a565-4884-b1bd-c3dbf37462db",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "912c8e9c-e746-4f94-8c40-84e47713ad77",
+              "leftValue": "={{ $json.cells.Name }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "6fc29e8b-a3ba-4f9d-ac41-2992bca75d0b",
+              "leftValue": "={{ $json.cells.Repo }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.2,
+      "position": [
+        660,
+        800
+      ],
+      "id": "3493febc-b08c-4ecd-89af-f15d62405a72",
+      "name": "Filter"
+    },
+    {
+      "parameters": {
+        "chunkSize": 120,
+        "chunkOverlap": 20,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.textSplitterRecursiveCharacterTextSplitter",
+      "typeVersion": 1,
+      "position": [
+        1520,
+        820
+      ],
+      "id": "b8abf074-2c2a-4a8c-9c21-6b7cf50eebd3",
+      "name": "Recursive Character Text Splitter"
+    },
+    {
+      "parameters": {
+        "executeOnce": false,
+        "command": "=sh scripts/gen_bom_csv_from_repo.sh {{ $json.cells.Repo }}"
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        880,
+        1000
+      ],
+      "id": "0e35ba99-0f0a-42e9-a0cd-fa8139c6d7e7",
+      "name": "Generate BOM",
+      "onError": "continueErrorOutput"
+    },
     {
       "parameters": {
         "method": "POST",
@@ -17,10 +246,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        1880,
-        900
+        1450,
+        1000
       ],
-      "id": "243dd547-58e9-48bd-8bdc-b3d83b4f1d26",
+      "id": "73801fde-8823-454e-bf04-8f0dfddae37e",
       "name": "Get access token",
       "executeOnce": true,
       "credentials": {
@@ -56,15 +285,15 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        2100,
-        900
+        1800,
+        1000
       ],
-      "id": "f7433c5c-16ff-46ce-ad7e-0c90734e5b55",
+      "id": "5557c7ff-801d-4780-a8e5-f5ad40e55593",
       "name": "Get workspaces"
     },
     {
       "parameters": {
-        "url": "=http://appflowy.iadoc.alteria.vpn.alonsom.com/api/workspace/{{ $json.data.workspace_id }}/database/",
+        "url": "=http://appflowy.iadoc.alteria.vpn.alonsom.com/api/workspace/{{ $('Get workspaces').item.json.data[0].workspace_id }}/database/",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
@@ -79,11 +308,37 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        2540,
-        900
+        2020,
+        1000
       ],
-      "id": "687da59c-b729-44c0-934f-9fe822ec5bba",
+      "id": "f1763726-4637-421e-8ca2-ef7c6f31a21c",
       "name": "Get Inventory database"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Loop over input items and add a new field called 'myNewField' to the JSON of each one\nvar data = []\n\nfor (var i = 0; i < $input.all().length; i++) {\n  data.push({\n    id: $('Filter').all()[i].json.id,\n    bom: $input.all()[i].json.stdout,\n    pre_hash: $('Filter').all()[i].json.cells.Name\n  })\n}\n\nreturn data;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1100,
+        1000
+      ],
+      "id": "0167ced0-67ad-40d1-a254-80b79be9e138",
+      "name": "Parse bom"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Loop over input items and add a new field called 'myNewField' to the JSON of each one\nvar data = []\nvar dbId = $input.first().json.data.find(el => el.views.find(v => v.name == \"KICAD\")).id;\n\nfor (const item of $('Parse bom').all()) {\n  data.push({\n    \"workspace\": $('Get workspaces').first().json.data[0].workspace_id,\n    \"dbID\": dbId,\n    \"bom\": item.json.bom,\n    \"id\": item.json.id,\n    \"pre_hash\": item.json.pre_hash\n  })\n}\n\nreturn data;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2240,
+        1000
+      ],
+      "id": "a95ea05d-5656-4b0e-9b1c-576ffb0d1287",
+      "name": "Prepare update"
     },
     {
       "parameters": {
@@ -106,10 +361,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        1440,
-        1260
+        2680,
+        1000
       ],
-      "id": "ce178dbf-fbe3-4dbc-bd72-73a4e2c9ead4",
+      "id": "22d78d61-6a3f-4fa8-a386-59cc7d45488f",
       "name": "Update rows of Inventory",
       "executeOnce": false
     },
@@ -120,190 +375,218 @@
       "type": "n8n-nodes-base.splitInBatches",
       "typeVersion": 3,
       "position": [
-        1220,
-        1260
+        2460,
+        1000
       ],
-      "id": "1d84b641-e063-48fa-854d-046e0a2f5c13",
+      "id": "7cca2839-5524-4583-bac4-f90470f1d935",
       "name": "Loop Rows"
     },
     {
-      "parameters": {},
-      "type": "n8n-nodes-base.manualTrigger",
+      "parameters": {
+        "workspaceId": "9b8e8db6-c1f5-4947-a931-f26e9b179ab5",
+        "databaseId": "938b67a6-b2c4-40ba-8817-1d7338cd9832",
+        "returnAll": true,
+        "simplify": false
+      },
+      "type": "n8n-nodes-appflowy.appflowy",
       "typeVersion": 1,
       "position": [
-        1220,
-        800
+        440,
+        1100
       ],
-      "id": "91865348-5d56-4125-9466-7b85170ee853",
-      "name": "When clicking ‘Execute workflow’"
-    },
-    {
-      "parameters": {
-        "jsCode": "for (const item of $input.all()) {\n  item.json.workspace_name = \"demo\";\n  item.json.database_view_name = \"Inventory\";\n\n  const rowsIds = [\n    \"d05836b0-afb2-43ce-bebd-ce2e2e3feaf6\",\n    \"ffb9315d-cab7-4685-8fb1-c205a62dcab4\"\n  ];\n\n  if (!item.json.rowsIds) {\n    item.json.rowsIds = [];\n  }\n\n  rowsIds.forEach(id => {\n    item.json.rowsIds.push(id);\n  });\n}\n\nreturn $input.all();\n"
-      },
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        1440,
-        800
-      ],
-      "id": "b1c9d1d1-db62-4e62-aa33-bdd1eb94ab2d",
-      "name": "Code"
-    },
-    {
-      "parameters": {
-        "workflowInputs": {
-          "values": [
-            {
-              "name": "workspace_name"
-            },
-            {
-              "name": "database_view_name"
-            },
-            {
-              "name": "rowsIds",
-              "type": "array"
-            }
-          ]
+      "id": "1d1d1413-0793-44d4-8e89-c1ab610ce941",
+      "name": "Get All KICADs",
+      "credentials": {
+        "appflowyApi": {
+          "id": "YODmFLRKL0nTWCx6",
+          "name": "Default"
         }
-      },
-      "type": "n8n-nodes-base.executeWorkflowTrigger",
-      "typeVersion": 1.1,
-      "position": [
-        1440,
-        1000
-      ],
-      "id": "baef8b55-4017-4939-9024-dffe51d075e9",
-      "name": "When Executed by Another Workflow"
+      }
     },
     {
       "parameters": {
-        "jsCode": "\nreturn $input.all();"
-      },
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        1660,
-        900
-      ],
-      "id": "3bed4a9e-dd89-4352-aef6-6e6ea40b2e6f",
-      "name": "Aux join"
-    },
-    {
-      "parameters": {
-        "mode": "runOnceForEachItem",
-        "jsCode": "var ret = {\n  data: {},\n  status: \"fail\"\n};\n\n// Loop over input items and add a new field called 'myNewField' to the JSON of each one\nfor (const item of $json.data) {\n  if (item.workspace_name == $('Aux join').item.json.workspace_name) {\n    ret.data = item\n    ret.status = \"ok\"\n    return ret;\n  }\n}\n\nreturn ret;"
-      },
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        2320,
-        900
-      ],
-      "id": "269afd20-e383-456a-824f-4cf9cb3c7b11",
-      "name": "Filter worlspace"
-    },
-    {
-      "parameters": {
-        "mode": "runOnceForEachItem",
-        "jsCode": "var ret = {\n  data: {},\n  status: \"fail\"\n};\n\n// Loop over input items and add a new field called 'myNewField' to the JSON of each one\nfor (const item of $json.data) {\n  for (const view of item.views) {\n    if (view.name == $('Aux join').item.json.database_view_name) {\n      ret.data = item\n      ret.status = \"ok\"\n      return ret;\n    }\n  }\n}\n\nreturn ret;"
-      },
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        2760,
-        900
-      ],
-      "id": "b512a56a-49b4-4360-b612-747649a177ca",
-      "name": "Filter database"
-    },
-    {
-      "parameters": {
-        "url": "=http://appflowy.iadoc.alteria.vpn.alonsom.com/api/workspace/{{ $('Filter worlspace').item.json.data.workspace_id }}/database/{{ $('Filter database').item.json.data.id }}/row/detail?ids={{ $json.joinedIds }}",
-        "sendHeaders": true,
-        "headerParameters": {
-          "parameters": [
+        "workflowId": {
+          "__rl": true,
+          "value": "6vmqq4cOYNHYVzjr",
+          "mode": "list",
+          "cachedResultName": "SARA FUNC - GET DATABASE ROWS BY WORKSPACE_NAME AND DATABASE_VIEW_NAME"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "workspace_name": "demo",
+            "database_view_name": "KICAD"
+          },
+          "matchingColumns": [],
+          "schema": [
             {
-              "name": "Authorization",
-              "value": "=Bearer {{ $('Get access token').item.json.access_token }}"
+              "id": "workspace_name",
+              "displayName": "workspace_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "database_view_name",
+              "displayName": "database_view_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
             }
-          ]
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
         },
         "options": {}
       },
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
       "position": [
-        3620,
-        900
+        420,
+        780
       ],
-      "id": "59124d85-9e3e-4c0d-9619-3bcc92acc59a",
-      "name": "get Rows"
+      "id": "8ec38df3-847d-4f51-a11c-f7faf067dac8",
+      "name": "Execute Workflow"
     },
     {
       "parameters": {
-        "jsCode": "const ids = $json.data.map(entry => `urn:uuid:${entry}`);\nconst joinedIds = ids.join(',');\n\nreturn [\n  {\n    json: {\n      ids,         // array de ids\n      joinedIds    // string final listo para la URL\n    }\n  }\n];\n"
+        "jsCode": "// Loop over input items and add a new field called 'myNewField' to the JSON of each one\nlet data = [];\nfor (const item of $input.first().json.data.data ) {\n  data.push(item);\n}\n\nreturn data;"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        3420,
-        920
+        540,
+        640
       ],
-      "id": "389b3e64-8fe5-4cb0-b3ca-2f04c6996da7",
-      "name": "Format ids"
-    },
-    {
-      "parameters": {
-        "url": "=http://appflowy.iadoc.alteria.vpn.alonsom.com/api/workspace/{{ $('Filter worlspace').item.json.data.workspace_id }}/database/{{ $('Filter database').item.json.data.id }}/row\n\n",
-        "sendHeaders": true,
-        "headerParameters": {
-          "parameters": [
-            {
-              "name": "Authorization",
-              "value": "=Bearer {{ $('Get access token').item.json.access_token }}"
-            }
-          ]
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [
-        2980,
-        900
-      ],
-      "id": "b1baa6be-d252-4f4b-8995-cbee6aca4217",
-      "name": "getIds Row ids"
-    },
-    {
-      "parameters": {
-        "jsCode": "if ($json.code === 0) {\n  return [{\n    json: {\n      data: $json,\n      status: \"ok\"\n    }\n  }];\n} else {\n  return [{\n    json: {\n      data: {},\n      status: \"fail\"\n    }\n  }];\n}\n"
-      },
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        3880,
-        900
-      ],
-      "id": "01f4fce9-0f66-46ef-bf81-ff0068713913",
-      "name": "Code1"
-    },
-    {
-      "parameters": {
-        "jsCode": "const rowsIds = $('Aux join').first().json.rowsIds;\nconst dataArray = $input.first().json.data;\n\nlet foundCount = 0;\n\nfor (const id of rowsIds) {\n  const match = dataArray.find(entry => entry.id === id);\n  if (match) {\n    foundCount++;\n  }\n}\n\nreturn [\n  {\n    json: {\n      data: rowsIds,\n      status: foundCount === rowsIds.length ? \"ok\" : \"partial\" // o \"fail\"\n    }\n  }\n];\n"
-      },
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        3200,
-        900
-      ],
-      "id": "ba1c5e77-946a-4dbb-a7cd-170a3214bbcd",
-      "name": "filter Rows Ids"
+      "id": "86110256-bac1-4dd8-b789-3830c9863c01",
+      "name": "Code"
     }
   ],
   "connections": {
+    "Embeddings Ollama": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Postgres PGVector Store",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Delete table or rows": {
+      "main": [
+        [
+          {
+            "node": "Execute Workflow",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres PGVector Store": {
+      "main": [
+        []
+      ]
+    },
+    "Code2": {
+      "main": [
+        [
+          {
+            "node": "Postgres PGVector Store",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Delete table or rows",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Delete table or rows",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Default Data Loader": {
+      "ai_document": [
+        [
+          {
+            "node": "Postgres PGVector Store",
+            "type": "ai_document",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Code2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter": {
+      "main": [
+        [
+          {
+            "node": "Generate BOM",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Recursive Character Text Splitter": {
+      "ai_textSplitter": [
+        [
+          {
+            "node": "Default Data Loader",
+            "type": "ai_textSplitter",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate BOM": {
+      "main": [
+        [
+          {
+            "node": "Parse bom",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
     "Get access token": {
       "main": [
         [
@@ -319,7 +602,7 @@
       "main": [
         [
           {
-            "node": "Filter worlspace",
+            "node": "Get Inventory database",
             "type": "main",
             "index": 0
           }
@@ -330,7 +613,29 @@
       "main": [
         [
           {
-            "node": "Filter database",
+            "node": "Prepare update",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse bom": {
+      "main": [
+        [
+          {
+            "node": "Get access token",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare update": {
+      "main": [
+        [
+          {
+            "node": "Loop Rows",
             "type": "main",
             "index": 0
           }
@@ -361,7 +666,12 @@
         ]
       ]
     },
-    "When clicking ‘Execute workflow’": {
+    "Get All KICADs": {
+      "main": [
+        []
+      ]
+    },
+    "Execute Workflow": {
       "main": [
         [
           {
@@ -376,95 +686,7 @@
       "main": [
         [
           {
-            "node": "Aux join",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "When Executed by Another Workflow": {
-      "main": [
-        [
-          {
-            "node": "Aux join",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Aux join": {
-      "main": [
-        [
-          {
-            "node": "Get access token",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Filter worlspace": {
-      "main": [
-        [
-          {
-            "node": "Get Inventory database",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Filter database": {
-      "main": [
-        [
-          {
-            "node": "getIds Row ids",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Format ids": {
-      "main": [
-        [
-          {
-            "node": "get Rows",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "getIds Row ids": {
-      "main": [
-        [
-          {
-            "node": "filter Rows Ids",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "get Rows": {
-      "main": [
-        [
-          {
-            "node": "Code1",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "filter Rows Ids": {
-      "main": [
-        [
-          {
-            "node": "Format ids",
+            "node": "Filter",
             "type": "main",
             "index": 0
           }
@@ -916,7 +1138,7 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "1b53d616-a849-4481-85de-ccc36572eb0a",
+  "versionId": "17cc0c40-4e6f-4056-aa7e-ad43ad5344cf",
   "triggerCount": 3,
   "tags": []
 }
